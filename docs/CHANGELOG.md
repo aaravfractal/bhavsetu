@@ -135,3 +135,39 @@ One thing left alone and worth flagging: the voice sheet's listening waveform lo
 infinitely. It is pre-existing and it means "still recording", so silencing it would
 cost the screen its meaning — but it is the one loop in the file, and the motion test
 pins it as the only permitted one so nothing else can join it.
+
+## Deferred — Evergreen premium skin (7 Sep 2026)
+
+deferred: Evergreen premium skin, revisit on branch feat/evergreen after internal
+round, pending a design package that exists.
+
+Evergreen conflicts with CLAUDE.md rule 1 and with the already-submitted deck; brand
+consistency through the 9 Sep internal round wins. The token swap committed earlier
+today was reverted in full (`635cbbf`), so the locked Kanda palette, the Sawali scrim
+and the rule 9 motion doctrine all stand exactly as they were. The referenced design
+package — `BhavSetu Premium.dc.html`, the Farmer App and Hindi `.dc.html` files, the
+Handoff PDF — is not in the repo or anywhere on this machine, which is the second
+reason not to build against it yet.
+
+## Wednesday state — verified (7 Sep 2026)
+
+`demo/index.html` was driven through the presenter-panel order end to end in a real
+DOM (jsdom, installed outside the repo so nothing here changed). All 33 beats pass:
+the Home reveal completes and the hero reads ₹1,850 with the verdict visible, the
+verdict tap opens three staged reasons, the mic sheet builds its waveform, the chart
+reveals volume, candles, averages and forecast band, the calculator computes, lots and
+buyers render, hold-to-accept flips the lot to करार झाला and lands on Money, delivery
+releases escrow with the season total and extra-earned counting up, offline toggles
+both ways and toasts in Marathi, and the QR renders for the deployed origin. Repo
+suite: 44 tests passing, build green.
+
+One discrepancy found and deliberately NOT changed, because nothing else changes before
+the round — it needs a decision, not a patch. The sell-or-store calculator computes a
+gain of **₹3,920** on 20q (20 × (2100 − 1850 − 54), with cold storage at the locked
+₹18/q/week for three weeks). The deck, `docs/frontend-spec.md` (§6.4 and the demo flow)
+and `docs/master-prompt.md` all state **₹4,200**. On stage at demo step 5 the presenter
+says "Store, gain ₹4,200" while the screen reads ₹3,920 — a ₹280 gap. Reaching ₹4,200
+from the locked inputs would need storage at about ₹40/q for three weeks rather than
+₹54, so this is a reconciliation between the demo and the deck, not a typo. Either the
+storage rate in the demo changes or the deck figure does; both are outside this
+session's scope.
