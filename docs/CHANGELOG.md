@@ -135,29 +135,3 @@ One thing left alone and worth flagging: the voice sheet's listening waveform lo
 infinitely. It is pre-existing and it means "still recording", so silencing it would
 cost the screen its meaning — but it is the one loop in the file, and the motion test
 pins it as the only permitted one so nothing else can join it.
-
-## Session 2c — Evergreen design system (7 Sep 2026)
-
-The locked palette moves from Kanda maroon to Evergreen, and `CLAUDE.md`'s token block
-moves with it rather than being quietly diverged from: deep evergreen #1E5A40 with the
-CTA and mic gradient, warm ivory #F6F4ED page, ink #221E17 on #6A6154, emerald gains,
-antique gold hold, terracotta danger. Hairlines, scrim and frost are now ink at low
-alpha rather than separate hues, so `alpha` joins `color` as its own token group and
-`--c-line` keeps working everywhere it was already used. Shape moves to the 20px card
-and 14–16px button scale, the hard bottom edge on the Bhav card becomes the raised step
-on a layered soft-shadow scale, the tab bar is frosted and the mic FAB carries the
-gradient plus an inset top highlight. Type leads with the system stack and keeps Mukta
-for Devanagari; Tiro stays verdict-only. Motion becomes cubic-bezier(0.22,1,0.36,1)
-with the 360ms screen rise, 440ms sheet spring, 280ms overlay fade and 0.96 press,
-while the two 400ms confirm fills and the 800ms count-ups are unchanged.
-
-`tests/tokens.lock.test.js` was rewritten against the new table and still fails the
-build on any stray hex, which is what caught the maroon left behind in `index.html`,
-`public/manifest.webmanifest` and the favicon. Build green, 45 tests passing, first
-load 74.2 KB gzipped.
-
-Scope note: this session changed the design system only. The ten premium screens are
-not built — the design package they are meant to match (`BhavSetu Premium.dc.html`, the
-Farmer App and Hindi files, the Handoff PDF) is not in the repo or anywhere on this
-machine. `demo/index.html` is deliberately untouched and remains maroon on the earlier
-motion doctrine; re-skinning it is a separate call.

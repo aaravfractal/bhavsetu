@@ -9,30 +9,19 @@
   min-height: var(--sz-tap);
   padding: 0 var(--sp-l);
   border: 1px solid transparent;
-  border-radius: var(--r-m);
+  border-radius: var(--r-s);
   font-weight: 700;
   font-size: var(--fs-body-mr);
   line-height: var(--lh-body-mr);
   cursor: pointer;
   transition: background-color var(--mo-fast) var(--mo-ease),
-    color var(--mo-fast) var(--mo-ease),
-    transform var(--mo-fast) var(--mo-ease);
-}
-
-.btn:active {
-  transform: scale(var(--mo-press-scale));
+    color var(--mo-fast) var(--mo-ease);
 }
 
 .btn--primary {
   height: var(--sz-cta);
-  border-radius: var(--r-l);
-  background: var(--g-cta);
+  background: var(--c-primary);
   color: var(--c-surface);
-  box-shadow: var(--el-inset-highlight), var(--el-card);
-}
-
-.btn--primary:active {
-  background: var(--c-primary-pressed);
 }
 
 .btn--secondary {
@@ -60,14 +49,14 @@
 .card {
   background: var(--c-surface);
   border: 1px solid var(--c-line);
-  border-radius: var(--r-card);
+  border-radius: var(--r-m);
   padding: var(--sp-m);
   box-shadow: var(--el-card);
 }
 
-/* The Bhav card sits one step above the page on the layered shadow scale. */
+/* The one bold element: a hard bottom edge, like a chalked mandi slate. */
 .card--bhav {
-  box-shadow: var(--el-raised);
+  box-shadow: var(--el-bhav);
   padding: var(--sp-l);
 }
 
@@ -138,8 +127,6 @@
   position: fixed;
   inset: 0;
   background: var(--c-scrim);
-  backdrop-filter: var(--fx-overlay-blur);
-  -webkit-backdrop-filter: var(--fx-overlay-blur);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -152,7 +139,7 @@
   max-height: 82vh;
   overflow-y: auto;
   background: var(--c-surface);
-  border-radius: var(--r-card) var(--r-card) 0 0;
+  border-radius: var(--r-m) var(--r-m) 0 0;
   padding: var(--sp-l) var(--sp-screen) var(--sp-xl);
 }
 
@@ -352,9 +339,7 @@
 /* ---------- BottomNav ---------- */
 .bottomnav {
   display: flex;
-  background: var(--c-frost);
-  backdrop-filter: var(--fx-blur);
-  -webkit-backdrop-filter: var(--fx-blur);
+  background: var(--c-surface);
   border-top: 1px solid var(--c-line);
 }
 
@@ -394,19 +379,18 @@
   height: var(--sz-mic);
   border-radius: var(--r-pill);
   border: 3px solid var(--c-surface);
-  background: var(--g-cta);
+  background: var(--c-primary);
   color: var(--c-surface);
   display: grid;
   justify-items: center;
   align-content: center;
   gap: 1px;
   cursor: pointer;
-  box-shadow: var(--el-inset-highlight), var(--el-raised);
   transition: transform var(--mo-fast) var(--mo-ease);
 }
 
 .micfab:active {
-  transform: scale(var(--mo-press-scale));
+  transform: scale(0.96);
 }
 
 .micfab__word {

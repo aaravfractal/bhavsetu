@@ -31,21 +31,15 @@ optimises for that demo working offline on stage.
    reply. Budget: <150KB gzipped first load. Check with the build output.
 6. Numbers use tabular-nums. Price is the largest element on any screen
    that shows one. Verdict words (विका / थांबा / सावध) render in Tiro
-   Devanagari Marathi; everything else uses the system stack, with Mukta
-   carrying Devanagari.
+   Devanagari Marathi; everything else Mukta.
 7. Accessibility floor: hit targets >=56px, contrast >=7:1 for farmer-app
    text, every icon has a Marathi word under it.
 8. Demo data: use the fixtures in tests/fixtures (Lasalgaon onion) and the
    figures in docs/master-prompt.md. Never invent different numbers; the
    deck and video use these exact figures.
-9. Motion (Evergreen): cubic-bezier(0.22,1,0.36,1). Screens enter with a
-   360ms rise (translateY 12px + fade); bottom sheets spring up over 440ms;
-   overlays fade 280ms behind a 4px backdrop blur; buttons scale to 0.96 on
-   press over 120ms; the deal-accept and payment-release fills stay a single
-   400ms left-to-right sweep; count-ups 800ms. Nothing loops or bounces.
-   Honour prefers-reduced-motion.
-   Note: demo/index.html predates this and keeps the earlier
-   cubic-bezier(0.2,0.8,0.2,1) doctrine throughout — see docs/CHANGELOG.md.
+9. Motion: ease-out cubic-bezier(0.2,0.8,0.2,1); 120ms taps, 400ms single
+   left-to-right Paan fill on deal-accept and payment-release, 800ms
+   count-ups. No other animation. Honour prefers-reduced-motion.
 10. TypeScript strict. Commit only when `npm run build` and tests pass.
     Conventional commits: feat(home): ..., fix(offline): ...
 11. Verdicts are never bare: every verdict badge opens a sheet with up to
@@ -55,25 +49,16 @@ optimises for that demo working offline on stage.
 13. After payment release, Money screen shows "extra earned vs harvest-day
     price" per lot and a season total.
 
-## Design tokens (locked) — "Evergreen"
-Supersedes the earlier Kanda maroon system (7 Sep 2026). Source of truth in code:
-src/tokens/theme.ts, pinned by tests/tokens.lock.test.js.
-
-Primary   #1E5A40 deep evergreen · pressed #154431 · tint #E3EFE7
-CTA/mic gradient  linear-gradient(180deg,#2A6E4F,#1E5A40 55%,#154732)
-Surfaces  page #F6F4ED warm ivory · card #FFFFFF · hairline rgba(34,30,23,.05)
-Ink       #221E17 · secondary #6A6154
-Semantic  gain/paid #1F7A46 emerald · hold/forecast #A87806 antique gold
-          (tint #F8F1DF) · danger/glut #B23A2A terracotta · offline #6B6B66
-Scrim     rgba(34,30,23,.45)
-Type: system stack (-apple-system, BlinkMacSystemFont, 'SF Pro Text', Mukta —
-Mukta carries Devanagari) · Tiro Devanagari Marathi for one-word verdicts only
-Hero price 72px/800, -0.035em tracking · tabular-nums on every ₹ · body min 13px
-Shape: 20px cards · 14-16px buttons · 10px chips/inputs · hairline borders
-Shadows: layered and soft — 0 1px 2px rgba(34,30,23,.04),
-         0 8-12px 24-32px rgba(34,30,23,.06-.08)
-Chrome: frosted tab bar rgba(255,255,255,.78) + blur(24px) saturate(1.8);
-        mic FAB uses the gradient plus an inset top highlight
+## Design tokens (locked)
+Kanda (primary)   #8C2F4A, tint #F3E3E8   CTAs, mic FAB, active nav
+Chuna (bg)        #F5F4EE, card #FFFFFF, line #D9D2C5
+Ink               #2B1F16, secondary #5C4A3C
+Paan (up/success) #1F7A46, tint #E4F0E8   price up, paid, sell verdict
+Haldi (hold/warn) #C98A0A, tint #FBF3E2   hold verdict, forecast band, escrow held
+Danger #B3261E · Offline #6B6B66 · Sawali (scrim) rgb(43 31 22 / 45%)
+Type: Mukta 400-800 (UI) · Tiro Devanagari Marathi (verdict words only)
+Body min 13px · price 72px · radius 6px buttons / 12px cards ·
+1px #D9D2C5 borders · hard bottom edge on Bhav card, no soft shadows.
 Hit targets >=56px, primary CTA 64px.
 
 ## Definition of done, every session
