@@ -38,6 +38,8 @@ export const color = {
   loss: '#B3261E',
   /** Dhool — offline banner, cached-data badge, stale chrome */
   offline: '#6B6B66',
+  /** Sawali — sheet and modal scrim. Mati at 45%, not a new hue. */
+  scrim: 'rgb(43 31 22 / 45%)',
 } as const
 
 export type ColorToken = keyof typeof color
@@ -102,10 +104,15 @@ export const size = {
 
 /** Two families only. Never add a third. */
 export const font = {
-  /** All UI. */
-  ui: "'Mukta', 'Noto Sans Devanagari', system-ui, sans-serif",
+  /**
+   * All UI. Self-hosted (src/styles/fonts.css) with font-display: swap, so the
+   * fallbacks below carry the first paint: Noto Sans Devanagari on Android,
+   * Nirmala UI on Windows, Kohinoor Devanagari on iOS and macOS.
+   */
+  ui: "'Mukta', 'Noto Sans Devanagari', 'Nirmala UI', 'Kohinoor Devanagari', system-ui, sans-serif",
   /** Verdict words only — reads like a chalk-written rate on a slate. */
-  verdict: "'Tiro Devanagari Marathi', 'Noto Serif Devanagari', Georgia, serif",
+  verdict:
+    "'Tiro Devanagari Marathi', 'Noto Serif Devanagari', 'Kohinoor Devanagari', Georgia, serif",
 } as const
 
 /** Type scale. [size, lineHeight, weight] */
@@ -123,18 +130,6 @@ export const type = {
 
 /** Smallest permitted body text anywhere. */
 export const minBodySize = '13px'
-
-/**
- * Sheet scrim. Not a new colour: the locked ink at reduced alpha. The token
- * table has no scrim value, and a bottom sheet (spec 6.3) needs one — flagged
- * for the token owner rather than invented.
- */
-export const scrim = withAlpha(color.ink, 0.45)
-
-function withAlpha(hex: string, alpha: number): string {
-  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16))
-  return `rgb(${r} ${g} ${b} / ${Math.round(alpha * 100)}%)`
-}
 
 export const motion = {
   ease: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
@@ -169,7 +164,6 @@ export function themeCss(): string {
     push(`fw-${kebab(k)}`, String(v.weight))
   }
   push('fs-min', minBodySize)
-  push('c-scrim', scrim)
 
   return `:root {\n${decl.join('\n')}\n}`
 }

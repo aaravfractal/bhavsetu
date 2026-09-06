@@ -55,7 +55,7 @@ Chuna (bg)        #F5F4EE, card #FFFFFF, line #D9D2C5
 Ink               #2B1F16, secondary #5C4A3C
 Paan (up/success) #1F7A46, tint #E4F0E8   price up, paid, sell verdict
 Haldi (hold/warn) #C98A0A, tint #FBF3E2   hold verdict, forecast band, escrow held
-Danger #B3261E · Offline #6B6B66
+Danger #B3261E · Offline #6B6B66 · Sawali (scrim) rgb(43 31 22 / 45%)
 Type: Mukta 400-800 (UI) · Tiro Devanagari Marathi (verdict words only)
 Body min 13px · price 72px · radius 6px buttons / 12px cards ·
 1px #D9D2C5 borders · hard bottom edge on Bhav card, no soft shadows.

@@ -49,7 +49,7 @@
   "deduction.bid": "TODO-mr: Bid",
   "deduction.transport": "TODO-mr: Transport",
   "deduction.cess": "TODO-mr: Cess",
-  "deduction.inHand": "TODO-mr: In hand (master prompt gives this as 'tumhala milel' — confirm the exact Marathi conjugation)",
+  "deduction.inHand": "TODO-mr: In hand",
   "money.seasonTotal": "TODO-mr: Received this season",
   "money.escrowNote": "माल पोहोचल्यावर पैसे तुम्हाला मिळतील",
   "money.received": "{amount} मिळाले",

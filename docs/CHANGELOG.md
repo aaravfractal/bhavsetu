@@ -28,15 +28,38 @@ and the suite runs on `node --test` including an SSR smoke render through Vite.
 TypeScript strict is now on. Build is green at **73.8 KB gzipped first load**
 (70.63 JS + 2.45 CSS + 0.71 HTML) against the 150 KB budget, 16 tests passing.
 
-Open items for the token owner and the native reviewer:
-- The token table has no scrim value; the sheet backdrop derives one from the locked
-  ink at 45% alpha rather than inventing a colour. Confirm or add a token.
-- The spec writes `₹2,100` in Latin digits inside a Marathi sentence while CLAUDE.md
-  rule 2 mandates Devanagari digits in mr/hi. Numbers are parameterised out of the
-  copy and formatted, so that line renders as `८ दिवसांनी ₹२,१०० पर्यंत जाईल`.
-- Fonts load from Google Fonts. They must be self-hosted as woff2 before the stage
-  demo (Session 11) so the app does not depend on the network for type.
-- 18 farmer-facing keys await native Marathi (the three verdict reasons, the money
-  math labels, the mic and speaker words, and the retry/close labels), plus 17 on the
-  dev-only gallery surface. The whole of `hi.json` awaits Hindi. `/gallery` lists
-  every one of them.
+All four open items from the first pass are now closed.
+
+**Sawali (scrim)** is approved at `rgb(43 31 22 / 45%)` and sits in the token table in
+both `theme.ts` and CLAUDE.md, with a lock test on the value.
+
+**Devanagari digits** stay as implemented: numbers are parameterised out of the copy
+and formatted, so the hold line renders `८ दिवसांनी ₹२,१०० पर्यंत जाईल`.
+
+**Type is now self-hosted.** Mukta 400-800 and Tiro Devanagari Marathi ship from
+`public/fonts` as woff2 (devanagari and latin subsets; latin-ext dropped, the app
+renders no accented Latin), declared in `src/styles/fonts.css` with
+`font-display: swap`, under the OFL bundled alongside. Nothing is preloaded on
+purpose — the reference user is on 2G and the 73.8 KB shell should paint before any
+font round-trip, carried by a fallback stack that names Noto Sans Devanagari,
+Nirmala UI and Kohinoor Devanagari so Android, Windows, iOS and macOS all have a real
+Devanagari face on first paint. Verified: the built output references **no external
+host at all**, and every one of the sixteen assets the page asks for resolves from
+our own origin. `tests/offline.assets.test.js` builds the app and holds that line.
+
+The cost is worth stating plainly: **the twelve faces total 727 KB**, dominated by the
+five Mukta Devanagari weights at ~100 KB each. Cached after the first visit and
+outside the bundle the 150 KB rule measures, but on 2G that is a slow first visit.
+The lever, if you want one, is the type table: dropping to three Mukta weights
+(400 / 700 / 800, folding bodyMr and dataLabel into them) would take it to about
+440 KB. That changes a locked table, so it is your call, not mine.
+
+**The 18 Marathi strings** are exported to `docs/marathi-review.md` as a
+WhatsApp-pasteable block, each with its English meaning and where it appears on
+screen — including the constraints that matter, like the mic and speaker words having
+to be one word inside a 72 px circle. `npm run marathi-review` regenerates it from
+`mr.json`, so it stays accurate as later sessions add strings.
+
+Still outstanding, both by design: the whole of `hi.json` awaits Hindi, and true
+airplane-mode offline needs the service worker and IndexedDB cache from Session 11 —
+self-hosting removes the third-party dependency, it does not yet cache our own origin.

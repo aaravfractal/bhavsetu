@@ -25,6 +25,9 @@ const LOCKED = {
   offline: '#6B6B66',
 }
 
+/** Approved 7 Sep 2026 as "Sawali (scrim)": Mati at 45%, not a new hue. */
+const SCRIM = 'rgb(43 31 22 / 45%)'
+
 const theme = readFileSync(join(ROOT, 'src/tokens/theme.ts'), 'utf8')
 
 test('theme.ts carries every locked colour, spelled exactly', () => {
@@ -35,6 +38,10 @@ test('theme.ts carries every locked colour, spelled exactly', () => {
       `theme.ts is missing or has changed colour token "${name}" (${hex})`,
     )
   }
+})
+
+test('the Sawali scrim is the approved value', () => {
+  assert.match(theme, new RegExp(`scrim:\\s*'${SCRIM.replace(/[()/]/g, '\\$&')}'`))
 })
 
 test('the verdict mapping never swaps', () => {

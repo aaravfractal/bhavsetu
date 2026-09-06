@@ -9,16 +9,8 @@
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="theme-color" content="#8C2F4A" />
 
-    <!-- Mukta does all UI; Tiro Devanagari Marathi is verdict words only.
-         TODO(Session 11): self-host both as woff2 so the stage demo does not
-         depend on fonts.gstatic.com. The fallback stack below keeps the app
-         fully readable with the network off. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Tiro+Devanagari+Marathi&display=swap"
-    />
+    <!-- Type is self-hosted from /fonts (see src/styles/fonts.css). The app
+         makes no third-party request at any point. -->
   </head>
   <body>
     <div id="root"></div>

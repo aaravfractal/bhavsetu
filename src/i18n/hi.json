@@ -49,7 +49,7 @@
   "deduction.bid": "TODO-hi: Bid",
   "deduction.transport": "TODO-hi: Transport",
   "deduction.cess": "TODO-hi: Cess",
-  "deduction.inHand": "TODO-hi: In hand (master prompt gives this as 'tumhala milel' in Marathi — needs the Hindi equivalent)",
+  "deduction.inHand": "TODO-hi: In hand",
   "money.seasonTotal": "TODO-hi: Received this season",
   "money.escrowNote": "TODO-hi: Released to you when delivery is confirmed",
   "money.received": "TODO-hi: {amount} received",

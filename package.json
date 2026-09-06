@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "test": "node --test tests/",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "marathi-review": "node scripts/marathi-review.mjs"
   },
   "dependencies": {
     "react": "^19.2.8",
