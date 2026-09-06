@@ -99,3 +99,39 @@ alone would leave Vercel's framework detection running a Vite build and deployin
 `dist` instead. 12 new tests cover the manifest, real icon dimensions, the meta tags,
 safe-area wiring, third-party isolation, asset existence, precache completeness, glyph
 coverage and the QR. 34 tests passing.
+
+## Session 2b — Demo motion pass (7 Sep 2026)
+
+Motion doctrine applied to `demo/index.html`: every animation either answers a tap or
+points at a price or a verdict, nothing loops or bounces, and the only animated
+properties are transform and opacity — a test walks every `transition` shorthand in
+the file and fails on anything that could trigger layout. All easing is the locked
+`cubic-bezier(0.2,0.8,0.2,1)`, including the JS count-ups, which solve the curve
+directly rather than approximating it; a second test asserts no other curve appears
+anywhere in the file.
+
+Home opens with the hero counting 0 → ₹1,850 over 800ms, its width locked to the final
+string first so tabular figures never reflow the card, then the sparkline history draws
+over 700ms, the forecast reveals dashed through a clipped scale over 500ms, the ±110
+band fades over 300ms, and the verdict lands as a hard cut 100ms later — 1.6s total,
+which is the "2-second reveal" the presenter note now tells the speaker to wait out.
+The chart stages volume bars up from their baseline at 15ms stagger, candles scaling
+in at 20ms, average lines drawing through a clip over 600ms and the forecast band last,
+finishing at 1.55s. Tab changes slide the incoming view 24px in the direction of nav
+travel; sheets keep their 300ms slide and gain a 150ms scrim fade, with the three
+reasons landing at 80ms stagger behind a verdict that compresses to 0.97 under the
+thumb before the sheet opens. Money's escrow lock pulses Haldi twice and stops. Going
+offline desaturates the chrome over 300ms and slides the banner down inside its own
+clip so only a transform animates; coming back reverses it and toasts
+"नेटवर्क परत आले · ताजी माहिती घेतली" for 2s. The two 400ms Paan fills on deal-accept
+and payment-release are untouched, as instructed, and a test pins them.
+
+`prefers-reduced-motion` zeroes four duration tokens in one place and every JS sequence
+checks the same query and jumps to its final state. Added code is 2.92 KB gzipped
+(9.31 KB raw, mostly comments) against the 6 KB budget, still a single dependency-free
+file. Fonts were re-subset for the new toast string. 44 tests passing.
+
+One thing left alone and worth flagging: the voice sheet's listening waveform loops
+infinitely. It is pre-existing and it means "still recording", so silencing it would
+cost the screen its meaning — but it is the one loop in the file, and the motion test
+pins it as the only permitted one so nothing else can join it.

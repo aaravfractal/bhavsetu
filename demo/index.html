@@ -47,6 +47,7 @@
   /* Safe-area insets. Zero inside the desktop phone frame, real values only
      in the mobile layout, so the two modes share one set of rules. */
   --sat:0px; --sab:0px;
+  --t-fast:120ms; --t-view:200ms; --t-scrim:150ms; --t-slow:300ms;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
@@ -172,8 +173,53 @@ svg text{font-family:var(--mukta)}
   .scrim,.sheet{border-radius:0}
   .sheet{border-radius:20px 20px 0 0}
 }
-@media (prefers-reduced-motion:reduce){*{transition-duration:0s!important;animation:none!important}}
+@media (prefers-reduced-motion:reduce){
+  :root{--t-fast:0s;--t-view:0s;--t-scrim:0s;--t-slow:0s}
+  *{transition-duration:0s!important;animation:none!important}
+}
 .hidden{display:none!important}
+
+/* ---------------- motion ----------------
+   Every animation below either answers a tap or points at a price or a verdict.
+   Nothing loops, nothing bounces, and only transform and opacity are animated,
+   so none of it can trigger layout on a mid-range Android. */
+
+/* touch feedback: 120ms press on anything tappable */
+.cta,.fab,nav button,.stepper button,.panel button,.mandi,.bid,.hold,.verdict,#chan button{
+  transition:transform var(--t-fast) var(--ease),background-color var(--t-fast) var(--ease)}
+.cta:active,.fab:active,nav button:active,.stepper button:active,
+.mandi:active,.bid:active,.hold:active,#chan button:active{transform:scale(.97)}
+.cta.sub:active,.stepper button:active,.mandi:active,.bid:active,#chan button:active{background:var(--kanda-soft)}
+
+/* view transitions: incoming view slides 24px in the direction of nav travel */
+.view{will-change:auto}
+
+/* sheets: scrim fades in 150ms, panel settles without overshoot */
+.scrim{transition:opacity var(--t-scrim) var(--ease)}
+.sheet .reason{opacity:1}
+.sheet.staged .reason{opacity:0;transform:translateY(8px)}
+
+/* sparkline reveal */
+#spark #fcRect{transform-box:fill-box;transform-origin:left center}
+
+/* chart reveal */
+#chart .cvol{transform-box:fill-box;transform-origin:50% 100%}
+#chart .ccandle{transform-box:fill-box;transform-origin:50% 50%}
+#chart #avgRect{transform-box:fill-box;transform-origin:left center}
+
+/* escrow lock: two gentle Haldi pulses when Money first opens, then it stops */
+.lockpulse{display:inline-block;position:relative}
+.lockpulse::before{content:'';position:absolute;left:50%;top:50%;width:24px;height:24px;
+  margin:-12px 0 0 -12px;border-radius:999px;background:var(--haldi);opacity:0;pointer-events:none}
+.lockpulse.on::before{animation:lockp 1s var(--ease) 2}
+@keyframes lockp{from{transform:scale(.55);opacity:.4}to{transform:scale(1.75);opacity:0}}
+
+/* offline banner slides down inside its own clip; the row height snaps, only
+   the transform animates */
+.offline-banner{overflow:hidden}
+.offline-banner i{display:block;font-style:normal;transform:translateY(-140%);
+  transition:transform var(--t-slow) var(--ease)}
+.offline-in .offline-banner i{transform:none}
 </style>
 </head>
 <body>
@@ -183,7 +229,7 @@ svg text{font-family:var(--mukta)}
     <div><h1 id="greet">नमस्कार राजू</h1><div class="en">Hello Raju · Niphad, Nashik</div></div>
     <div class="offline-pill">ऑफलाइन</div>
   </header>
-  <div class="offline-banner">नेटवर्क नाही. काल सकाळी ११ ची माहिती. <span class="en" style="color:#eee">No network · showing yesterday 11 am</span></div>
+  <div class="offline-banner"><i>नेटवर्क नाही. काल सकाळी ११ ची माहिती. <span class="en" style="color:#eee">No network · showing yesterday 11 am</span></i></div>
 
   <main>
     <!-- HOME -->
@@ -194,7 +240,7 @@ svg text{font-family:var(--mukta)}
         <div class="mrsub">प्रति क्विंटल · आज <span class="en">per quintal · today</span></div>
         <div class="delta">▲ ₹120 कालपेक्षा</div>
         <svg id="spark" viewBox="0 0 300 70" style="width:100%;margin:10px 0 4px"></svg>
-        <div class="verdict" onclick="openSheet('reasons')">थांबा<small>८ दिवसांनी ₹2,100 पर्यंत · Hold, ₹2,100 in 8 days · का? टॅप करा</small></div>
+        <div class="verdict" onclick="tapVerdict()">थांबा<small>८ दिवसांनी ₹2,100 पर्यंत · Hold, ₹2,100 in 8 days · का? टॅप करा</small></div>
         <button class="cta" onclick="openSheet('voice')">पूर्ण माहिती ऐका · Hear details</button>
       </div>
 
@@ -216,7 +262,7 @@ svg text{font-family:var(--mukta)}
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:start">
           <div><b style="font-size:16px">भाव चार्ट · कांदा, लासलगाव</b><div class="en">30 days + 14-day forecast</div></div>
-          <div class="verdict" style="font-size:22px" onclick="openSheet('reasons')">थांबा</div>
+          <div class="verdict" style="font-size:22px" onclick="tapVerdict()">थांबा</div>
         </div>
         <svg id="chart" viewBox="0 0 340 210" style="width:100%;margin-top:8px"></svg>
         <div class="legend">
@@ -331,7 +377,7 @@ svg text{font-family:var(--mukta)}
       <div class="card escrow" style="margin-top:14px" id="escrowcard">
         <div class="fillbar" id="fillbar"></div>
         <div style="display:flex;justify-content:space-between;align-items:center">
-          <b style="font-size:15px" id="esctitle">🔒 पैसे रोखले · ₹1,58,100</b>
+          <b style="font-size:15px" id="esctitle"><span class="lockpulse" id="lockpulse">🔒</span> पैसे रोखले · ₹1,58,100</b>
           <span class="statuspill" id="escpill">पैसे रोखले</span>
         </div>
         <div class="mrsub" style="margin-top:6px">सह्याद्री एक्स्पोर्ट्स · 77 क्विं. · माल पोहोचल्यावर पैसे तुम्हाला</div>
@@ -403,13 +449,44 @@ svg text{font-family:var(--mukta)}
     <div id="qrbox"></div>
     <div class="qrurl" id="qrurl"></div>
   </div>
-  <div class="note">Order for Wednesday: Home → tap थांबा (reasons) → mic → chart → calc → lots → buyers → hold-to-accept → Money → deliver. Fixtures = Lasalgaon Sep 2026, same numbers as the deck.</div>
+  <div class="note">Order for Wednesday: let Home finish its 2-second reveal before speaking → tap थांबा (reasons) → mic → chart → calc → lots → buyers → hold-to-accept → Money → deliver. Fixtures = Lasalgaon Sep 2026, same numbers as the deck.</div>
 </div>
 
 <script>
 // ---------- fixtures ----------
 const hist=[1640,1690,1720,1700,1730,1780,1850];
 const fc=[1880,1920,1960,2010,2050,2080,2100,2110,2090,2060];
+
+// ---------- motion ----------
+// One doctrine: an animation either answers a tap or points at a price or a
+// verdict. Nothing loops, nothing bounces, transform and opacity only.
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const EASE_PTS=[.2,.8,.2,1];                       // the locked ease-out
+function ease(t){                                   // solve x(u)=t, return y(u)
+  const[x1,y1,x2,y2]=EASE_PTS;let lo=0,hi=1,u=t;
+  for(let i=0;i<18;i++){u=(lo+hi)/2;
+    const x=3*(1-u)*(1-u)*u*x1+3*(1-u)*u*u*x2+u*u*u;
+    x<t?lo=u:hi=u}
+  return 3*(1-u)*(1-u)*u*y1+3*(1-u)*u*u*y2+u*u*u;
+}
+const inr=n=>'₹'+n.toLocaleString('en-IN');
+// Counts a figure up without letting the box reflow: the width is locked to the
+// final string first, and tabular-nums keeps every digit the same width.
+function countUp(el,from,to,ms,fmt){
+  fmt=fmt||inr;
+  if(reduced){el.textContent=fmt(to);return}
+  el.style.display='inline-block';
+  el.textContent=fmt(to);
+  el.style.minWidth=el.getBoundingClientRect().width+'px';
+  el.style.willChange='contents';
+  const t0=performance.now();
+  (function step(now){
+    const p=Math.min(1,(now-t0)/ms);
+    el.textContent=fmt(Math.round(from+(to-from)*ease(p)));
+    if(p<1)requestAnimationFrame(step);else el.style.willChange='';
+  })(t0);
+}
+function after(ms,fn){setTimeout(fn,reduced?0:ms)}
 
 // ---------- sparkline ----------
 (function(){
@@ -420,10 +497,21 @@ const fc=[1880,1920,1960,2010,2050,2080,2100,2110,2090,2060];
   [...fc].reverse().forEach((v,i)=>{band+=`${x(6+fc.length-i)},${y(v+110)} `});
   hist.forEach((v,i)=>{hp+=`${i?'L':'M'}${x(i)},${y(v)}`});
   fp=`M${x(6)},${y(1850)}`; fc.forEach((v,i)=>{fp+=`L${x(7+i)},${y(v)}`});
-  s.innerHTML=`<polygon points="${band}" fill="#C98A0A" opacity=".16"/>
-    <path d="${hp}" fill="none" stroke="#2B1F16" stroke-width="2.5"/>
-    <path d="${fp}" fill="none" stroke="#C98A0A" stroke-width="2.5" stroke-dasharray="5 4"/>
-    <circle cx="${x(6)}" cy="${y(1850)}" r="3.5" fill="#2B1F16"/>`;
+  s.innerHTML=`<defs><clipPath id="fcClip"><rect id="fcRect" x="${x(6)}" y="0" width="${W-x(6)}" height="${H}"/></clipPath></defs>
+    <polygon id="sparkBand" points="${band}" fill="#C98A0A" opacity=".16"/>
+    <path id="sparkHist" d="${hp}" fill="none" stroke="#2B1F16" stroke-width="2.5"/>
+    <g clip-path="url(#fcClip)"><path d="${fp}" fill="none" stroke="#C98A0A" stroke-width="2.5" stroke-dasharray="5 4"/></g>
+    <circle id="sparkDot" cx="${x(6)}" cy="${y(1850)}" r="3.5" fill="#2B1F16"/>`;
+  // Pre-state is set synchronously, before the first paint, so the reveal never
+  // flashes its finished frame.
+  if(!reduced){
+    const h=document.getElementById('sparkHist'),L=h.getTotalLength();
+    h.style.strokeDasharray=L;h.style.strokeDashoffset=L;
+    document.getElementById('fcRect').style.transform='scaleX(0)';
+    document.getElementById('sparkBand').style.opacity='0';
+    document.getElementById('sparkDot').style.opacity='0';
+    document.querySelector('#v-home .verdict').style.visibility='hidden';
+  }
 })();
 
 // ---------- candlestick chart ----------
@@ -437,45 +525,140 @@ const fc=[1880,1920,1960,2010,2050,2080,2100,2110,2090,2060];
   // gridlines + labels
   [1500,1700,1900,2100].forEach(v=>{g+=`<line x1="${padL}" y1="${yy(v)}" x2="${W}" y2="${yy(v)}" stroke="#D9D2C5" stroke-width=".6"/><text x="2" y="${yy(v)+3}" font-size="8" fill="#5C4A3C">${v}</text>`});
   // volume
-  closes.forEach((c,i)=>{const vh=vols[i]*.28;g+=`<rect x="${padL+i*cw+1}" y="${205-vh}" width="${cw-2}" height="${vh}" fill="#D9D2C5"/>`});
+  closes.forEach((c,i)=>{const vh=vols[i]*.28;g+=`<rect class="cvol" x="${padL+i*cw+1}" y="${205-vh}" width="${cw-2}" height="${vh}" fill="#D9D2C5"/>`});
   // candles
   closes.forEach((c,i)=>{
     const o=i?closes[i-1]:1570, up=c>=o, col=up?'#1F7A46':'#B3261E';
     const hi=Math.max(o,c)+18, lo=Math.min(o,c)-18, X=padL+i*cw+cw/2;
-    g+=`<line x1="${X}" y1="${yy(hi)}" x2="${X}" y2="${yy(lo)}" stroke="${col}" stroke-width="1"/>
-        <rect x="${padL+i*cw+1}" y="${yy(Math.max(o,c))}" width="${cw-2}" height="${Math.max(2,Math.abs(yy(o)-yy(c)))}" fill="${col}"/>`;
+    g+=`<g class="ccandle"><line x1="${X}" y1="${yy(hi)}" x2="${X}" y2="${yy(lo)}" stroke="${col}" stroke-width="1"/>
+        <rect x="${padL+i*cw+1}" y="${yy(Math.max(o,c))}" width="${cw-2}" height="${Math.max(2,Math.abs(yy(o)-yy(c)))}" fill="${col}"/></g>`;
   });
   // 30d + 7d averages
   const avg=(arr,n)=>arr.map((_,i)=>{const s=arr.slice(Math.max(0,i-n+1),i+1);return s.reduce((a,b)=>a+b)/s.length});
   const a30=avg(closes,30),a7=avg(closes,7);
   const line=(arr,col,dash)=>{let p='';arr.forEach((v,i)=>{p+=`${i?'L':'M'}${padL+i*cw+cw/2},${yy(v)}`});return `<path d="${p}" fill="none" stroke="${col}" stroke-width="1.5" ${dash?`stroke-dasharray="3 3"`:''}/>`};
-  g+=line(a30,'#5C4A3C')+line(a7,'#8C2F4A',1);
+  g+=`<defs><clipPath id="avgClip"><rect id="avgRect" x="${padL}" y="0" width="${W-padL}" height="210"/></clipPath></defs><g clip-path="url(#avgClip)">`
+     +line(a30,'#5C4A3C')+line(a7,'#8C2F4A',1)+`</g>`;
   // forecast band + line
   const fx=i=>padL+(30+i)*(cw*0.72);
   let bp='';fc.forEach((v,i)=>{bp+=`${fx(i+1)},${yy(v-110)} `});[...fc].reverse().forEach((v,i)=>{bp+=`${fx(fc.length-i)},${yy(v+110)} `});
-  g+=`<polygon points="${bp}" fill="#C98A0A" opacity=".18"/>`;
   let fp2=`M${padL+29*cw+cw/2},${yy(1850)}`;fc.forEach((v,i)=>{fp2+=`L${fx(i+1)},${yy(v)}`});
-  g+=`<path d="${fp2}" fill="none" stroke="#C98A0A" stroke-width="2" stroke-dasharray="5 4"/>`;
+  g+=`<g class="cfore"><polygon points="${bp}" fill="#C98A0A" opacity=".18"/>`
+     +`<path d="${fp2}" fill="none" stroke="#C98A0A" stroke-width="2" stroke-dasharray="5 4"/></g>`;
   g+=`<line x1="${padL+29*cw+cw}" y1="8" x2="${padL+29*cw+cw}" y2="205" stroke="#5C4A3C" stroke-width=".7" stroke-dasharray="2 3"/><text x="${padL+29*cw+cw-8}" y="7" font-size="8" fill="#5C4A3C">आज</text>`;
   document.getElementById('chart').innerHTML=g;
 })();
 
 // ---------- nav ----------
+const ORDER=['home','calc','lots','buyers','money'];
+let curView='home';
 function go(v){
+  if(v===curView)return;
+  const from=ORDER.indexOf(curView),to=ORDER.indexOf(v);
+  const dir=(from<0||to<0)?1:(to>from?1:-1);   // travel direction along the nav
   document.querySelectorAll('.view').forEach(s=>s.classList.remove('active'));
-  document.getElementById('v-'+v).classList.add('active');
+  const el=document.getElementById('v-'+v);
+  el.classList.add('active');
   document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
   document.querySelector('main').scrollTop=0;
+  curView=v;
+  if(!reduced){
+    el.style.transition='none';
+    el.style.transform='translateX('+(24*dir)+'px)';
+    el.style.opacity='0';
+    el.style.willChange='transform,opacity';
+    requestAnimationFrame(()=>{
+      el.style.transition='transform var(--t-view) var(--ease),opacity var(--t-view) var(--ease)';
+      el.style.transform='none';el.style.opacity='1';
+      setTimeout(()=>{el.style.willChange='';el.style.transition='';el.style.transform='';el.style.opacity=''},260);
+    });
+  }
+  if(v==='chart')revealChart();
+  if(v==='money')pulseEscrow();
+}
+
+// ---------- home reveal: price, then the line, then the verdict ----------
+// Runs once per visit to the app, not on every return to the tab — a demo
+// shouldn't replay its opening each time the presenter comes back.
+let homeDone=false;
+function revealHome(){
+  if(homeDone)return;homeDone=true;
+  const price=document.querySelector('#v-home .bhav .price');
+  const hist=document.getElementById('sparkHist'),fcR=document.getElementById('fcRect'),
+        band=document.getElementById('sparkBand'),dot=document.getElementById('sparkDot'),
+        verdict=document.querySelector('#v-home .verdict');
+  countUp(price,0,1850,800);
+  if(reduced){verdict.style.visibility='';return}
+  hist.style.transition='stroke-dashoffset 700ms var(--ease)';
+  requestAnimationFrame(()=>{hist.style.strokeDashoffset='0'});
+  after(700,()=>{
+    fcR.style.transition='transform 500ms var(--ease)';fcR.style.transform='none';
+  });
+  after(1200,()=>{band.style.transition='opacity 300ms var(--ease)';band.style.opacity='.16';
+    dot.style.transition='opacity 300ms var(--ease)';dot.style.opacity='1'});
+  after(1600,()=>{verdict.style.visibility=''});   // hard cut, no fade
+}
+
+// ---------- chart reveal: volume, candles, averages, forecast ----------
+let chartDone=false;
+function revealChart(){
+  if(chartDone)return;chartDone=true;
+  const c=document.getElementById('chart');
+  const vol=c.querySelectorAll('.cvol'),cand=c.querySelectorAll('.ccandle'),
+        avg=c.querySelector('#avgRect'),fore=c.querySelector('.cfore');
+  if(reduced)return;
+  vol.forEach((el,i)=>{el.style.transform='scaleY(0)';
+    el.style.transition='transform 220ms var(--ease) '+(i*15)+'ms'});
+  cand.forEach((el,i)=>{el.style.transform='scale(0)';
+    el.style.transition='transform 220ms var(--ease) '+(250+i*20)+'ms'});
+  avg.style.transform='scaleX(0)';
+  avg.style.transition='transform 600ms var(--ease) 850ms';
+  fore.style.opacity='0';
+  fore.style.transition='opacity 250ms var(--ease) 1300ms';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    vol.forEach(el=>el.style.transform='none');
+    cand.forEach(el=>el.style.transform='none');
+    avg.style.transform='none';fore.style.opacity='1';
+  }));
+  after(1600,()=>{[...vol,...cand,avg,fore].forEach(el=>{el.style.transition='';el.style.willChange=''})});
+}
+
+// ---------- escrow lock: two Haldi pulses, foreshadowing the release ----------
+let pulsed=false;
+function pulseEscrow(){
+  if(pulsed||reduced)return;pulsed=true;
+  const el=document.getElementById('lockpulse');
+  if(!el)return;
+  el.classList.add('on');
+  after(2100,()=>el.classList.remove('on'));
 }
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.v));
 
 // ---------- sheets ----------
 function openSheet(id){
   closeSheets();
+  const sheet=document.getElementById('sh-'+id);
   document.getElementById('scrim').classList.add('open');
-  document.getElementById('sh-'+id).classList.add('open');
+  if(id==='reasons'&&!reduced){
+    // Each reason lands 80ms after the one above it.
+    const rs=sheet.querySelectorAll('.reason');
+    sheet.classList.add('staged');
+    rs.forEach(r=>{r.style.transition='none';r.style.opacity='0';r.style.transform='translateY(8px)'});
+    sheet.classList.add('open');
+    requestAnimationFrame(()=>{
+      sheet.classList.remove('staged');
+      rs.forEach((r,i)=>{
+        r.style.transition='opacity 220ms var(--ease) '+(120+i*80)+'ms,transform 220ms var(--ease) '+(120+i*80)+'ms';
+        r.style.opacity='1';r.style.transform='none';
+      });
+    });
+  }else{
+    sheet.classList.add('open');
+  }
   if(id==='voice'){const w=document.getElementById('wave');w.innerHTML='';for(let i=0;i<26;i++){const b=document.createElement('i');b.style.animationDelay=(i*0.05)+'s';w.appendChild(b);}}
 }
+// The verdict compresses under the thumb before its reasons arrive.
+function tapVerdict(){after(120,()=>openSheet('reasons'))}
 function closeSheets(){
   document.getElementById('scrim').classList.remove('open');
   document.querySelectorAll('.sheet').forEach(s=>s.classList.remove('open'));
@@ -525,14 +708,31 @@ function deliver(){
   setTimeout(()=>{
     document.getElementById('esctitle').textContent='✓ पैसे मिळाले · ₹1,58,100';
     const p=document.getElementById('escpill');p.textContent='पैसे मिळाले';p.className='statuspill paid';
-    document.getElementById('season').textContent='₹5,70,700';
+    countUp(document.getElementById('season'),412600,570700,800);
     document.getElementById('earned').classList.remove('hidden');
+    countUp(document.querySelector('#earned .price'),0,4000,800,n=>'+ '+inr(n));
     toast('₹1,58,100 मिळाले ✓');
   },450);
 }
 
 // ---------- offline ----------
-function toggleOffline(){document.body.classList.toggle('offline-mode')}
+function toggleOffline(){
+  const b=document.body;
+  if(!b.classList.contains('offline-mode')){
+    b.classList.add('offline-mode');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>b.classList.add('offline-in')));
+  }else{
+    b.classList.remove('offline-in');
+    after(300,()=>{
+      b.classList.remove('offline-mode');
+      toast('नेटवर्क परत आले · ताजी माहिती घेतली',2000);
+    });
+  }
+}
+
+// Wait for the real face before locking the price width, but never let a slow
+// font hold the reveal hostage.
+Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,500))]).then(revealHome);
 
 // ---------- QR for the presenter panel ----------
 // Byte mode, ECC level L, versions 1-5 (single data block), auto mask.
@@ -646,7 +846,7 @@ if('serviceWorker' in navigator){
 
 // ---------- toast ----------
 let tt;
-function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2600)}
+function toast(m,ms){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),ms||2600)}
 </script>
 </body>
 </html>
