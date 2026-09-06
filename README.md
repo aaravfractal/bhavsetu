@@ -1,32 +1,33 @@
-# React + TypeScript + Vite
+# BhavSetu
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Marathi voice-first price discovery and market linkage for Maharashtra onion
+farmers. SIH 2026 entry, Government of Maharashtra, Software category.
+Team Fractal Verse, GEHU Dehradun.
 
-Currently, two official plugins are available:
+भाव कळेल. बाजार मिळेल. पैसे मिळतील. — Know the price. Reach the buyer. Get paid.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Run it
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```
+npm install
+npm run dev        # http://localhost:5173
+npm run build      # tsc -b && vite build
+npm test           # node --test, no runner dependency
+npm run lint
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+`/gallery` renders every locked token and shared component in all three
+locales, with a strings table showing what still needs native review.
+
+## Read before changing anything
+
+| File | What it settles |
+|---|---|
+| `CLAUDE.md` | Hard rules and the locked token table |
+| `docs/frontend-spec.md` | Screen-by-screen layout, copy and states |
+| `docs/master-prompt.md` | Product context, feature tiers, demo figures |
+| `docs/roadmap.md` | Session order and locked decisions |
+| `docs/data_sources.md` | API findings from Session 1 |
+| `docs/CHANGELOG.md` | What each session shipped |
+
+Full submission README lands in Session 13.

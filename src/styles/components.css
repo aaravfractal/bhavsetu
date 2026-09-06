@@ -1,0 +1,448 @@
+/* Shared component styles. Tokens only — see src/tokens/theme.ts. */
+
+/* ---------- Button ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-s);
+  min-height: var(--sz-tap);
+  padding: 0 var(--sp-l);
+  border: 1px solid transparent;
+  border-radius: var(--r-s);
+  font-weight: 700;
+  font-size: var(--fs-body-mr);
+  line-height: var(--lh-body-mr);
+  cursor: pointer;
+  transition: background-color var(--mo-fast) var(--mo-ease),
+    color var(--mo-fast) var(--mo-ease);
+}
+
+.btn--primary {
+  height: var(--sz-cta);
+  background: var(--c-primary);
+  color: var(--c-surface);
+}
+
+.btn--secondary {
+  background: transparent;
+  border-color: var(--c-ink);
+  color: var(--c-ink);
+}
+
+.btn--quiet {
+  background: transparent;
+  border-color: var(--c-line);
+  color: var(--c-ink);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ---------- Card ---------- */
+.card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-m);
+  padding: var(--sp-m);
+  box-shadow: var(--el-card);
+}
+
+/* The one bold element: a hard bottom edge, like a chalked mandi slate. */
+.card--bhav {
+  box-shadow: var(--el-bhav);
+  padding: var(--sp-l);
+}
+
+.card--accent-gain {
+  border-left: 4px solid var(--c-gain);
+}
+
+.card--accent-loss {
+  border-left: 4px solid var(--c-loss);
+}
+
+/* ---------- VerdictBadge ---------- */
+.verdict {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-s);
+  min-height: var(--sz-tap);
+  padding: var(--sp-s) var(--sp-m);
+  background: transparent;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  transition: background-color var(--mo-fast) var(--mo-ease);
+}
+
+.verdict__word {
+  font-family: var(--ff-verdict);
+  font-size: var(--fs-verdict);
+  line-height: var(--lh-verdict);
+  font-weight: var(--fw-verdict);
+  color: var(--verdict-c);
+}
+
+.verdict__hint {
+  font-size: var(--fs-data-label);
+  line-height: var(--lh-data-label);
+  font-weight: var(--fw-data-label);
+  color: var(--c-ink2);
+}
+
+.verdict--sell {
+  --verdict-c: var(--c-verdict-sell);
+  background: var(--c-gain-soft);
+  border-color: var(--c-gain-soft);
+}
+
+.verdict--hold {
+  --verdict-c: var(--c-verdict-hold);
+  background: var(--c-price-soft);
+  border-color: var(--c-price-soft);
+}
+
+.verdict--warn {
+  --verdict-c: var(--c-verdict-warn);
+  background: var(--c-primary-soft);
+  border-color: var(--c-primary-soft);
+}
+
+.verdict__chevron {
+  width: var(--sz-icon-small);
+  height: var(--sz-icon-small);
+  flex: none;
+  color: var(--verdict-c);
+}
+
+/* ---------- Sheet ---------- */
+.sheet__scrim {
+  position: fixed;
+  inset: 0;
+  background: var(--c-scrim);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 40;
+}
+
+.sheet {
+  width: 100%;
+  max-width: var(--sz-frame-w);
+  max-height: 82vh;
+  overflow-y: auto;
+  background: var(--c-surface);
+  border-radius: var(--r-m) var(--r-m) 0 0;
+  padding: var(--sp-l) var(--sp-screen) var(--sp-xl);
+}
+
+.sheet__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-m);
+  margin-bottom: var(--sp-m);
+}
+
+.sheet__grip {
+  width: 44px;
+  height: var(--sp-xs);
+  border-radius: var(--r-pill);
+  background: var(--c-line);
+  margin: 0 auto var(--sp-m);
+}
+
+.sheet__close {
+  min-width: var(--sz-tap);
+  min-height: var(--sz-tap);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-s);
+  cursor: pointer;
+  flex: none;
+}
+
+/* ---------- Reasons list (rule 11: a verdict is never bare) ---------- */
+.reasons {
+  display: grid;
+  gap: var(--sp-s);
+}
+
+.reasons__item {
+  display: flex;
+  gap: var(--sp-m);
+  align-items: flex-start;
+  padding: var(--sp-m);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-s);
+}
+
+.reasons__marker {
+  flex: none;
+  width: var(--sp-s);
+  height: var(--sp-s);
+  margin-top: 10px;
+  border-radius: var(--r-pill);
+  background: var(--verdict-c, var(--c-ink2));
+}
+
+/* ---------- StatusPill ---------- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  padding: var(--sp-s) var(--sp-m);
+  border-radius: var(--r-pill);
+  font-size: var(--fs-data-label);
+  line-height: var(--lh-data-label);
+  font-weight: var(--fw-data-label);
+  background: var(--c-bg);
+  color: var(--c-ink);
+  border: 1px solid var(--c-line);
+}
+
+.pill--gain {
+  background: var(--c-gain-soft);
+  border-color: var(--c-gain-soft);
+  color: var(--c-gain);
+}
+
+.pill--price {
+  background: var(--c-price-soft);
+  border-color: var(--c-price-soft);
+  color: var(--c-price);
+}
+
+.pill--primary {
+  background: var(--c-primary-soft);
+  border-color: var(--c-primary-soft);
+  color: var(--c-primary);
+}
+
+.pill--offline {
+  background: var(--c-surface);
+  border-color: var(--c-offline);
+  color: var(--c-offline);
+}
+
+/* ---------- Chip ---------- */
+.chip {
+  min-height: var(--sz-tap);
+  padding: 0 var(--sp-l);
+  border-radius: var(--r-s);
+  border: 1px solid var(--c-line);
+  background: var(--c-surface);
+  color: var(--c-ink);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--mo-fast) var(--mo-ease);
+}
+
+.chip[aria-pressed='true'] {
+  background: var(--c-primary-soft);
+  border-color: var(--c-primary);
+  color: var(--c-primary);
+}
+
+/* ---------- TrustBar ---------- */
+.trust {
+  display: grid;
+  gap: var(--sp-s);
+}
+
+.trust__track {
+  display: flex;
+  gap: var(--sp-xs);
+}
+
+.trust__seg {
+  height: var(--sp-s);
+  flex: 1;
+  background: var(--c-line);
+}
+
+.trust__seg--on {
+  background: var(--c-gain);
+}
+
+.trust__reason {
+  font-size: var(--fs-data-label);
+  line-height: var(--lh-data-label);
+  font-weight: var(--fw-data-label);
+  color: var(--c-ink2);
+}
+
+.trust__reason--warn {
+  color: var(--c-price);
+}
+
+/* ---------- Stepper ---------- */
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-m);
+}
+
+.stepper__btn {
+  width: var(--sz-tap);
+  height: var(--sz-tap);
+  flex: none;
+  border: 1px solid var(--c-ink);
+  border-radius: var(--r-s);
+  background: var(--c-surface);
+  color: var(--c-ink);
+  font-size: var(--sz-icon);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.stepper__value {
+  flex: 1;
+  text-align: center;
+  font-size: var(--fs-price-desktop);
+  line-height: var(--lh-price-desktop);
+  font-weight: var(--fw-price-desktop);
+}
+
+.stepper__unit {
+  font-size: var(--fs-data-label);
+  font-weight: var(--fw-data-label);
+  color: var(--c-ink2);
+}
+
+/* ---------- OfflinePill / banner ---------- */
+.offline-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-s);
+  padding: var(--sp-m);
+  border-radius: var(--r-s);
+  background: var(--c-surface);
+  border: 1px solid var(--c-offline);
+  color: var(--c-offline);
+  font-size: var(--fs-data-label);
+  line-height: var(--lh-data-label);
+  font-weight: var(--fw-data-label);
+}
+
+/* ---------- BottomNav ---------- */
+.bottomnav {
+  display: flex;
+  background: var(--c-surface);
+  border-top: 1px solid var(--c-line);
+}
+
+.bottomnav__item {
+  flex: 1;
+  min-height: var(--sz-tap);
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 2px;
+  padding: var(--sp-s) 0;
+  background: transparent;
+  border: 0;
+  color: var(--c-ink2);
+  cursor: pointer;
+}
+
+/* Every icon has a Marathi word under it. No icon stands alone. */
+.bottomnav__word {
+  font-size: var(--fs-min);
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.bottomnav__item[aria-current='page'] {
+  color: var(--c-primary);
+}
+
+.bottomnav__icon {
+  width: var(--sz-icon);
+  height: var(--sz-icon);
+}
+
+/* ---------- MicFAB ---------- */
+.micfab {
+  width: var(--sz-mic);
+  height: var(--sz-mic);
+  border-radius: var(--r-pill);
+  border: 3px solid var(--c-surface);
+  background: var(--c-primary);
+  color: var(--c-surface);
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 1px;
+  cursor: pointer;
+  transition: transform var(--mo-fast) var(--mo-ease);
+}
+
+.micfab:active {
+  transform: scale(0.96);
+}
+
+.micfab__word {
+  font-size: var(--fs-min);
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+/* ---------- SpeakerButton ---------- */
+.speaker {
+  min-width: var(--sz-tap);
+  min-height: var(--sz-tap);
+  display: inline-grid;
+  justify-items: center;
+  align-content: center;
+  gap: 1px;
+  background: transparent;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-s);
+  color: var(--c-ink);
+  cursor: pointer;
+}
+
+.speaker__word {
+  font-size: var(--fs-min);
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+/* ---------- Paan confirm fill (deal accept, payment release) ---------- */
+.fill {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.fill::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--c-gain-soft);
+  transform: scaleX(0);
+  transform-origin: left center;
+  z-index: -1;
+}
+
+.fill--on::before {
+  animation: paan-fill var(--mo-confirm) var(--mo-ease) forwards;
+}
+
+@keyframes paan-fill {
+  to {
+    transform: scaleX(1);
+  }
+}

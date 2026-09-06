@@ -1,10 +1,24 @@
 <!doctype html>
-<html lang="en">
+<html lang="mr">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>BhavSetu</title>
+    <meta name="description" content="भाव कळेल. बाजार मिळेल. पैसे मिळतील." />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>bhavsetu</title>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#8C2F4A" />
+
+    <!-- Mukta does all UI; Tiro Devanagari Marathi is verdict words only.
+         TODO(Session 11): self-host both as woff2 so the stage demo does not
+         depend on fonts.gstatic.com. The fallback stack below keeps the app
+         fully readable with the network off. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Tiro+Devanagari+Marathi&display=swap"
+    />
   </head>
   <body>
     <div id="root"></div>

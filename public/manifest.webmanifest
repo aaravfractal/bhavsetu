@@ -1,0 +1,13 @@
+{
+  "name": "BhavSetu",
+  "short_name": "BhavSetu",
+  "lang": "mr",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F5F4EE",
+  "theme_color": "#8C2F4A",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
