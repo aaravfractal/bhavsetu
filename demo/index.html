@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BhavSetu — demo</title>
+<meta name="description" content="Know the price. Reach the buyer. Get paid.">
+<meta name="theme-color" content="#8C2F4A">
+
+<!-- Installable on the presenter's phone; opens offline from the home screen. -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="BhavSetu">
+<!-- 'default' keeps iOS from drawing the app under the status bar; the
+     safe-area padding below is still applied, so this is correct either way. -->
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="BhavSetu — Know the price. Reach the buyer. Get paid.">
+<meta property="og:description" content="Marathi voice-first price discovery and market linkage for Maharashtra onion farmers. SIH 2026.">
+<meta property="og:image" content="icons/icon-512.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="BhavSetu — Know the price. Reach the buyer. Get paid.">
+<meta name="twitter:description" content="Marathi voice-first price discovery and market linkage for Maharashtra onion farmers. SIH 2026.">
+
+<style>
+/* Type is self-hosted and precached by the service worker — the stage demo
+   makes no third-party request. Subsets are generated from this file's own
+   text by scripts/subset-demo-fonts.py; see demo/fonts/README.md. */
+@font-face{font-family:'Mukta';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/mukta-400.woff2') format('woff2')}
+@font-face{font-family:'Mukta';font-style:normal;font-weight:600;font-display:swap;src:url('fonts/mukta-600.woff2') format('woff2')}
+@font-face{font-family:'Mukta';font-style:normal;font-weight:700;font-display:swap;src:url('fonts/mukta-700.woff2') format('woff2')}
+@font-face{font-family:'Mukta';font-style:normal;font-weight:800;font-display:swap;src:url('fonts/mukta-800.woff2') format('woff2')}
+@font-face{font-family:'Tiro Devanagari Marathi';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/tiro-devanagari-marathi-400.woff2') format('woff2')}
+
+:root{
+  --bg:#F5F4EE; --surface:#FFFFFF; --ink:#2B1F16; --ink2:#5C4A3C; --line:#D9D2C5;
+  --kanda:#8C2F4A; --kanda-soft:#F3E3E8; --haldi:#C98A0A; --haldi-soft:#FBF3E2;
+  --paan:#1F7A46; --paan-soft:#E4F0E8; --mirchi:#B3261E; --dhool:#6B6B66;
+  --scrim:rgb(43 31 22 / 45%);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --mukta:'Mukta','Noto Sans Devanagari','Nirmala UI','Kohinoor Devanagari',sans-serif;
+  --tiro:'Tiro Devanagari Marathi','Noto Serif Devanagari',serif;
+  /* Safe-area insets. Zero inside the desktop phone frame, real values only
+     in the mobile layout, so the two modes share one set of rules. */
+  --sat:0px; --sab:0px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+html{overscroll-behavior:none}
+body{background:#3B2A1E;font-family:var(--mukta);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;gap:28px;font-variant-numeric:tabular-nums}
+.phone{width:380px;height:800px;background:var(--ink);border-radius:36px;padding:10px;box-shadow:0 24px 60px rgb(0 0 0/.5);position:relative}
+.screen{width:100%;height:100%;background:var(--bg);border-radius:28px;overflow:hidden;display:flex;flex-direction:column;position:relative;transition:filter .3s var(--ease)}
+.offline-mode .screen{filter:grayscale(.55)}
+main{flex:1;overflow-y:auto;padding:18px 18px calc(120px + var(--sab));scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+main::-webkit-scrollbar{display:none}
+.view{display:none}.view.active{display:block}
+
+/* header */
+header{padding:calc(16px + var(--sat)) 18px 4px;display:flex;justify-content:space-between;align-items:center}
+header h1{font-size:19px;font-weight:700}
+.offline-pill{display:none;background:var(--dhool);color:#fff;font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px}
+.offline-mode .offline-pill{display:block}
+.offline-banner{display:none;background:var(--dhool);color:#fff;font-size:12.5px;padding:7px 18px}
+.offline-mode .offline-banner{display:block}
+
+/* card */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.bhav{border-bottom:4px solid var(--line);border-radius:12px 12px 8px 8px}
+.mrsub{font-size:13px;color:var(--ink2)}
+.en{font-size:12px;color:var(--ink2);font-weight:400}
+.price{font-size:64px;font-weight:800;line-height:1.05;letter-spacing:-1px}
+.delta{color:var(--paan);font-weight:700;font-size:15px}
+.verdict{font-family:var(--tiro);font-size:32px;color:var(--haldi);line-height:1.2;cursor:pointer;display:inline-block}
+.verdict small{font-family:var(--mukta);font-size:12px;color:var(--ink2);display:block}
+.cta{width:100%;height:56px;background:var(--kanda);color:#fff;border:0;border-radius:6px;font:600 16px var(--mukta);margin-top:14px;cursor:pointer}
+.cta.sub{background:var(--surface);color:var(--kanda);border:1.5px solid var(--kanda)}
+
+/* mandi rows */
+.mandi{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:8px}
+.mandi.best{border-left:4px solid var(--paan)}
+.mandi b{font-size:15px}
+.net{font-weight:800;font-size:16px}
+.mandi.best .net{color:var(--paan)}
+.alertcard{border-left:4px solid var(--mirchi)}
+h3.sec{font-size:15px;font-weight:700;margin:18px 0 8px}
+
+/* nav + FAB */
+nav{position:absolute;left:0;right:0;bottom:0;height:calc(76px + var(--sab));padding-bottom:var(--sab);background:var(--surface);border-top:1px solid var(--line);display:flex;border-radius:0 0 28px 28px}
+nav button{flex:1;background:none;border:0;font-family:var(--mukta);font-size:12px;font-weight:600;color:var(--ink2);cursor:pointer;padding-top:8px}
+nav button.on{color:var(--kanda)}
+nav button span{display:block;font-size:20px;line-height:1.3}
+.fab{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(52px + var(--sab));width:68px;height:68px;border-radius:999px;background:var(--kanda);color:#fff;border:4px solid var(--bg);font-size:26px;cursor:pointer;z-index:5}
+
+/* sheet */
+.scrim{position:absolute;inset:0;background:var(--scrim);opacity:0;pointer-events:none;transition:opacity .25s var(--ease);z-index:8;border-radius:28px}
+.scrim.open{opacity:1;pointer-events:auto}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:20px 20px 28px 28px;padding:20px 20px calc(26px + var(--sab));transform:translateY(105%);transition:transform .3s var(--ease);z-index:9}
+.sheet.open{transform:none}
+.sheet h4{font-family:var(--tiro);font-size:24px;color:var(--haldi);margin-bottom:10px}
+.reason{display:flex;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:15px}
+.reason:first-of-type{border-top:0}
+.reason .dot{width:10px;height:10px;border-radius:99px;background:var(--haldi);margin-top:6px;flex:none}
+
+/* chart */
+svg text{font-family:var(--mukta)}
+.legend{display:flex;gap:14px;font-size:11.5px;color:var(--ink2);margin-top:6px;flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+
+/* calc */
+.cols{display:flex;gap:10px}
+.col{flex:1;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px}
+.col h5{font-size:13px;margin-bottom:8px}
+.row{display:flex;justify-content:space-between;font-size:13px;padding:3px 0;color:var(--ink2)}
+.row.total{border-top:1px solid var(--line);margin-top:6px;padding-top:8px;color:var(--ink);font-weight:800;font-size:17px}
+.stepper{display:flex;align-items:center;gap:14px;margin:10px 0 14px}
+.stepper button{width:56px;height:56px;border-radius:6px;border:1.5px solid var(--kanda);background:var(--surface);color:var(--kanda);font-size:24px;cursor:pointer}
+.stepper b{font-size:26px;min-width:70px;text-align:center}
+
+/* bids */
+.bid{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:10px;cursor:pointer}
+.bid .top{display:flex;justify-content:space-between;font-weight:700;font-size:15px}
+.trust{display:flex;gap:3px;margin:7px 0 5px}
+.trust i{height:6px;flex:1;background:var(--line);border-radius:3px}
+.trust i.f{background:var(--paan)}
+.trust.low i.f{background:var(--haldi)}
+.math{font-size:13px;color:var(--ink2)}
+.math b{color:var(--ink);font-size:15px}
+.hold{width:100%;height:60px;border-radius:999px;background:var(--kanda);color:#fff;border:0;font:600 15px var(--mukta);margin-top:12px;position:relative;overflow:hidden;cursor:pointer}
+.hold .fill{position:absolute;inset:0;width:0;background:var(--paan);transition:width 1s linear}
+.hold span{position:relative}
+.statuspill{font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--haldi-soft);color:var(--haldi)}
+.statuspill.paid{background:var(--paan-soft);color:var(--paan)}
+
+/* money */
+.big{font-size:44px;font-weight:800}
+.escrow{position:relative;overflow:hidden}
+.escrow .fillbar{position:absolute;inset:0;width:0;background:var(--paan-soft);z-index:0}
+.escrow>*{position:relative;z-index:1}
+.earned{border:1.5px solid var(--paan);background:var(--paan-soft)}
+.earned .price{font-size:40px;color:var(--paan)}
+.toast{position:absolute;left:20px;right:20px;bottom:calc(96px + var(--sab));background:var(--ink);color:#fff;padding:12px 16px;border-radius:10px;font-size:14px;transform:translateY(20px);opacity:0;transition:all .3s var(--ease);z-index:12;pointer-events:none}
+.toast.show{transform:none;opacity:1}
+
+/* voice */
+.wave{display:flex;gap:3px;height:52px;align-items:center;justify-content:center;margin:14px 0}
+.wave i{width:5px;background:var(--kanda);border-radius:3px;animation:w 0.9s var(--ease) infinite alternate}
+@keyframes w{from{height:8px}to{height:44px}}
+.transcript{font-size:17px;text-align:center;font-weight:600}
+
+/* controls panel */
+.panel{width:230px;color:#EFE9E0;font-size:13px;line-height:1.6}
+.panel h2{font-size:15px;margin-bottom:10px;color:#fff}
+.panel button{display:block;width:100%;margin-bottom:8px;padding:10px;border-radius:8px;border:1px solid #6b5a4b;background:#4a3728;color:#fff;font-family:var(--mukta);font-size:13px;cursor:pointer;text-align:left}
+.panel button:hover{background:#5a4433}
+.panel .note{color:#B7A897;font-size:11.5px;margin-top:10px}
+.panel .qr{margin-top:14px;padding-top:14px;border-top:1px solid #6b5a4b}
+.panel .qr b{display:block;font-size:12.5px;color:#fff;margin-bottom:8px}
+.panel .qr svg{width:112px;height:112px;background:#fff;padding:7px;border-radius:6px;display:block;shape-rendering:crispEdges}
+.panel .qrurl{font-size:10.5px;color:#B7A897;word-break:break-all;margin-top:7px}
+@media (max-width:700px){
+  :root{--sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px)}
+  .panel{display:none}
+  body{background:var(--bg);display:block}
+  .phone{width:100vw;height:100vh;height:100dvh;border-radius:0;padding:0;box-shadow:none}
+  .screen{border-radius:0}
+  nav{border-radius:0}
+  .scrim,.sheet{border-radius:0}
+  .sheet{border-radius:20px 20px 0 0}
+}
+@media (prefers-reduced-motion:reduce){*{transition-duration:0s!important;animation:none!important}}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<div class="phone"><div class="screen" id="screen">
+  <header>
+    <div><h1 id="greet">नमस्कार राजू</h1><div class="en">Hello Raju · Niphad, Nashik</div></div>
+    <div class="offline-pill">ऑफलाइन</div>
+  </header>
+  <div class="offline-banner">नेटवर्क नाही. काल सकाळी ११ ची माहिती. <span class="en" style="color:#eee">No network · showing yesterday 11 am</span></div>
+
+  <main>
+    <!-- HOME -->
+    <section class="view active" id="v-home">
+      <div class="card bhav">
+        <div style="display:flex;justify-content:space-between"><div class="mrsub">लासलगाव · कांदा <span class="en">Lasalgaon · Onion</span></div><div style="font-size:18px;cursor:pointer" title="ऐका">🔊</div></div>
+        <div class="price">₹1,850</div>
+        <div class="mrsub">प्रति क्विंटल · आज <span class="en">per quintal · today</span></div>
+        <div class="delta">▲ ₹120 कालपेक्षा</div>
+        <svg id="spark" viewBox="0 0 300 70" style="width:100%;margin:10px 0 4px"></svg>
+        <div class="verdict" onclick="openSheet('reasons')">थांबा<small>८ दिवसांनी ₹2,100 पर्यंत · Hold, ₹2,100 in 8 days · का? टॅप करा</small></div>
+        <button class="cta" onclick="openSheet('voice')">पूर्ण माहिती ऐका · Hear details</button>
+      </div>
+
+      <h3 class="sec">जवळचे बाजार <span class="en">nearby markets, by what you take home</span></h3>
+      <div class="mandi best"><div><b>पिंपळगाव</b><div class="en">18 km · भाव ₹1,920 − वाहतूक ₹85</div></div><div class="net">तुम्हाला ₹1,835</div></div>
+      <div class="mandi"><div><b>लासलगाव</b><div class="en">11 km · भाव ₹1,850 − वाहतूक ₹50</div></div><div class="net">₹1,800</div></div>
+      <div class="mandi"><div><b>येवला</b><div class="en">34 km · भाव ₹1,900 − वाहतूक ₹140</div></div><div class="net">₹1,760</div></div>
+
+      <div class="card alertcard" style="margin-top:16px">
+        <b style="font-size:14.5px">सूचना · Alert</b>
+        <div style="font-size:14px;margin-top:4px">पुढच्या आठवड्यात कांद्याची आवक +38%. भाव ₹250–400 पडू शकतो.</div>
+        <div class="en">Arrivals +38% next week. Prices may fall. Warning sent 6 days early.</div>
+      </div>
+      <button class="cta sub" onclick="go('chart')">भाव चार्ट पहा · Open Bhav chart</button>
+    </section>
+
+    <!-- CHART -->
+    <section class="view" id="v-chart">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:start">
+          <div><b style="font-size:16px">भाव चार्ट · कांदा, लासलगाव</b><div class="en">30 days + 14-day forecast</div></div>
+          <div class="verdict" style="font-size:22px" onclick="openSheet('reasons')">थांबा</div>
+        </div>
+        <svg id="chart" viewBox="0 0 340 210" style="width:100%;margin-top:8px"></svg>
+        <div class="legend">
+          <span><i style="background:var(--paan)"></i>वाढ candle</span>
+          <span><i style="background:var(--mirchi)"></i>घट candle</span>
+          <span><i style="background:var(--ink2)"></i>30-दिवस सरासरी</span>
+          <span><i style="background:var(--haldi)"></i>अंदाज ±110</span>
+          <span><i style="background:var(--line)"></i>आवक (volume)</span>
+        </div>
+      </div>
+      <button class="cta" onclick="go('alerts')">भाव सूचना लावा · Set price alert</button>
+    </section>
+
+    <!-- ALERTS -->
+    <section class="view" id="v-alerts">
+      <div class="card">
+        <b style="font-size:16px">भाव सूचना · Price alert</b>
+        <div class="mrsub" style="margin-top:8px">भाव ₹ ___ च्या वर गेला की सांगा</div>
+        <div class="stepper">
+          <button onclick="alertStep(-50)">−</button><b id="alertVal">₹2,000</b><button onclick="alertStep(50)">+</button>
+        </div>
+        <div class="mrsub" style="margin-bottom:6px">कसे कळवू? <span class="en">how to notify</span></div>
+        <div style="display:flex;gap:8px" id="chan">
+          <button class="cta" style="flex:1;height:48px" data-c="call">📞 फोन</button>
+          <button class="cta sub" style="flex:1;height:48px" data-c="sms">SMS</button>
+          <button class="cta sub" style="flex:1;height:48px" data-c="wa">WhatsApp</button>
+        </div>
+        <button class="cta" style="margin-top:16px" onclick="saveAlert()">सूचना जतन करा · Save alert</button>
+      </div>
+      <div class="card" style="background:var(--haldi-soft);border-color:var(--haldi)">
+        <b style="font-size:14px">अंदाज खाली वळला तर लगेच फोन येईल</b>
+        <div class="en">You also get a call the moment the forecast turns down.</div>
+      </div>
+    </section>
+
+    <!-- CALC -->
+    <section class="view" id="v-calc">
+      <div class="card">
+        <b style="font-size:16px">विकू की साठवू? · Sell or store</b>
+        <div class="stepper" style="margin-top:10px">
+          <button onclick="qty(-5)">−</button><b><span id="q">20</span> क्विं.</b><button onclick="qty(5)">+</button>
+        </div>
+        <div class="cols">
+          <div class="col"><h5>आज विकल्यास <span class="en">sell today</span></h5>
+            <div class="row"><span>भाव</span><span id="s1"></span></div>
+            <div class="row"><span>− वाहतूक</span><span id="s2"></span></div>
+            <div class="row total"><span>हातात</span><span id="s3"></span></div>
+          </div>
+          <div class="col" style="border-color:var(--paan)"><h5>३ आठवडे साठवल्यास <span class="en">store 3 wks</span></h5>
+            <div class="row"><span>अंदाजे भाव</span><span id="t1"></span></div>
+            <div class="row"><span>− वाहतूक</span><span id="t2"></span></div>
+            <div class="row"><span>− साठवण</span><span id="t3"></span></div>
+            <div class="row total" style="color:var(--paan)"><span>हातात</span><span id="t4"></span></div>
+          </div>
+        </div>
+        <div class="verdict" style="margin-top:14px;color:var(--paan)" id="calcverdict">साठवा.<small id="calcgain"></small></div>
+        <div class="mrsub" style="margin-top:8px">विंचूर ॲग्रो कोल्ड चेन · 9 km · ₹18/क्विं./आठवडा <button style="border:0;background:none;color:var(--kanda);font-weight:700;cursor:pointer">📞 कॉल</button></div>
+      </div>
+    </section>
+
+    <!-- LOTS -->
+    <section class="view" id="v-lots">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <b style="font-size:15px">LOT-0412 · कांदा · 20 क्विं.</b>
+          <span class="statuspill" id="lotstatus">बोली आली</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+          <span style="background:var(--paan);color:#fff;font-weight:700;font-size:12px;padding:4px 12px;border-radius:999px">अ दर्जा · Grade A</span>
+          <span class="en">size ✓ · sprouting 2% · damage 1%</span>
+        </div>
+        <div class="mrsub" style="margin-top:8px">हा फोटो व दर्जा खरेदीदारांना दिसतो · buyers see this lot passport</div>
+      </div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <b style="font-size:15px">LOT-0398 · एकत्रित · 85 क्विं.</b>
+          <span class="statuspill">खरेदीदार शोधत आहे</span>
+        </div>
+        <div class="mrsub" style="margin-top:8px">तुमच्या 10 km मध्ये 4 शेतकरी एकत्र · एक ट्रक, मोठे खरेदीदार</div>
+        <div class="en">4 farmers pooled within 10 km · one truck, bigger buyers</div>
+      </div>
+      <button class="cta" onclick="go('buyers')">बोली पहा · See bids</button>
+    </section>
+
+    <!-- BUYERS -->
+    <section class="view" id="v-buyers">
+      <div class="mrsub" style="margin-bottom:10px">LOT-0412 वर बोली · हातातली रक्कम प्रत्येक बोलीखाली</div>
+      <div class="bid" onclick="openSheet('bidsheet')">
+        <div class="top"><span>सह्याद्री एक्स्पोर्ट्स</span><span>₹2,050</span></div>
+        <div class="trust"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></div>
+        <div class="en">31 व्यवहार, नेहमी वेळेवर पैसे · exporter</div>
+        <div class="math">₹2,050 − वाहतूक ₹85 − सेस ₹30 = <b>तुम्हाला ₹1,935</b></div>
+      </div>
+      <div class="bid">
+        <div class="top"><span>देशमुख डिहायड्रेशन</span><span>₹1,980</span></div>
+        <div class="trust low"><i class="f"></i><i class="f"></i><i></i><i></i><i></i></div>
+        <div class="en" style="color:var(--haldi)">2 वेळा माल नाकारला · processor</div>
+        <div class="math">₹1,980 − ₹85 − ₹30 = <b>₹1,865</b></div>
+      </div>
+      <div class="bid">
+        <div class="top"><span>किसान ॲग्रो ट्रेडर्स</span><span>₹1,940</span></div>
+        <div class="trust"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></div>
+        <div class="en">23 व्यवहार, वेळेवर पैसे · trader</div>
+        <div class="math">₹1,940 − ₹50 − ₹30 = <b>₹1,860</b></div>
+      </div>
+    </section>
+
+    <!-- MONEY -->
+    <section class="view" id="v-money">
+      <div class="mrsub">या हंगामात मिळाले · received this season</div>
+      <div class="big" id="season">₹4,12,600</div>
+      <div class="card escrow" style="margin-top:14px" id="escrowcard">
+        <div class="fillbar" id="fillbar"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <b style="font-size:15px" id="esctitle">🔒 पैसे रोखले · ₹1,58,100</b>
+          <span class="statuspill" id="escpill">पैसे रोखले</span>
+        </div>
+        <div class="mrsub" style="margin-top:6px">सह्याद्री एक्स्पोर्ट्स · 77 क्विं. · माल पोहोचल्यावर पैसे तुम्हाला</div>
+        <div class="en">Released to you when delivery is confirmed</div>
+      </div>
+      <div class="card earned hidden" id="earned">
+        <b style="font-size:15px">या व्यवहारात जास्त मिळाले · extra earned</b>
+        <div class="price">+ ₹4,000</div>
+        <div class="mrsub">विकले ₹2,050 ला · कापणीच्या दिवशी भाव ₹1,850 होता (20 क्विं.)</div>
+        <div class="en">Sold at 2,050 vs harvest-day 1,850, via BhavSetu</div>
+      </div>
+      <button class="cta sub">बँकेसाठी अहवाल · Report for bank (PDF)</button>
+    </section>
+  </main>
+
+  <button class="fab" onclick="openSheet('voice')">🎤</button>
+  <nav>
+    <button data-v="home" class="on"><span>🏪</span>बाजार</button>
+    <button data-v="calc"><span>🧮</span>हिशेब</button>
+    <button data-v="lots" style="margin-right:64px"><span>🧺</span>माझा माल</button>
+    <button data-v="buyers"><span>🤝</span>खरेदीदार</button>
+    <button data-v="money"><span>💰</span>पैसे</button>
+  </nav>
+
+  <div class="scrim" id="scrim" onclick="closeSheets()"></div>
+
+  <div class="sheet" id="sh-reasons">
+    <h4>थांबा — का?</h4>
+    <div class="reason"><div class="dot"></div><div>नाशिकमध्ये आवक कमी होत आहे<div class="en">Arrivals falling across Nashik mandis</div></div></div>
+    <div class="reason"><div class="dot"></div><div>पुढचे १० दिवस पाऊस नाही<div class="en">No rain expected 10 days, harvest slows</div></div></div>
+    <div class="reason"><div class="dot"></div><div>२ आठवड्यांत सणांची मागणी वाढेल<div class="en">Festival demand rising in 2 weeks</div></div></div>
+    <div class="mrsub" style="margin-top:10px">अंदाज ₹2,100 ± 110 · ८ दिवसांत</div>
+  </div>
+
+  <div class="sheet" id="sh-voice">
+    <div class="mrsub" style="text-align:center">ऐकत आहे… <span class="en">listening</span></div>
+    <div class="wave" id="wave"></div>
+    <div class="transcript">"लासलगाव कांदा वीस क्विंटल"</div>
+    <div class="card bhav" style="margin-top:14px">
+      <div class="mrsub">लासलगाव · कांदा · आज</div>
+      <div class="price" style="font-size:44px">₹1,850</div>
+      <div class="verdict" style="font-size:24px">थांबा<small>८ दिवसांनी ₹2,100 · उत्तर आवाजातही दिले जाते (Bhashini TTS)</small></div>
+    </div>
+    <button class="cta" onclick="closeSheets()">ठीक आहे</button>
+  </div>
+
+  <div class="sheet" id="sh-bidsheet">
+    <b style="font-size:17px">सह्याद्री एक्स्पोर्ट्स · ₹2,050/क्विं.</b>
+    <div class="math" style="margin:10px 0 4px;font-size:15px">₹2,050 × 20 क्विं. = ₹41,000<br>− वाहतूक ₹1,700 − सेस ₹600 = <b style="font-size:18px">तुम्हाला ₹38,700</b></div>
+    <div class="mrsub">डिलिव्हरी: गुरुवार, पिंपळगाव यार्ड · पैसे एस्क्रोमध्ये सुरक्षित</div>
+    <button class="hold" id="holdbtn"
+      onmousedown="holdStart()" onmouseup="holdEnd()" onmouseleave="holdEnd()"
+      ontouchstart="holdStart()" ontouchend="holdEnd()">
+      <div class="fill" id="holdfill"></div>
+      <span>दाबून ठेवा आणि म्हणा: "मला मान्य आहे" 🎤</span>
+    </button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div></div>
+
+<div class="panel">
+  <h2>Demo controls (presenter only)</h2>
+  <button onclick="toggleOffline()">✈️ Offline toggle — chrome greys, cached data + timestamp shows</button>
+  <button onclick="deliver()">📦 Simulate delivery — escrow releases, Paan fill, extra-earned card</button>
+  <button onclick="location.reload()">↺ Reset demo</button>
+  <div class="qr">
+    <b>Scan to open on your phone</b>
+    <div id="qrbox"></div>
+    <div class="qrurl" id="qrurl"></div>
+  </div>
+  <div class="note">Order for Wednesday: Home → tap थांबा (reasons) → mic → chart → calc → lots → buyers → hold-to-accept → Money → deliver. Fixtures = Lasalgaon Sep 2026, same numbers as the deck.</div>
+</div>
+
+<script>
+// ---------- fixtures ----------
+const hist=[1640,1690,1720,1700,1730,1780,1850];
+const fc=[1880,1920,1960,2010,2050,2080,2100,2110,2090,2060];
+
+// ---------- sparkline ----------
+(function(){
+  const all=hist.concat(fc), min=1600, max=2250, W=300, H=70;
+  const x=i=>i*(W/(all.length-1)), y=v=>H-8-((v-min)/(max-min))*(H-16);
+  let s=document.getElementById('spark'), band='', hp='', fp='';
+  fc.forEach((v,i)=>{band+=`${x(6+i+1)},${y(v-110)} `});
+  [...fc].reverse().forEach((v,i)=>{band+=`${x(6+fc.length-i)},${y(v+110)} `});
+  hist.forEach((v,i)=>{hp+=`${i?'L':'M'}${x(i)},${y(v)}`});
+  fp=`M${x(6)},${y(1850)}`; fc.forEach((v,i)=>{fp+=`L${x(7+i)},${y(v)}`});
+  s.innerHTML=`<polygon points="${band}" fill="#C98A0A" opacity=".16"/>
+    <path d="${hp}" fill="none" stroke="#2B1F16" stroke-width="2.5"/>
+    <path d="${fp}" fill="none" stroke="#C98A0A" stroke-width="2.5" stroke-dasharray="5 4"/>
+    <circle cx="${x(6)}" cy="${y(1850)}" r="3.5" fill="#2B1F16"/>`;
+})();
+
+// ---------- candlestick chart ----------
+(function(){
+  // 30 days ending at the real last-7; generate a plausible walk before them
+  let closes=[1585,1600,1560,1540,1570,1610,1590,1620,1650,1630,1600,1580,1610,1640,1660,1640,1620,1590,1570,1600,1620,1650,1630,1640,1690,1720,1700,1730,1780,1850];
+  const vols=closes.map((c,i)=>60+((i*37)%50)+(i>24?30:0));
+  const W=340,H=210,padL=34,cw=(W-padL-70)/30,min=1450,max=2260;
+  const yy=v=>150-((v-min)/(max-min))*140;
+  let g='';
+  // gridlines + labels
+  [1500,1700,1900,2100].forEach(v=>{g+=`<line x1="${padL}" y1="${yy(v)}" x2="${W}" y2="${yy(v)}" stroke="#D9D2C5" stroke-width=".6"/><text x="2" y="${yy(v)+3}" font-size="8" fill="#5C4A3C">${v}</text>`});
+  // volume
+  closes.forEach((c,i)=>{const vh=vols[i]*.28;g+=`<rect x="${padL+i*cw+1}" y="${205-vh}" width="${cw-2}" height="${vh}" fill="#D9D2C5"/>`});
+  // candles
+  closes.forEach((c,i)=>{
+    const o=i?closes[i-1]:1570, up=c>=o, col=up?'#1F7A46':'#B3261E';
+    const hi=Math.max(o,c)+18, lo=Math.min(o,c)-18, X=padL+i*cw+cw/2;
+    g+=`<line x1="${X}" y1="${yy(hi)}" x2="${X}" y2="${yy(lo)}" stroke="${col}" stroke-width="1"/>
+        <rect x="${padL+i*cw+1}" y="${yy(Math.max(o,c))}" width="${cw-2}" height="${Math.max(2,Math.abs(yy(o)-yy(c)))}" fill="${col}"/>`;
+  });
+  // 30d + 7d averages
+  const avg=(arr,n)=>arr.map((_,i)=>{const s=arr.slice(Math.max(0,i-n+1),i+1);return s.reduce((a,b)=>a+b)/s.length});
+  const a30=avg(closes,30),a7=avg(closes,7);
+  const line=(arr,col,dash)=>{let p='';arr.forEach((v,i)=>{p+=`${i?'L':'M'}${padL+i*cw+cw/2},${yy(v)}`});return `<path d="${p}" fill="none" stroke="${col}" stroke-width="1.5" ${dash?`stroke-dasharray="3 3"`:''}/>`};
+  g+=line(a30,'#5C4A3C')+line(a7,'#8C2F4A',1);
+  // forecast band + line
+  const fx=i=>padL+(30+i)*(cw*0.72);
+  let bp='';fc.forEach((v,i)=>{bp+=`${fx(i+1)},${yy(v-110)} `});[...fc].reverse().forEach((v,i)=>{bp+=`${fx(fc.length-i)},${yy(v+110)} `});
+  g+=`<polygon points="${bp}" fill="#C98A0A" opacity=".18"/>`;
+  let fp2=`M${padL+29*cw+cw/2},${yy(1850)}`;fc.forEach((v,i)=>{fp2+=`L${fx(i+1)},${yy(v)}`});
+  g+=`<path d="${fp2}" fill="none" stroke="#C98A0A" stroke-width="2" stroke-dasharray="5 4"/>`;
+  g+=`<line x1="${padL+29*cw+cw}" y1="8" x2="${padL+29*cw+cw}" y2="205" stroke="#5C4A3C" stroke-width=".7" stroke-dasharray="2 3"/><text x="${padL+29*cw+cw-8}" y="7" font-size="8" fill="#5C4A3C">आज</text>`;
+  document.getElementById('chart').innerHTML=g;
+})();
+
+// ---------- nav ----------
+function go(v){
+  document.querySelectorAll('.view').forEach(s=>s.classList.remove('active'));
+  document.getElementById('v-'+v).classList.add('active');
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  document.querySelector('main').scrollTop=0;
+}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.v));
+
+// ---------- sheets ----------
+function openSheet(id){
+  closeSheets();
+  document.getElementById('scrim').classList.add('open');
+  document.getElementById('sh-'+id).classList.add('open');
+  if(id==='voice'){const w=document.getElementById('wave');w.innerHTML='';for(let i=0;i<26;i++){const b=document.createElement('i');b.style.animationDelay=(i*0.05)+'s';w.appendChild(b);}}
+}
+function closeSheets(){
+  document.getElementById('scrim').classList.remove('open');
+  document.querySelectorAll('.sheet').forEach(s=>s.classList.remove('open'));
+}
+
+// ---------- alerts ----------
+let av=2000;
+function alertStep(d){av=Math.max(1500,av+d);document.getElementById('alertVal').textContent='₹'+av.toLocaleString('en-IN')}
+document.querySelectorAll('#chan button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#chan button').forEach(x=>x.className='cta sub');
+  b.className='cta';b.style.flex=1;
+  document.querySelectorAll('#chan button').forEach(x=>x.style.height='48px');
+});
+function saveAlert(){toast(`सूचना जतन झाली — कांदा ₹${av.toLocaleString('en-IN')} पार होताच फोन येईल`)}
+
+// ---------- calc ----------
+let Q=20;
+function qty(d){Q=Math.max(5,Q+d);document.getElementById('q').textContent=Q;calc()}
+function calc(){
+  const today=1850,fut=2100,tr=85,store=18*3;
+  const s=Q*(today-tr), t=Q*(fut-tr-store), gain=t-s;
+  const f=n=>'₹'+n.toLocaleString('en-IN');
+  s1.textContent=f(Q*today);s2.textContent='−'+f(Q*tr);s3.textContent=f(s);
+  t1.textContent=f(Q*fut);t2.textContent='−'+f(Q*tr);t3.textContent='−'+f(Q*store);t4.textContent=f(t);
+  calcgain.textContent=f(gain)+' जास्त मिळतील · you gain '+f(gain);
+}
+calc();
+
+// ---------- hold to accept ----------
+let ht;
+function holdStart(){
+  document.getElementById('holdfill').style.width='100%';
+  ht=setTimeout(()=>{
+    closeSheets();
+    document.getElementById('lotstatus').textContent='करार झाला';
+    toast('करार झाला ✓ आवाज-करार जतन · voice contract saved');
+    setTimeout(()=>go('money'),900);
+  },1000);
+}
+function holdEnd(){clearTimeout(ht);document.getElementById('holdfill').style.width='0'}
+
+// ---------- money / deliver ----------
+function deliver(){
+  go('money');
+  const fb=document.getElementById('fillbar');
+  fb.style.transition='width .4s cubic-bezier(.2,.8,.2,1)';fb.style.width='100%';
+  setTimeout(()=>{
+    document.getElementById('esctitle').textContent='✓ पैसे मिळाले · ₹1,58,100';
+    const p=document.getElementById('escpill');p.textContent='पैसे मिळाले';p.className='statuspill paid';
+    document.getElementById('season').textContent='₹5,70,700';
+    document.getElementById('earned').classList.remove('hidden');
+    toast('₹1,58,100 मिळाले ✓');
+  },450);
+}
+
+// ---------- offline ----------
+function toggleOffline(){document.body.classList.toggle('offline-mode')}
+
+// ---------- QR for the presenter panel ----------
+// Byte mode, ECC level L, versions 1-5 (single data block), auto mask.
+// Encoded from location.origin at runtime, so the code is always right for
+// whatever URL this is actually served from — production, preview or laptop.
+function qrMatrix(text){
+  const EXP=new Uint8Array(512),LOG=new Uint8Array(256);
+  for(let i=0,x=1;i<255;i++){EXP[i]=x;LOG[x]=i;x<<=1;if(x&256)x^=0x11d}
+  for(let i=255;i<512;i++)EXP[i]=EXP[i-255];
+  const mul=(a,b)=>(a&&b)?EXP[LOG[a]+LOG[b]]:0;
+  const CAP=[19,34,55,80,108],ECN=[7,10,15,20,26];
+  const bytes=[...new TextEncoder().encode(text)];
+  let v=1; while(v<=5&&12+8*bytes.length>CAP[v-1]*8)v++;
+  if(v>5)return null;
+  const nData=CAP[v-1],nEc=ECN[v-1],size=17+4*v;
+  const bits=[],put=(val,len)=>{for(let i=len-1;i>=0;i--)bits.push((val>>>i)&1)};
+  put(4,4);put(bytes.length,8);bytes.forEach(b=>put(b,8));
+  put(0,Math.min(4,nData*8-bits.length));
+  while(bits.length%8)bits.push(0);
+  for(let i=0;bits.length<nData*8;i++)put(i%2?0x11:0xEC,8);
+  const all=new Uint8Array(nData+nEc);
+  bits.forEach((b,i)=>{if(b)all[i>>3]|=0x80>>(i&7)});
+  const div=new Uint8Array(nEc);div[nEc-1]=1;
+  for(let i=0,root=1;i<nEc;i++){
+    for(let j=0;j<nEc;j++){div[j]=mul(div[j],root);if(j+1<nEc)div[j]^=div[j+1]}
+    root=mul(root,2)}
+  const rem=new Uint8Array(nEc);
+  for(let d=0;d<nData;d++){
+    const f=all[d]^rem[0];rem.copyWithin(0,1);rem[nEc-1]=0;
+    for(let i=0;i<nEc;i++)rem[i]^=mul(div[i],f)}
+  all.set(rem,nData);
+  const m=Array.from({length:size},()=>new Uint8Array(size));
+  const fn=Array.from({length:size},()=>new Uint8Array(size));
+  const set=(x,y,val)=>{if(x>=0&&y>=0&&x<size&&y<size){m[y][x]=val;fn[y][x]=1}};
+  for(let i=0;i<size;i++){set(6,i,i%2===0?1:0);set(i,6,i%2===0?1:0)}
+  for(const c of [[3,3],[size-4,3],[3,size-4]])
+    for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++){
+      const d=Math.max(Math.abs(dx),Math.abs(dy));
+      set(c[0]+dx,c[1]+dy,(d!==2&&d!==4)?1:0)}
+  if(v>1){const c=[6,4*v+10];
+    for(const cy of c)for(const cx of c){
+      if((cx===6&&cy===6)||(cx===6&&cy===c[1])||(cx===c[1]&&cy===6))continue;
+      for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++)
+        set(cx+dx,cy+dy,Math.max(Math.abs(dx),Math.abs(dy))!==1?1:0)}}
+  const fmt=(w,mask)=>{
+    const d=(1<<3)|mask;let r=d;
+    for(let i=0;i<10;i++)r=(r<<1)^((r>>>9)*0x537);
+    const b=((d<<10|r)^0x5412),bit=i=>(b>>>i)&1;
+    for(let i=0;i<=5;i++)w(8,i,bit(i));
+    w(8,7,bit(6));w(8,8,bit(7));w(7,8,bit(8));
+    for(let i=9;i<15;i++)w(14-i,8,bit(i));
+    for(let i=0;i<8;i++)w(size-1-i,8,bit(i));
+    for(let i=8;i<15;i++)w(8,size-15+i,bit(i));
+    w(8,size-8,1)};
+  fmt(set,0);
+  let bi=0;
+  for(let right=size-1;right>=1;right-=2){
+    if(right===6)right=5;
+    for(let vert=0;vert<size;vert++)for(let j=0;j<2;j++){
+      const x=right-j,up=((right+1)&2)===0,y=up?size-1-vert:vert;
+      if(!fn[y][x]&&bi<all.length*8){m[y][x]=(all[bi>>3]>>(7-(bi&7)))&1;bi++}}}
+  const MK=[(x,y)=>(x+y)%2,(x,y)=>y%2,(x,y)=>x%3,(x,y)=>(x+y)%3,
+    (x,y)=>(Math.floor(y/2)+Math.floor(x/3))%2,(x,y)=>(x*y)%2+(x*y)%3,
+    (x,y)=>((x*y)%2+(x*y)%3)%2,(x,y)=>((x+y)%2+(x*y)%3)%2];
+  let best=null,bp=Infinity;
+  for(let k=0;k<8;k++){
+    const g=m.map(r=>Uint8Array.from(r));
+    for(let y=0;y<size;y++)for(let x=0;x<size;x++)
+      if(!fn[y][x]&&MK[k](x,y)===0)g[y][x]^=1;
+    fmt((x,y,val)=>{g[y][x]=val},k);
+    const s=qrPenalty(g,size);
+    if(s<bp){bp=s;best=g}}
+  return best;
+}
+function qrPenalty(g,size){
+  let p=0;
+  const run=get=>{for(let a=0;a<size;a++){let c=1,prev=get(a,0);
+    for(let b=1;b<size;b++){const v=get(a,b);
+      if(v===prev)c++;else{if(c>=5)p+=c-2;c=1;prev=v}}
+    if(c>=5)p+=c-2}};
+  run((a,b)=>g[a][b]);run((a,b)=>g[b][a]);
+  for(let y=0;y<size-1;y++)for(let x=0;x<size-1;x++){
+    const s=g[y][x]+g[y][x+1]+g[y+1][x]+g[y+1][x+1];
+    if(s===0||s===4)p+=3}
+  const A=[1,0,1,1,1,0,1,0,0,0,0],B=[0,0,0,0,1,0,1,1,1,0,1];
+  const scan=get=>{for(let i=0;i<size;i++)for(let j=0;j+11<=size;j++){
+    let m1=1,m2=1;
+    for(let t=0;t<11;t++){const v=get(i,j+t);if(v!==A[t])m1=0;if(v!==B[t])m2=0}
+    p+=(m1+m2)*40}};
+  scan((i,j)=>g[i][j]);scan((i,j)=>g[j][i]);
+  let dark=0;for(let y=0;y<size;y++)for(let x=0;x<size;x++)dark+=g[y][x];
+  const total=size*size;
+  return p+(Math.ceil(Math.abs(dark*20-total*10)/total)-1)*10;
+}
+(function(){
+  const box=document.getElementById('qrbox');
+  if(!box)return;
+  const url=location.origin+location.pathname.replace(/index\.html$/,'');
+  const m=qrMatrix(url);
+  if(!m){box.textContent='—';return}
+  const n=m.length;let d='';
+  for(let y=0;y<n;y++)for(let x=0;x<n;x++)if(m[y][x])d+=`M${x} ${y}h1v1h-1z`;
+  box.innerHTML=`<svg viewBox="0 0 ${n} ${n}" role="img" aria-label="QR code for ${url}"><path d="${d}" fill="#2B1F16"/></svg>`;
+  document.getElementById('qrurl').textContent=url;
+})();
+
+// ---------- service worker: opens with no network at all ----------
+if('serviceWorker' in navigator){
+  addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+
+// ---------- toast ----------
+let tt;
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2600)}
+</script>
+</body>
+</html>
