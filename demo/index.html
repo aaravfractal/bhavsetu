@@ -170,7 +170,7 @@ svg text{font-family:var(--mukta)}
   .phone{width:100vw;height:100vh;height:100dvh;border-radius:0;padding:0;box-shadow:none}
   .screen{border-radius:0}
   nav{border-radius:0}
-  .scrim,.sheet{border-radius:0}
+  .scrim,.sheet,.call{border-radius:0}
   .sheet{border-radius:20px 20px 0 0}
 }
 @media (prefers-reduced-motion:reduce){
@@ -226,6 +226,80 @@ svg text{font-family:var(--mukta)}
   border:1px solid var(--line);border-radius:999px;padding:2px 8px;opacity:0;
   transition:opacity var(--t-fast) var(--ease);white-space:nowrap}
 .voicenote.on{opacity:1}
+
+/* auction: countdown chip, lot switcher, a bid row that has just landed */
+.chip{font:600 11.5px var(--mukta);padding:5px 10px;border-radius:999px;
+  background:var(--haldi-soft);color:var(--haldi);white-space:nowrap}
+.chip.live{background:var(--kanda-soft);color:var(--kanda)}
+.chip.done{background:var(--paan-soft);color:var(--paan)}
+.lothead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.tabs button{min-height:36px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);
+  background:var(--surface);font:600 12.5px var(--mukta);color:var(--ink2);cursor:pointer}
+.tabs button.on{background:var(--kanda);border-color:var(--kanda);color:#fff}
+.bid.landed{opacity:0;transform:translateY(10px)}
+.bidbtns{display:flex;gap:8px;margin-top:10px}
+.bidbtns button{flex:1;min-height:44px;border-radius:6px;font:600 13px var(--mukta);cursor:pointer}
+.ask{background:var(--surface);border:1.5px solid var(--kanda);color:var(--kanda)}
+.take{background:var(--kanda);border:0;color:#fff}
+.empty{text-align:center;color:var(--ink2);font-size:15px;padding:22px 0}
+
+/* lots: status pill vocabulary, contextual next action, photo passport */
+.lotrow{display:flex;gap:12px;align-items:flex-start}
+.thumb{width:64px;height:64px;border-radius:8px;object-fit:cover;border:1px solid var(--line);
+  flex:none;background:var(--bg)}
+.gradechip{background:var(--paan);color:#fff;font:700 12px var(--mukta);padding:4px 12px;border-radius:999px}
+.statuspill.deal{background:var(--kanda-soft);color:var(--kanda)}
+.statuspill.transit{background:var(--haldi-soft);color:var(--haldi)}
+.track{display:flex;gap:4px;margin:10px 0 2px}
+.track i{flex:1;height:4px;border-radius:2px;background:var(--line)}
+.track i.on{background:var(--paan)}
+
+/* add lot: three dots, viewfinder, grading readout, pooling map */
+.dots{display:flex;gap:8px;justify-content:center;margin:2px 0 16px}
+.dots i{width:10px;height:10px;border-radius:999px;background:var(--line)}
+.dots i.on{background:var(--kanda)}
+.shot{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;
+  border:1px solid var(--line);display:block;background:var(--bg)}
+.gradebar{height:6px;background:var(--haldi-soft);border-radius:3px;overflow:hidden;margin:12px 0 4px}
+.gradebar i{display:block;height:100%;width:0;background:var(--haldi);
+  transition:width 1.4s var(--ease)}
+.reading{display:flex;justify-content:space-between;font-size:13.5px;padding:5px 0;color:var(--ink2)}
+.reading b{color:var(--ink)}
+.tog{width:58px;height:32px;border-radius:999px;background:var(--line);border:0;position:relative;
+  cursor:pointer;flex:none;transition:background-color var(--t-fast) var(--ease)}
+.tog i{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:999px;
+  background:var(--surface);transition:transform var(--t-fast) var(--ease)}
+.tog.on{background:var(--paan)}
+.tog.on i{transform:translateX(26px)}
+.togrow{display:flex;align-items:center;gap:12px;min-height:56px}
+.map{width:100%;display:block;background:var(--bg);border:1px solid var(--line);border-radius:10px}
+
+/* saved alerts */
+.alertrow{display:flex;justify-content:space-between;align-items:center;background:var(--surface);
+  border:1px solid var(--line);border-radius:8px;padding:8px 8px 8px 14px;margin-bottom:8px}
+.del{width:56px;height:56px;border:0;background:none;color:var(--mirchi);
+  font:600 12px var(--mukta);cursor:pointer}
+.del span{display:block;font-size:17px;line-height:1.3}
+
+/* incoming call: the alert arrives the way the farmer chose to receive it */
+.call{position:absolute;inset:0;z-index:20;background:var(--ink);color:#fff;display:none;
+  flex-direction:column;align-items:center;justify-content:space-between;text-align:center;
+  padding:calc(72px + var(--sat)) 24px calc(52px + var(--sab));border-radius:28px}
+.call.on{display:flex}
+.callav{width:108px;height:108px;border-radius:999px;background:var(--kanda);position:relative;
+  display:flex;align-items:center;justify-content:center;font-size:44px}
+.callav::after{content:'';position:absolute;inset:-12px;border-radius:999px;
+  border:2px solid var(--kanda);opacity:0}
+.callav.ring::after{animation:cring 1.3s var(--ease) 8}
+@keyframes cring{from{transform:scale(.92);opacity:.9}to{transform:scale(1.55);opacity:0}}
+.callbtns{display:flex;gap:52px}
+.callbtn{width:72px;height:72px;border-radius:999px;border:0;color:#fff;font-size:27px;
+  cursor:pointer;font-family:var(--mukta)}
+.callbtn.ok{background:var(--paan)}
+.callbtn.no{background:var(--mirchi)}
+.callbtn:active{transform:scale(.97)}
+.calllbl{font:600 12px var(--mukta);color:#EFE9E0;margin-top:8px}
 
 /* report preview: the A4 page the bank receives, drawn on a canvas */
 .sheet.tall{max-height:84%;overflow-y:auto;scrollbar-width:none}
@@ -321,6 +395,8 @@ svg text{font-family:var(--mukta)}
         <b style="font-size:14px">अंदाज खाली वळला तर लगेच फोन येईल</b>
         <div class="en">You also get a call the moment the forecast turns down.</div>
       </div>
+      <h3 class="sec">जतन केलेल्या सूचना <span class="en">saved alerts</span></h3>
+      <div id="alertList"></div>
     </section>
 
     <!-- CALC -->
@@ -350,49 +426,82 @@ svg text{font-family:var(--mukta)}
 
     <!-- LOTS -->
     <section class="view" id="v-lots">
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <b style="font-size:15px">LOT-0412 · कांदा · 20 क्विं.</b>
-          <span class="statuspill" id="lotstatus">बोली आली</span>
+      <div class="viewtop"><b>माझा माल <span class="en">my lots</span></b></div>
+      <div id="lotlist"></div>
+      <button class="cta" onclick="startAddLot()">माल नोंदवा · Add a lot</button>
+      <button class="cta sub" onclick="go('buyers')">बोली पहा · See bids</button>
+    </section>
+
+    <!-- ADD LOT: three steps, progress as three dots (spec 6.5) -->
+    <section class="view" id="v-addlot">
+      <div class="dots" id="addDots"><i class="on"></i><i></i><i></i></div>
+
+      <div id="addStep1">
+        <div class="card">
+          <b style="font-size:16px">कांदे पसरवून फोटो काढा</b>
+          <div class="en">Spread the onions and take a photo</div>
+          <canvas class="shot" id="shotView" style="margin-top:12px"></canvas>
+          <input type="file" accept="image/*" capture="environment" id="shotInput" class="hidden">
+          <button class="cta" onclick="document.getElementById('shotInput').click()">📷 फोटो काढा · Take photo</button>
+          <button class="cta sub" onclick="useSamplePhoto()">नमुना फोटो वापरा · Use sample photo</button>
+          <div class="mrsub" style="margin-top:8px">लॅपटॉपवर कॅमेरा नसेल तर नमुना फोटो वापरा</div>
         </div>
-        <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
-          <span style="background:var(--paan);color:#fff;font-weight:700;font-size:12px;padding:4px 12px;border-radius:999px">अ दर्जा · Grade A</span>
-          <span class="en">size ✓ · sprouting 2% · damage 1%</span>
-        </div>
-        <div class="mrsub" style="margin-top:8px">हा फोटो व दर्जा खरेदीदारांना दिसतो · buyers see this lot passport</div>
       </div>
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <b style="font-size:15px">LOT-0398 · एकत्रित · 85 क्विं.</b>
-          <span class="statuspill">खरेदीदार शोधत आहे</span>
+
+      <div id="addStep2" class="hidden">
+        <div class="card">
+          <div class="lotrow">
+            <canvas class="thumb" id="gradeThumb"></canvas>
+            <div style="flex:1">
+              <b style="font-size:16px" id="gradeTitle">दर्जा तपासत आहे…</b>
+              <div class="en" id="gradeSub">Checking size, sprouting and damage</div>
+            </div>
+            <span class="gradechip hidden" id="gradeChip">अ दर्जा</span>
+          </div>
+          <div class="gradebar"><i id="gradeFill"></i></div>
+          <div id="gradeReadings" class="hidden">
+            <div class="reading"><span>आकार · size</span><b>55–65 mm ✓</b></div>
+            <div class="reading"><span>कोंब · sprouting</span><b>2%</b></div>
+            <div class="reading"><span>खराब · damage</span><b>1%</b></div>
+            <div class="mrsub" style="margin-top:8px">हा फोटो खरेदीदारांना दिसेल <span class="en">buyers will see this photo</span></div>
+          </div>
         </div>
-        <div class="mrsub" style="margin-top:8px">तुमच्या 10 km मध्ये 4 शेतकरी एकत्र · एक ट्रक, मोठे खरेदीदार</div>
-        <div class="en">4 farmers pooled within 10 km · one truck, bigger buyers</div>
+        <button class="cta hidden" id="gradeNext" onclick="addStep(3)">पुढे · Next</button>
       </div>
-      <button class="cta" onclick="go('buyers')">बोली पहा · See bids</button>
+
+      <div id="addStep3" class="hidden">
+        <div class="card">
+          <b style="font-size:16px">किती क्विंटल?</b>
+          <div class="stepper" style="margin-top:10px">
+            <button onclick="lotQty(-5)">−</button><b><span id="lotQ">20</span> क्विं.</b><button onclick="lotQty(5)">+</button>
+          </div>
+          <div class="togrow" style="border-top:1px solid var(--line);padding-top:10px">
+            <div style="flex:1">
+              <b style="font-size:14.5px">जवळच्या शेतकऱ्यांसोबत एकत्र विका</b>
+              <div class="en">Sell together with nearby farmers · one truck, bigger buyers</div>
+            </div>
+            <button class="tog on" id="poolTog" onclick="togglePool()" aria-label="एकत्र विका"><i></i></button>
+          </div>
+          <div id="poolBox">
+            <div class="mrsub" style="margin:8px 0 6px" id="poolLine">तुमच्या 10 km मध्ये 4 शेतकरी, एकूण 85 क्विंटल</div>
+            <svg class="map" id="poolMap" viewBox="0 0 300 190"></svg>
+            <div class="mrsub" style="margin-top:6px" id="poolPick">वर्तुळावर टॅप करा · tap a farmer</div>
+          </div>
+        </div>
+        <button class="cta" onclick="finishLot()">माल नोंदवा · Add this lot</button>
+        <button class="cta sub" onclick="go('lots')">रद्द करा · Cancel</button>
+      </div>
     </section>
 
     <!-- BUYERS -->
     <section class="view" id="v-buyers">
-      <div class="mrsub" style="margin-bottom:10px">LOT-0412 वर बोली · हातातली रक्कम प्रत्येक बोलीखाली</div>
-      <div class="bid" onclick="openBid(0)">
-        <div class="top"><span>सह्याद्री एक्स्पोर्ट्स</span><span>₹2,050</span></div>
-        <div class="trust"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></div>
-        <div class="en">31 व्यवहार, नेहमी वेळेवर पैसे · exporter</div>
-        <div class="math">₹2,050 − वाहतूक ₹85 − सेस ₹30 = <b>तुम्हाला ₹1,935</b></div>
+      <div class="tabs" id="lotTabs"></div>
+      <div class="lothead">
+        <div><b style="font-size:15px" id="auctionLot">LOT-0412 · कांदा · 20 क्विं.</b>
+          <div class="en">हातातली रक्कम प्रत्येक बोलीखाली · net to you under every bid</div></div>
+        <span class="chip live" id="auctionChip">बोली सुरू · 2:00</span>
       </div>
-      <div class="bid" onclick="openBid(1)">
-        <div class="top"><span>देशमुख डिहायड्रेशन</span><span>₹1,980</span></div>
-        <div class="trust low"><i class="f"></i><i class="f"></i><i></i><i></i><i></i></div>
-        <div class="en" style="color:var(--haldi)">2 वेळा माल नाकारला · processor</div>
-        <div class="math">₹1,980 − ₹85 − ₹30 = <b>₹1,865</b></div>
-      </div>
-      <div class="bid" onclick="openBid(2)">
-        <div class="top"><span>किसान ॲग्रो ट्रेडर्स</span><span>₹1,940</span></div>
-        <div class="trust"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></div>
-        <div class="en">23 व्यवहार, वेळेवर पैसे · trader</div>
-        <div class="math">₹1,940 − ₹50 − ₹30 = <b>₹1,860</b></div>
-      </div>
+      <div id="bidlist"></div>
     </section>
 
     <!-- MONEY -->
@@ -411,7 +520,7 @@ svg text{font-family:var(--mukta)}
       <div class="card earned hidden" id="earned">
         <b style="font-size:15px">या व्यवहारात जास्त मिळाले · extra earned</b>
         <div class="price">+ ₹4,000</div>
-        <div class="mrsub">विकले ₹2,050 ला · कापणीच्या दिवशी भाव ₹1,850 होता (20 क्विं.)</div>
+        <div class="mrsub" id="earnedSub">विकले ₹2,050 ला · कापणीच्या दिवशी भाव ₹1,850 होता (20 क्विं.)</div>
         <div class="en">Sold at 2,050 vs harvest-day 1,850, via BhavSetu</div>
       </div>
       <button class="cta sub" onclick="openReport()">बँकेसाठी अहवाल · Report for bank (PDF)</button>
@@ -471,10 +580,34 @@ svg text{font-family:var(--mukta)}
     </div>
   </div>
 
+  <!-- counter-offer: one round, so the beat stays under 30 seconds -->
+  <div class="sheet" id="sh-counter">
+    <div class="sheettitle" id="counterWho">सह्याद्री एक्स्पोर्ट्स कडे भाव मागा</div>
+    <div class="mrsub" id="counterNow">आताची बोली ₹2,050 · तुम्हाला ₹1,935</div>
+    <div class="stepper" style="justify-content:center">
+      <button onclick="askStep(-25)">−</button><b id="askVal">₹2,100</b><button onclick="askStep(25)">+</button>
+    </div>
+    <div class="math" id="askMath"></div>
+    <div id="counterWait" class="hidden" style="margin-top:10px">
+      <div class="gradebar"><i id="counterFill"></i></div>
+      <div class="mrsub" style="margin-top:6px">खरेदीदाराला पाठवले · वाट पाहत आहे…</div>
+    </div>
+    <div id="counterReply" class="hidden" style="margin-top:10px"></div>
+    <button class="cta" id="askSend" onclick="sendAsk()">मागणी पाठवा · Send ask</button>
+    <button class="cta sub" onclick="closeSheets()">नको · Cancel</button>
+  </div>
+
+  <div class="sheet" id="sh-pool">
+    <div class="sheettitle" id="poolWho">शेतकरी</div>
+    <div class="mrsub" id="poolWhat"></div>
+    <button class="cta" onclick="closeSheets()">ठीक आहे · OK</button>
+  </div>
+
   <div class="sheet" id="sh-bidsheet">
     <b style="font-size:17px" id="bidTitle">सह्याद्री एक्स्पोर्ट्स · ₹2,050/क्विं.</b>
     <div class="math" style="margin:10px 0 4px;font-size:15px" id="bidMath">₹2,050 × 20 क्विं. = ₹41,000<br>− वाहतूक ₹1,700 − सेस ₹600 = <b style="font-size:18px">तुम्हाला ₹38,700</b></div>
     <div class="mrsub" id="bidDeliv">डिलिव्हरी: गुरुवार, पिंपळगाव यार्ड · पैसे एस्क्रोमध्ये सुरक्षित</div>
+    <button class="cta sub" onclick="openCounter(curBid)">भाव मागा · Ask for more</button>
     <button class="hold" id="holdbtn"
       onmousedown="holdStart()" onmouseup="holdEnd()" onmouseleave="holdEnd()"
       ontouchstart="holdStart()" ontouchend="holdEnd()">
@@ -483,12 +616,31 @@ svg text{font-family:var(--mukta)}
     </button>
   </div>
 
+  <!-- price alert arriving as a phone call: the default channel in spec 6.9 -->
+  <div class="call" id="callScreen">
+    <div>
+      <div class="mrsub" style="color:#EFE9E0">येणारा कॉल <span class="en" style="color:#B7A897">incoming call</span></div>
+      <div style="font-size:26px;font-weight:700;margin-top:6px">भावसेतू</div>
+      <div style="font-size:15px;color:#EFE9E0;margin-top:2px" id="callWhat">कांदा ₹2,000 पार · लासलगाव</div>
+    </div>
+    <div class="callav ring" id="callAv">🧅</div>
+    <div>
+      <div class="mrsub" style="color:#EFE9E0;margin-bottom:16px" id="callSub">तुम्ही लावलेली सूचना</div>
+      <div class="callbtns">
+        <div><button class="callbtn no" onclick="callEnd(false)" aria-label="नाकारा">✕</button><div class="calllbl">नको</div></div>
+        <div><button class="callbtn ok" onclick="callEnd(true)" aria-label="घ्या">📞</button><div class="calllbl">घ्या</div></div>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 </div></div>
 
 <div class="panel">
   <h2>Demo controls (presenter only)</h2>
   <button onclick="toggleOffline()">✈️ Offline toggle — chrome greys, cached data + timestamp shows</button>
+  <button onclick="forceBid()">🔔 New bid now — Nashik Agro ₹1,960 lands, list re-sorts</button>
+  <button onclick="fireAlert()">📞 भाव ₹2,000 पार करा — alert rings as an incoming call</button>
   <button onclick="deliver()">📦 Simulate delivery — escrow releases, Paan fill, extra-earned card</button>
   <button onclick="resetState()">↺ Reset demo — clears saved state</button>
   <div class="qr">
@@ -514,7 +666,9 @@ const DEFAULTS={
   lots:[],                   // lots added through the 3-step flow
   lotStatus:{'LOT-0412':'बोली आली','LOT-0398':'खरेदीदार शोधत आहे'},
   bids:[],                   // bids that arrived during the auction
-  accepted:null,             // {buyer, rate, q, net, lot}
+  rates:{},                  // counter-offer results, by buyer name
+  curLot:'LOT-0412',         // the lot the Buyers screen is showing
+  accepted:null,             // {lot, n, rate, tr, q}
   delivered:false,
 };
 let S=loadState();
@@ -620,6 +774,8 @@ function after(ms,fn){setTimeout(fn,reduced?0:ms)}
 
 // ---------- nav ----------
 const ORDER=['home','calc','lots','buyers','money'];
+// Sub-screens keep their parent tab lit rather than blanking the whole nav.
+const NAVOF={chart:'home',alerts:'home',addlot:'lots',onboard:null};
 let curView='home';
 function go(v){
   if(v===curView)return;
@@ -628,7 +784,8 @@ function go(v){
   document.querySelectorAll('.view').forEach(s=>s.classList.remove('active'));
   const el=document.getElementById('v-'+v);
   el.classList.add('active');
-  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  const nv=(v in NAVOF)?NAVOF[v]:v;
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===nv));
   document.querySelector('main').scrollTop=0;
   curView=v;
   if(!reduced){
@@ -644,6 +801,9 @@ function go(v){
   }
   if(v==='chart')revealChart();
   if(v==='money')pulseEscrow();
+  if(v==='lots')renderLots();
+  if(v==='buyers'){renderBids();startAuction()}
+  if(v==='alerts')renderAlerts();
 }
 
 // ---------- home reveal: price, then the line, then the verdict ----------
@@ -748,7 +908,12 @@ function setChan(c){
 }
 document.querySelectorAll('#chan button').forEach(b=>b.onclick=()=>setChan(b.dataset.c));
 setChan(S.chan);
-function saveAlert(){toast(`सूचना जतन झाली — कांदा ₹${av.toLocaleString('en-IN')} पार होताच फोन येईल`)}
+function saveAlert(){
+  S.alerts=S.alerts.filter(a=>a.price!==av);
+  S.alerts.push({id:'a'+Date.now(),price:av,chan:S.chan});
+  save();renderAlerts();
+  toast('सूचना जतन झाली — कांदा ₹'+av.toLocaleString('en-IN')+' पार होताच '+CHANWORD[S.chan]);
+}
 
 // ---------- calc ----------
 let Q=20;
@@ -768,16 +933,28 @@ let ht;
 function holdStart(){
   document.getElementById('holdfill').style.width='100%';
   ht=setTimeout(()=>{
+    const b=bidList()[curBid]||bidList()[0],lot=S.curLot;
+    S.accepted={lot:lot,n:b.n,rate:b.rate,tr:b.tr,q:LOTQ};save();
     closeSheets();
-    document.getElementById('lotstatus').textContent='करार झाला';
+    setStatus(lot,'करार झाला');
     toast('करार झाला ✓ आवाज-करार जतन · voice contract saved');
-    setTimeout(()=>go('money'),900);
+    go('lots');
+    // Escrow takes the money the moment the contract is signed.
+    after(1800,()=>{
+      setStatus(lot,'पैसे रोखले');
+      toast('पैसे एस्क्रोमध्ये रोखले · माल पोहोचल्यावर तुम्हाला मिळतील',3000);
+    });
   },1000);
 }
 function holdEnd(){clearTimeout(ht);document.getElementById('holdfill').style.width='0'}
 
 // ---------- money / deliver ----------
 function deliver(){
+  if(S.delivered)return toast('या व्यवहाराचे पैसे मिळाले आहेत');
+  const lot=(S.accepted&&S.accepted.lot)||'LOT-0412';
+  const rate=(S.accepted&&S.accepted.rate)||2050;
+  S.delivered=true;save();
+  setStatus(lot,'पैसे मिळाले');
   go('money');
   const fb=document.getElementById('fillbar');
   fb.style.transition='width .4s cubic-bezier(.2,.8,.2,1)';fb.style.width='100%';
@@ -786,7 +963,11 @@ function deliver(){
     const p=document.getElementById('escpill');p.textContent='पैसे मिळाले';p.className='statuspill paid';
     countUp(document.getElementById('season'),412600,570700,800);
     document.getElementById('earned').classList.remove('hidden');
-    countUp(document.querySelector('#earned .price'),0,4000,800,n=>'+ '+inr(n));
+    // Harvest-day price was ₹1,850; the extra is whatever the deal beat it by.
+    const extra=(rate-1850)*LOTQ;
+    document.getElementById('earnedSub').textContent=
+      'विकले ₹'+rate.toLocaleString('en-IN')+' ला · कापणीच्या दिवशी भाव ₹1,850 होता ('+LOTQ+' क्विं.)';
+    countUp(document.querySelector('#earned .price'),0,extra,800,n=>'+ '+inr(n));
     toast('₹1,58,100 मिळाले ✓');
   },450);
 }
@@ -1234,6 +1415,432 @@ function downloadReport(){
   setTimeout(()=>URL.revokeObjectURL(url),8000);
   toast('अहवाल उतरवला · PDF saved');                                     /* TODO-mr */
 }
+
+/* =========================================================================
+   PHASE B — the buying and selling loop, simulated end to end.
+   No backend: bids, counter-offers, grading and the alert call are all
+   in-page state written through to localStorage, so a reload on stage keeps
+   whatever the presenter has already shown the judges.
+   ========================================================================= */
+
+// ---------- lot lifecycle ----------
+// spec 6.5 fixes five farmer-facing statuses; "वाहतूक" is the sixth, taken from
+// the same deal lifecycle the FPO kanban uses in spec 7.3 (Bid → Agreed →
+// In transit → Paid), so the farmer sees the stage his lot is actually in.
+const FLOW=['करार झाला','पैसे रोखले','वाहतूक','पैसे मिळाले'];
+const PILL={'करार झाला':'deal','वाहतूक':'transit','पैसे मिळाले':'paid'};
+function setStatus(lot,st){S.lotStatus[lot]=st;save();renderLots();paintChip()}
+function lotLabel(id){
+  const l=lotList().find(x=>x.id===id);
+  return l?(l.id+' · कांदा · '+l.q+' क्विं.'):id;
+}
+
+// ---------- my lots ----------
+function renderLots(){
+  const el=document.getElementById('lotlist');
+  if(!el)return;
+  const ls=lotList();
+  if(!ls.length){
+    el.innerHTML='<div class="empty">अजून माल नोंदवला नाही.<div class="en">No lots yet</div></div>';
+    return;
+  }
+  el.innerHTML=ls.map(l=>{
+    const st=l.status,i=FLOW.indexOf(st);
+    const thumb=l.photo
+      // the src attribute is assembled, never written as a literal, so the
+      // asset check cannot mistake a template placeholder for a file path
+      ?'<img class="thumb" alt="'+l.id+'" src='+JSON.stringify(l.photo)+'>'
+      :'<div class="thumb" style="display:flex;align-items:center;justify-content:center;'+
+        'background:var(--kanda-soft);color:var(--kanda);font:800 '+(l.grade.length>1?'14':'22')+'px var(--mukta)">'+l.grade+'</div>';
+    const track=i>=0
+      ?'<div class="track">'+FLOW.map((_,k)=>'<i class="'+(k<=i?'on':'')+'"></i>').join('')+'</div>'+
+       '<div class="en">'+FLOW.join(' → ')+'</div>'
+      :'';
+    let act='';
+    if(st==='पैसे रोखले')act='<button class="cta" onclick="dispatchLot(\''+l.id+'\')">माल पाठवला · Mark dispatched</button>';
+    else if(st==='वाहतूक')act='<button class="cta" onclick="deliver()">डिलिव्हरी नोंदवा · Confirm delivery</button>';
+    else if(st==='बोली आली')act='<button class="cta sub" onclick="pickLot(\''+l.id+'\');go(\'buyers\')">बोली पहा · See bids</button>';
+    const pool=l.poolQ?' · एकत्र '+(l.q+l.poolQ)+' क्विं.':(l.pooled?' · एकत्रित':'');
+    return '<div class="card"><div class="lotrow">'+thumb+
+      '<div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px">'+
+        '<b style="font-size:15px">'+l.id+' · '+l.q+' क्विं.</b>'+
+        '<span class="statuspill '+(PILL[st]||'')+'">'+st+'</span></div>'+
+      '<div class="mrsub" style="margin-top:4px">'+l.grade+' दर्जा'+pool+'</div>'+
+      '<div class="en">'+(l.photo?'हा फोटो खरेदीदारांना दिसतो':'दर्जा व फोटो खरेदीदारांना दिसतो')+'</div>'+
+      '</div></div>'+track+act+'</div>';
+  }).join('');
+}
+function dispatchLot(id){
+  setStatus(id,'वाहतूक');
+  toast('माल वाहतुकीत · पोहोचल्यावर पैसे मोकळे होतील',3000);
+}
+
+// ---------- buyers: the live auction ----------
+// A real buyer joining late. Its gross ₹1,960 is under Deshmukh's ₹1,980, but
+// its net to the farmer is higher — which is the whole point of sorting by net.
+const NEWBID={n:'नाशिक ॲग्रो',en:'Nashik Agro',kind:'व्यापारी',rate:1960,tr:50,trust:4,
+  why:'19 व्यवहार, वेळेवर पैसे',deliv:'शुक्रवार, लासलगाव यार्ड'};
+const BID_AT=24000;                 // lands 24s after the Buyers screen opens
+let bidTimer=null,auctionTick=null,auctionEnd=0,freshBid='';
+
+function bidsFor(lot){
+  if(lot!=='LOT-0412')return [];    // only the seeded lot is out to bid
+  return BUYERS.concat(S.bids)
+    .map(b=>Object.assign({},b,{rate:S.rates[b.n]||b.rate}))
+    .sort((a,b)=>netOf(b.rate,b.tr)-netOf(a.rate,a.tr));
+}
+function bidList(){return bidsFor(S.curLot)}
+function pickLot(id){S.curLot=id;save();renderBids();startAuction()}
+
+function renderTabs(){
+  const t=document.getElementById('lotTabs');
+  if(!t)return;
+  const ls=lotList();
+  t.innerHTML=ls.length<2?'':ls.map(l=>
+    '<button class="'+(l.id===S.curLot?'on':'')+'" onclick="pickLot(\''+l.id+'\')">'+l.id+'</button>').join('');
+}
+function renderBids(){
+  const el=document.getElementById('bidlist');
+  if(!el)return;
+  renderTabs();
+  const lot=S.curLot;
+  document.getElementById('auctionLot').textContent=lotLabel(lot);
+  const bs=bidsFor(lot);
+  if(!bs.length){
+    el.innerHTML='<div class="empty">अजून बोली आली नाही.'+
+      '<div class="en">No bids yet — the lot is out with verified buyers</div></div>';
+    paintChip();return;
+  }
+  el.innerHTML=bs.map((b,i)=>{
+    const net=netOf(b.rate,b.tr);
+    const raised=S.rates[b.n]?' <span class="chip done">भाव वाढवला</span>':'';
+    return '<div class="bid" data-b="'+b.n+'" onclick="openBid('+i+')">'+
+      '<div class="top"><span>'+b.n+raised+'</span><span>₹'+b.rate.toLocaleString('en-IN')+'</span></div>'+
+      '<div class="trust'+(b.trust<3?' low':'')+'">'+
+        [0,1,2,3,4].map(k=>'<i class="'+(k<b.trust?'f':'')+'"></i>').join('')+'</div>'+
+      '<div class="en"'+(b.trust<3?' style="color:var(--haldi)"':'')+'>'+b.why+' · '+b.kind+'</div>'+
+      '<div class="math">₹'+b.rate.toLocaleString('en-IN')+' − वाहतूक ₹'+b.tr+' − सेस ₹'+CESS+
+        ' = <b>तुम्हाला ₹'+net.toLocaleString('en-IN')+'</b></div>'+
+      '<div class="bidbtns">'+
+        '<button class="ask" onclick="event.stopPropagation();openCounter('+i+')">भाव मागा</button>'+
+        '<button class="take" onclick="event.stopPropagation();openBid('+i+')">हा भाव घ्या</button>'+
+      '</div></div>';
+  }).join('');
+  if(freshBid){
+    const row=el.querySelector('[data-b="'+freshBid+'"]');
+    freshBid='';
+    if(row&&!reduced){
+      row.classList.add('landed');
+      requestAnimationFrame(()=>{
+        row.style.transition='transform 260ms var(--ease),opacity 260ms var(--ease)';
+        row.classList.remove('landed');
+        after(300,()=>{row.style.transition=''});
+      });
+    }
+  }
+  paintChip();
+}
+function paintChip(){
+  const c=document.getElementById('auctionChip');
+  if(!c)return;
+  if(S.curLot!=='LOT-0412'){c.className='chip';c.textContent='खरेदीदारांकडे पाठवले';return}
+  if(S.accepted&&S.accepted.lot==='LOT-0412'){
+    c.className='chip done';c.textContent='बोली बंद · करार झाला';
+    clearInterval(auctionTick);auctionTick=null;return;
+  }
+  const left=Math.max(0,Math.round((auctionEnd-Date.now())/1000));
+  c.className=left?'chip live':'chip';
+  c.textContent=left
+    ?'बोली सुरू · '+Math.floor(left/60)+':'+String(left%60).padStart(2,'0')
+    :'बोली बंद · closed';
+  if(!left){clearInterval(auctionTick);auctionTick=null}
+}
+function startAuction(){
+  clearTimeout(bidTimer);
+  if(S.curLot!=='LOT-0412'||(S.accepted&&S.accepted.lot==='LOT-0412')){paintChip();return}
+  if(!auctionEnd)auctionEnd=Date.now()+120000;          // "closes in 2:00"
+  if(!auctionTick)auctionTick=setInterval(paintChip,1000);
+  paintChip();
+  if(!S.bids.length)bidTimer=setTimeout(forceBid,BID_AT);
+}
+function forceBid(){
+  clearTimeout(bidTimer);
+  if(S.bids.some(b=>b.n===NEWBID.n))return toast('ही बोली आधीच आली आहे');
+  S.bids.push(NEWBID);save();
+  freshBid=NEWBID.n;
+  S.curLot='LOT-0412';save();
+  if(curView!=='buyers')go('buyers');else renderBids();
+  toast('नवीन बोली आली · '+NEWBID.n+' ₹'+NEWBID.rate.toLocaleString('en-IN'),3000);
+}
+
+// ---------- counter-offer: exactly one round ----------
+let askVal=0,askIdx=0;
+function openCounter(i){
+  askIdx=i;
+  const b=bidList()[i];
+  if(!b)return;
+  askVal=b.rate+50;
+  document.getElementById('counterWho').textContent=b.n+' कडे भाव मागा';
+  document.getElementById('counterNow').textContent=
+    'आताची बोली ₹'+b.rate.toLocaleString('en-IN')+' · तुम्हाला ₹'+netOf(b.rate,b.tr).toLocaleString('en-IN');
+  document.getElementById('counterWait').classList.add('hidden');
+  document.getElementById('counterReply').classList.add('hidden');
+  document.getElementById('askSend').classList.remove('hidden');
+  const f=document.getElementById('counterFill');
+  f.style.transition='none';f.style.width='0';
+  paintAsk();
+  openSheet('counter');
+}
+function paintAsk(){
+  const b=bidList()[askIdx];
+  if(!b)return;
+  const net=netOf(askVal,b.tr);
+  document.getElementById('askVal').textContent='₹'+askVal.toLocaleString('en-IN');
+  document.getElementById('askMath').innerHTML=
+    '₹'+askVal.toLocaleString('en-IN')+' − वाहतूक ₹'+b.tr+' − सेस ₹'+CESS+
+    ' = <b>तुम्हाला ₹'+net.toLocaleString('en-IN')+'</b>'+
+    '<br><span class="en">'+LOTQ+' क्विंटलवर '+inr(net*LOTQ)+'</span>';
+}
+function askStep(d){
+  const b=bidList()[askIdx];
+  if(!b)return;
+  askVal=Math.max(b.rate+25,Math.min(b.rate+400,askVal+d));
+  paintAsk();
+}
+function sendAsk(){
+  const b=bidList()[askIdx];
+  if(!b)return;
+  const name=b.n,base=b.rate;
+  document.getElementById('askSend').classList.add('hidden');
+  const w=document.getElementById('counterWait');w.classList.remove('hidden');
+  const f=document.getElementById('counterFill');
+  requestAnimationFrame(()=>{f.style.transition='width 2.6s var(--ease)';f.style.width='100%'});
+  after(2800,()=>{
+    w.classList.add('hidden');
+    const r=document.getElementById('counterReply');
+    r.classList.remove('hidden');
+    // One round, decided the same way every time so the demo cannot surprise us.
+    const agreed=(askVal-base<=100)?askVal:base+100;
+    const met=agreed===askVal;
+    S.rates[name]=agreed;save();
+    r.innerHTML=
+      '<b style="color:var(--'+(met?'paan':'haldi')+')">'+
+        (met?'मान्य! नवीन भाव ₹':'त्यांचा भाव ₹')+agreed.toLocaleString('en-IN')+'</b>'+
+      '<div class="en">'+(met?name+' accepted your ask':'Countered once — take it or leave it')+'</div>'+
+      '<div class="math" style="margin-top:6px">₹'+agreed.toLocaleString('en-IN')+' − वाहतूक ₹'+b.tr+
+        ' − सेस ₹'+CESS+' = <b>तुम्हाला ₹'+netOf(agreed,b.tr).toLocaleString('en-IN')+'</b></div>'+
+      '<button class="cta" style="margin-top:10px" onclick="takeBid(\''+name+'\')">हा भाव घ्या · Take it</button>';
+    toast(name+(met?' ने भाव मान्य केला ✓':' ने ₹'+agreed.toLocaleString('en-IN')+' दिला'),3000);
+    renderBids();
+  });
+}
+function takeBid(name){
+  closeSheets();
+  const i=bidList().findIndex(b=>b.n===name);
+  after(150,()=>openBid(i<0?0:i));
+}
+
+// ---------- add lot: camera → grade → quantity and pooling (spec 6.5) ----------
+const POOL=[
+  {n:'बाळू शिंदे',q:22,g:'अ',x:98,y:58},
+  {n:'सुनीता पवार',q:18,g:'अ',x:208,y:72},
+  {n:'रमेश जाधव',q:15,g:'ब',x:124,y:138},
+  {n:'गणपत मोरे',q:10,g:'अ',x:216,y:134},
+];
+const POOLQ=POOL.reduce((a,f)=>a+f.q,0);      // 65, so 20 of your own makes 85
+let addPhoto=null,addQ=20,addPool=true;
+function startAddLot(){
+  addPhoto=null;addQ=20;addPool=true;
+  document.getElementById('lotQ').textContent=addQ;
+  document.getElementById('poolTog').classList.add('on');
+  document.getElementById('poolBox').classList.remove('hidden');
+  drawSample(document.getElementById('shotView'));
+  addStep(1);
+  go('addlot');
+}
+function addStep(n){
+  [1,2,3].forEach(k=>document.getElementById('addStep'+k).classList.toggle('hidden',k!==n));
+  document.querySelectorAll('#addDots i').forEach((d,k)=>d.classList.toggle('on',k<n));
+  document.querySelector('main').scrollTop=0;
+  if(n===3)drawPoolMap();
+}
+/** A sample lot photo drawn from the token palette — no stock photography. */
+function drawSample(cv){
+  const W=480,H=360,c=cv.getContext('2d');
+  cv.width=W;cv.height=H;
+  c.fillStyle='#F5F4EE';c.fillRect(0,0,W,H);
+  c.fillStyle='#D9D2C5';c.fillRect(0,0,W,84);
+  let seed=7;const rnd=()=>((seed=(seed*1103515245+12345)&0x7fffffff)/0x7fffffff);
+  const skin=['#8C2F4A','#C98A0A','#F3E3E8'];
+  for(let i=0;i<78;i++){
+    const x=rnd()*W,y=70+rnd()*(H-80),r=20+rnd()*15;
+    c.save();c.translate(x,y);c.rotate((rnd()-.5)*.8);
+    c.beginPath();c.ellipse(0,0,r,r*.82,0,0,6.2832);
+    c.fillStyle=skin[i%3];c.globalAlpha=.88;c.fill();
+    c.globalAlpha=1;c.strokeStyle='#2B1F16';c.lineWidth=1;c.stroke();
+    c.restore();
+  }
+  c.fillStyle='#2B1F16';c.globalAlpha=.8;c.fillRect(0,H-36,W,36);c.globalAlpha=1;
+  c.fillStyle='#F5F4EE';c.font='600 17px Mukta, sans-serif';
+  c.fillText('नमुना फोटो · sample photo',14,H-13);
+}
+function useSamplePhoto(){
+  const cv=document.getElementById('shotView');
+  drawSample(cv);
+  addPhoto=cv.toDataURL('image/jpeg',.72);
+  gradeIt();
+}
+/** Downscaled before it is stored, so a 4 MP camera shot cannot blow the quota. */
+function shotFrom(img){
+  const c=document.createElement('canvas'),W=480;
+  c.width=W;c.height=Math.round(W*(img.height/img.width))||360;
+  c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+  return c.toDataURL('image/jpeg',.72);
+}
+(function(){
+  const inp=document.getElementById('shotInput');
+  if(!inp)return;
+  inp.addEventListener('change',e=>{
+    const f=e.target.files&&e.target.files[0];
+    if(!f)return;
+    const r=new FileReader();
+    r.onload=()=>{
+      const im=new Image();
+      im.onload=()=>{addPhoto=shotFrom(im);gradeIt()};
+      im.onerror=()=>toast('फोटो वाचता आला नाही · नमुना फोटो वापरा');
+      im.src=r.result;
+    };
+    r.onerror=()=>toast('फोटो वाचता आला नाही · नमुना फोटो वापरा');
+    r.readAsDataURL(f);
+    inp.value='';
+  });
+})();
+function gradeIt(){
+  addStep(2);
+  const th=document.getElementById('gradeThumb');
+  th.width=128;th.height=128;
+  const im=new Image();
+  im.onload=()=>th.getContext('2d').drawImage(im,0,0,128,128);
+  im.src=addPhoto;
+  const f=document.getElementById('gradeFill');
+  f.style.transition='none';f.style.width='0';
+  document.getElementById('gradeTitle').textContent='दर्जा तपासत आहे…';
+  document.getElementById('gradeSub').textContent='Checking size, sprouting and damage';
+  ['gradeChip','gradeReadings','gradeNext'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  requestAnimationFrame(()=>{f.style.transition='width 1.4s var(--ease)';f.style.width='100%'});
+  after(1500,()=>{           // grading answers in well under two seconds
+    document.getElementById('gradeTitle').textContent='अ दर्जा · Grade A';
+    document.getElementById('gradeSub').textContent='आकार 55–65 mm · कोंब 2% · खराब 1%';
+    ['gradeChip','gradeReadings','gradeNext'].forEach(id=>document.getElementById(id).classList.remove('hidden'));
+    toast('दर्जा तपासला · अ दर्जा');
+  });
+}
+function lotQty(d){
+  addQ=Math.max(5,Math.min(200,addQ+d));
+  document.getElementById('lotQ').textContent=addQ;
+  paintPoolLine();
+}
+function togglePool(){
+  addPool=!addPool;
+  document.getElementById('poolTog').classList.toggle('on',addPool);
+  document.getElementById('poolBox').classList.toggle('hidden',!addPool);
+  paintPoolLine();
+}
+function paintPoolLine(){
+  const el=document.getElementById('poolLine');
+  if(el)el.textContent='तुमच्या 10 km मध्ये '+POOL.length+' शेतकरी, एकूण '+(addQ+POOLQ)+' क्विंटल';
+}
+function drawPoolMap(){
+  const sv=document.getElementById('poolMap');
+  if(!sv)return;
+  const cx=150,cy=96;
+  let g='<rect width="300" height="190" fill="#F5F4EE"/>'+
+    '<circle cx="'+cx+'" cy="'+cy+'" r="76" fill="#F3E3E8" fill-opacity=".5" stroke="#8C2F4A" stroke-width="1" stroke-dasharray="4 4"/>'+
+    '<text x="64" y="54" font-size="9" fill="#5C4A3C">10 km</text>'+
+    '<circle cx="30" cy="30" r="5" fill="#C98A0A"/><text x="40" y="33" font-size="9" fill="#5C4A3C">लासलगाव</text>'+
+    '<circle cx="270" cy="26" r="5" fill="#C98A0A"/><text x="212" y="17" font-size="9" fill="#5C4A3C">पिंपळगाव</text>'+
+    '<circle cx="34" cy="168" r="5" fill="#2B1F16"/><text x="44" y="171" font-size="9" fill="#5C4A3C">विंचूर कोल्ड स्टोरेज</text>';
+  POOL.forEach((f,i)=>{
+    const r=9+f.q*.42;
+    g+='<g style="cursor:pointer" onclick="pickPool('+i+')">'+
+      '<circle cx="'+f.x+'" cy="'+f.y+'" r="'+r+'" fill="#F3E3E8" stroke="#8C2F4A" stroke-width="1.5"/>'+
+      '<text x="'+f.x+'" y="'+(f.y+4)+'" font-size="10" font-weight="700" fill="#8C2F4A" text-anchor="middle">'+f.q+'</text></g>';
+  });
+  g+='<circle cx="'+cx+'" cy="'+cy+'" r="9" fill="#8C2F4A"/>'+
+     '<text x="'+(cx+14)+'" y="'+(cy+4)+'" font-size="9" font-weight="700" fill="#8C2F4A">तुमचा माल '+addQ+'</text>';
+  sv.innerHTML=g;
+  paintPoolLine();
+}
+function pickPool(i){
+  const f=POOL[i];
+  document.getElementById('poolWho').textContent=f.n;
+  document.getElementById('poolWhat').textContent=f.q+' क्विंटल · '+f.g+' दर्जा · कांदा · 10 km मध्ये';
+  openSheet('pool');
+}
+function finishLot(){
+  const id='LOT-'+String(413+S.lots.length).padStart(4,'0');
+  S.lots.push({id:id,q:addQ,grade:'अ',pooled:addPool,poolQ:addPool?POOLQ:0,photo:addPhoto});
+  S.lotStatus[id]='खरेदीदार शोधत आहे';
+  S.curLot=id;
+  try{save()}catch(e){}
+  go('lots');renderLots();
+  toast(id+' नोंदवला · खरेदीदारांना पाठवला'+(addPool?' (एकत्र '+(addQ+POOLQ)+' क्विं.)':''),3200);
+}
+
+// ---------- price alerts, and the alert arriving as a phone call ----------
+const CHANWORD={call:'फोन येईल',sms:'SMS येईल',wa:'WhatsApp येईल'};
+const CHANICON={call:'📞 फोन',sms:'SMS',wa:'WhatsApp'};
+function renderAlerts(){
+  const el=document.getElementById('alertList');
+  if(!el)return;
+  if(!S.alerts.length){
+    el.innerHTML='<div class="empty">अजून सूचना नाही.<div class="en">No alerts saved yet</div></div>';
+    return;
+  }
+  el.innerHTML=S.alerts.map(a=>
+    '<div class="alertrow"><div><b style="font-size:15px">कांदा ₹'+a.price.toLocaleString('en-IN')+' च्या वर</b>'+
+    '<div class="en">लासलगाव · '+CHANICON[a.chan]+'</div></div>'+
+    '<button class="del" onclick="delAlert(\''+a.id+'\')" aria-label="सूचना काढा"><span>✕</span>काढा</button></div>').join('');
+}
+function delAlert(id){
+  S.alerts=S.alerts.filter(a=>a.id!==id);save();renderAlerts();
+  toast('सूचना काढली · alert removed');
+}
+/** Presenter control: the price crosses the threshold and the alert goes out. */
+function fireAlert(){
+  const a=S.alerts[S.alerts.length-1]||{price:S.alertPrice,chan:S.chan};
+  // ₹2,010 is the day-4 forecast in the fixtures; today's mandi close stays ₹1,850.
+  const line='कांदा ₹'+a.price.toLocaleString('en-IN')+' पार · लासलगाव अंदाज ₹2,010';
+  if(a.chan!=='call'){
+    toast(CHANICON[a.chan]+' — '+line,4200);
+    speak('कांदा भाव '+a.price+' रुपयांच्या वर गेला. लासलगावला अंदाज 2010 रुपये.');
+    return;
+  }
+  closeSheets();
+  document.getElementById('callWhat').textContent=line;
+  document.getElementById('callSub').textContent='तुम्ही लावलेली सूचना · '+CHANICON[a.chan];
+  document.getElementById('callScreen').classList.add('on');
+  const av2=document.getElementById('callAv');
+  av2.classList.remove('ring');
+  void av2.offsetWidth;                       // restart the ring, do not loop it
+  if(!reduced)av2.classList.add('ring');
+}
+function callEnd(ok){
+  document.getElementById('callScreen').classList.remove('on');
+  document.getElementById('callAv').classList.remove('ring');
+  const a=S.alerts[S.alerts.length-1]||{price:S.alertPrice};
+  if(ok){
+    go('home');
+    speak('नमस्कार राजू. कांदा भाव तुम्ही ठरवलेल्या '+a.price+
+      ' रुपयांच्या वर गेला. लासलगावला अंदाज 2010 रुपये. खरेदीदार तयार आहेत.');
+    toast('सूचना ऐकवली · आता खरेदीदार पहा',3000);
+  }else{
+    toast('कॉल नाकारला · तपशील SMS ने पाठवला');
+  }
+}
+
+// ---------- first paint ----------
+renderLots();renderAlerts();renderBids();
 </script>
 </body>
 </html>
