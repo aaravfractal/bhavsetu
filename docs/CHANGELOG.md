@@ -271,3 +271,72 @@ left, which holds at 1024×768 through 1440×900.
 Verified at 360×800 (35 checks) and 1280×860 (34 checks), plus offline: the public card
 renders from cache with the origin killed, and asking for consent refuses in Marathi with
 the reason. Suite 44/44. Demo shell 48.8 KB gzipped.
+
+## Session 5 — Transport, shelf life, quality pooling, trust, Q-commerce, next season (7 Sep 2026)
+
+Six features, all of them extensions of surfaces that already existed. One new card,
+no new screen: the demo still has the same eleven sections it had this morning.
+
+**Transport is part of the money now.** Every bid carries a mode — बायर पिकअप /
+शेतकरी डिलिव्हरी / खर्च वाटून / एकत्र ट्रक — and the rupees that mode costs the farmer,
+above the deduction math on both the row and the sheet. A lorry is hired for a trip,
+not per quintal, so a bid may carry a flat figure instead of a per-quintal one. The
+board sorts by what lands in hand, never by the headline, and a card at the top of it
+makes the point once: **A नाशिक फ्रेश रिटेल ₹2,000 with free buyer pickup takes home
+₹39,400 on 20 q; B अन्नपूर्णा हॉटेल्स ₹2,050 with a ₹2,500 lorry the farmer hires takes
+home ₹37,900. म्हणून A चांगला — ₹1,500 जास्त.** The counter-offer sheet lets him ask for
+a different mode as well as a different rate; a request to be picked up for free is met
+halfway at खर्च वाटून, the same way every time.
+
+The three master-prompt bids are untouched — Sahyadri 2,050 − 85 − 30 = 1,935,
+Deshmukh 1,980 − 85 − 30 = 1,865, Kisan Agro 1,940 − 50 − 30 = 1,860 — and a run-through
+check asserts each of them, because the mode is a name for a deduction that was always
+there, not a change to one.
+
+**The crop has a clock.** Every lot carries a harvest date, and onion keeps about 30 days
+in a kanda chawl against 60+ in cold storage. The calculator shows साठवलेले ६ / ३० दिवस
+with a bar above the two columns, and the lots list carries the same line. Under seven
+days left the verdict flips to विका with a Mirchi warning — जास्त थांबल्यास माल खराब होईल —
+whatever the forecast is doing, and the विका verdict opens its own three reasons like
+every other one. The presenter panel ages the lot to day 25 live and puts it back.
+
+**Pooling asks about grade before it asks about distance.** A buyer who wants Grade A will
+not take a truck with Grade B in it, so lots pool by grade. The map card reads
+**अ दर्जा · ५ शेतकरी · १०० क्विं.** against a demand line — सह्याद्री एक्स्पोर्ट्स ला
+१०० क्विं. अ दर्जा हवा — and the pool only forms while demand covers it: step the quintals
+to 105 and the chip turns to पूल तयार नाही with the reason. Grade B pools separately and
+says so, on the map (Haldi, dashed) and in a note naming रमेश जाधव. This needed a fifth
+Grade A neighbour, which widens the spec's "४ शेतकरी, एकूण ८५ क्विंटल" in
+`docs/frontend-spec.md` 6.5 to five neighbours and 115 q across both grades — flagged
+here rather than done quietly, because a grade-scoped pool cannot reach 100 q without one.
+
+**The trust bar opens.** Tapping it shows the record behind the summary: deals completed,
+on-time payment, cancellations, rejections, disputes and farmer feedback. Two rejections
+or any open dispute raises a Haldi सावध with the reason — देशमुख डिहायड्रेशन on
+rejections, अन्नपूर्णा हॉटेल्स on a dispute — and a buyer with no history at all reads
+नवीन खरेदीदार · एस्क्रो अनिवार्य. For all three the escrow switch on the bid sheet is
+locked on and says why; against a clean buyer it can be waived.
+
+**Buyers who never see a mandi.** Six buyer types now — निर्यातदार, व्यापारी,
+प्रक्रिया उद्योग, क्विक कॉमर्स, रिटेल, हॉटेल — each bid card carrying its pickup terms and
+its quality requirement, with type filter chips over the board. Two demo bids reach the
+farm gate directly: फ्रेशबास्केट ₹1,990, 4 तासांत शेतावरून पिकअप, फक्त अ दर्जा, and
+नाशिक फ्रेश रिटेल ₹2,000, बुधवारी शेतावरून स्वतः उचलतो.
+
+**पुढील हंगाम.** One card on Profile, marked सूचक · roadmap: उन्हाळ कांदा, ₹1,900–2,300
+expected Jan–Mar, मागणी जास्त, with three reasons — soil and region, this year's rain,
+and how long summer onion stores. Roadmap item 24 in `docs/master-prompt.md`, static demo
+data, and it never reads as a promise.
+
+Presenter panel is now 14 beats, with controls for the transport comparison, ageing the
+lot, and both trust breakdowns. Service worker at `bhavsetu-demo-v4`; the precache list is
+unchanged because everything new is markup and inline SVG. Fonts re-subset to 211
+characters, 329 KB across five faces.
+
+Verified with a scripted run-through of the real page — 105 checks, green at both the
+phone frame and the desktop shell, and again with the offline chrome engaged, where the
+shelf-life bar, the transport comparison and every screen still render from cache. Repo
+suite 44/44, build green, demo shell 59.7 KB gzipped. The one thing this session could not
+do is a pixel check in a real browser: there is no Chrome on this machine and screen
+capture is blocked, so layout at 360 and 1280 was reviewed in the stylesheet rather than
+seen. Worth a human glance at the buyer-type chip row, which wraps to three lines at 360.

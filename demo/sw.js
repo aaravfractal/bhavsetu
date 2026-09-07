@@ -8,7 +8,13 @@
  * Bump CACHE on any change to the shell or the fonts; activate then drops
  * every older cache.
  *
- * v3 adds consented QR access — the public trust card, the OTP consent flow
+ * v4 adds the final feature pass: transport modes in the money math, the
+ * shelf-life advisor, quality-based pooling, the buyer-trust breakdown,
+ * quick-commerce and retail buyers, and the next-season card. All of it is
+ * markup and inline SVG in index.html, so SHELL below is unchanged; the bump
+ * is what makes an already-installed home-screen copy pick the new page up.
+ *
+ * v3 added consented QR access — the public trust card, the OTP consent flow
  * and the access log. Still nothing new on disk: the requester screen, the
  * farmer's second frame and the QR itself are markup, inline SVG and the QR
  * encoder already in index.html.
@@ -19,7 +25,7 @@
  * complete. The version bump is what makes an already-installed home-screen
  * copy pick up the new index.html.
  */
-const CACHE = 'bhavsetu-demo-v3'
+const CACHE = 'bhavsetu-demo-v4'
 
 const SHELL = [
   './',
