@@ -214,6 +214,27 @@ svg text{font-family:var(--mukta)}
 .lockpulse.on::before{animation:lockp 1s var(--ease) 2}
 @keyframes lockp{from{transform:scale(.55);opacity:.4}to{transform:scale(1.75);opacity:0}}
 
+/* speaker: icon plus its Marathi word, 56px target, on every farmer screen */
+.spk{width:56px;height:56px;border:0;background:none;padding:0;cursor:pointer;
+  font:600 10px/1.15 var(--mukta);color:var(--ink2)}
+.spk span{display:block;font-size:19px;line-height:1.35}
+.spk.on{color:var(--kanda)}
+.spk:active{transform:scale(.97)}
+.viewtop{display:flex;justify-content:space-between;align-items:flex-start;margin:-6px -6px 2px 0}
+.viewtop b{font-size:16px}
+.voicenote{font:600 11px var(--mukta);color:var(--dhool);background:var(--bg);
+  border:1px solid var(--line);border-radius:999px;padding:2px 8px;opacity:0;
+  transition:opacity var(--t-fast) var(--ease);white-space:nowrap}
+.voicenote.on{opacity:1}
+
+/* report preview: the A4 page the bank receives, drawn on a canvas */
+.sheet.tall{max-height:84%;overflow-y:auto;scrollbar-width:none}
+.sheet.tall::-webkit-scrollbar{display:none}
+.pdfprev{width:100%;display:block;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+.sheettitle{font-size:17px;font-weight:700;margin-bottom:10px}
+.btnrow{display:flex;gap:8px;margin-top:12px}
+.btnrow .cta{margin-top:0}
+
 /* offline banner slides down inside its own clip; the row height snaps, only
    the transform animates */
 .offline-banner{overflow:hidden}
@@ -227,7 +248,11 @@ svg text{font-family:var(--mukta)}
 <div class="phone"><div class="screen" id="screen">
   <header>
     <div><h1 id="greet">नमस्कार राजू</h1><div class="en">Hello Raju · Niphad, Nashik</div></div>
-    <div class="offline-pill">ऑफलाइन</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="voicenote" id="voicenote"></div>
+      <div class="offline-pill">ऑफलाइन</div>
+      <button class="spk" id="spkbtn" onclick="speakScreen()" aria-label="ही स्क्रीन ऐका"><span>🔊</span>ऐका</button>
+    </div>
   </header>
   <div class="offline-banner"><i>नेटवर्क नाही. काल सकाळी ११ ची माहिती. <span class="en" style="color:#eee">No network · showing yesterday 11 am</span></i></div>
 
@@ -235,7 +260,7 @@ svg text{font-family:var(--mukta)}
     <!-- HOME -->
     <section class="view active" id="v-home">
       <div class="card bhav">
-        <div style="display:flex;justify-content:space-between"><div class="mrsub">लासलगाव · कांदा <span class="en">Lasalgaon · Onion</span></div><div style="font-size:18px;cursor:pointer" title="ऐका">🔊</div></div>
+        <div style="display:flex;justify-content:space-between"><div class="mrsub">लासलगाव · कांदा <span class="en">Lasalgaon · Onion</span></div><button class="spk" onclick="speakScreen()" aria-label="भाव ऐका"><span>🔊</span>ऐका</button></div>
         <div class="price">₹1,850</div>
         <div class="mrsub">प्रति क्विंटल · आज <span class="en">per quintal · today</span></div>
         <div class="delta">▲ ₹120 कालपेक्षा</div>
@@ -245,9 +270,9 @@ svg text{font-family:var(--mukta)}
       </div>
 
       <h3 class="sec">जवळचे बाजार <span class="en">nearby markets, by what you take home</span></h3>
-      <div class="mandi best"><div><b>पिंपळगाव</b><div class="en">18 km · भाव ₹1,920 − वाहतूक ₹85</div></div><div class="net">तुम्हाला ₹1,835</div></div>
-      <div class="mandi"><div><b>लासलगाव</b><div class="en">11 km · भाव ₹1,850 − वाहतूक ₹50</div></div><div class="net">₹1,800</div></div>
-      <div class="mandi"><div><b>येवला</b><div class="en">34 km · भाव ₹1,900 − वाहतूक ₹140</div></div><div class="net">₹1,760</div></div>
+      <div class="mandi best" onclick="openMandi(0)"><div><b>पिंपळगाव</b><div class="en">18 km · भाव ₹1,920 − वाहतूक ₹85</div></div><div class="net">तुम्हाला ₹1,835</div></div>
+      <div class="mandi" onclick="openMandi(1)"><div><b>लासलगाव</b><div class="en">11 km · भाव ₹1,850 − वाहतूक ₹50</div></div><div class="net">₹1,800</div></div>
+      <div class="mandi" onclick="openMandi(2)"><div><b>येवला</b><div class="en">34 km · भाव ₹1,900 − वाहतूक ₹140</div></div><div class="net">₹1,760</div></div>
 
       <div class="card alertcard" style="margin-top:16px">
         <b style="font-size:14.5px">सूचना · Alert</b>
@@ -319,7 +344,7 @@ svg text{font-family:var(--mukta)}
           </div>
         </div>
         <div class="verdict" style="margin-top:14px;color:var(--paan)" id="calcverdict">साठवा.<small id="calcgain"></small></div>
-        <div class="mrsub" style="margin-top:8px">विंचूर ॲग्रो कोल्ड चेन · 9 km · ₹18/क्विं./आठवडा <button style="border:0;background:none;color:var(--kanda);font-weight:700;cursor:pointer">📞 कॉल</button></div>
+        <div class="mrsub" style="margin-top:8px">विंचूर ॲग्रो कोल्ड चेन · 9 km · ₹18/क्विं./आठवडा <button style="border:0;background:none;color:var(--kanda);font-weight:700;cursor:pointer;min-height:56px" onclick="callStorage()">📞 कॉल</button></div>
       </div>
     </section>
 
@@ -350,19 +375,19 @@ svg text{font-family:var(--mukta)}
     <!-- BUYERS -->
     <section class="view" id="v-buyers">
       <div class="mrsub" style="margin-bottom:10px">LOT-0412 वर बोली · हातातली रक्कम प्रत्येक बोलीखाली</div>
-      <div class="bid" onclick="openSheet('bidsheet')">
+      <div class="bid" onclick="openBid(0)">
         <div class="top"><span>सह्याद्री एक्स्पोर्ट्स</span><span>₹2,050</span></div>
         <div class="trust"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></div>
         <div class="en">31 व्यवहार, नेहमी वेळेवर पैसे · exporter</div>
         <div class="math">₹2,050 − वाहतूक ₹85 − सेस ₹30 = <b>तुम्हाला ₹1,935</b></div>
       </div>
-      <div class="bid">
+      <div class="bid" onclick="openBid(1)">
         <div class="top"><span>देशमुख डिहायड्रेशन</span><span>₹1,980</span></div>
         <div class="trust low"><i class="f"></i><i class="f"></i><i></i><i></i><i></i></div>
         <div class="en" style="color:var(--haldi)">2 वेळा माल नाकारला · processor</div>
         <div class="math">₹1,980 − ₹85 − ₹30 = <b>₹1,865</b></div>
       </div>
-      <div class="bid">
+      <div class="bid" onclick="openBid(2)">
         <div class="top"><span>किसान ॲग्रो ट्रेडर्स</span><span>₹1,940</span></div>
         <div class="trust"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></div>
         <div class="en">23 व्यवहार, वेळेवर पैसे · trader</div>
@@ -389,7 +414,7 @@ svg text{font-family:var(--mukta)}
         <div class="mrsub">विकले ₹2,050 ला · कापणीच्या दिवशी भाव ₹1,850 होता (20 क्विं.)</div>
         <div class="en">Sold at 2,050 vs harvest-day 1,850, via BhavSetu</div>
       </div>
-      <button class="cta sub">बँकेसाठी अहवाल · Report for bank (PDF)</button>
+      <button class="cta sub" onclick="openReport()">बँकेसाठी अहवाल · Report for bank (PDF)</button>
     </section>
   </main>
 
@@ -421,13 +446,35 @@ svg text{font-family:var(--mukta)}
       <div class="price" style="font-size:44px">₹1,850</div>
       <div class="verdict" style="font-size:24px">थांबा<small>८ दिवसांनी ₹2,100 · उत्तर आवाजातही दिले जाते (Bhashini TTS)</small></div>
     </div>
-    <button class="cta" onclick="closeSheets()">ठीक आहे</button>
+    <div class="btnrow">
+      <button class="cta sub" style="flex:1" onclick="askAgain()">पुन्हा विचारा · Ask again</button>
+      <button class="cta" style="flex:1" onclick="closeSheets();go('home')">बाजार पहा · Market</button>
+    </div>
+  </div>
+
+  <!-- money math for one mandi row: nothing is ever silently deducted -->
+  <div class="sheet" id="sh-mandi">
+    <div class="sheettitle" id="mandiName">पिंपळगाव</div>
+    <div class="math" style="font-size:15px" id="mandiMath"></div>
+    <div class="mrsub" style="margin-top:8px" id="mandiNote"></div>
+    <button class="cta" onclick="closeSheets()">ठीक आहे · OK</button>
+  </div>
+
+  <!-- one-page A4 report, drawn here and handed over as a real PDF -->
+  <div class="sheet tall" id="sh-report">
+    <div class="sheettitle">बँकेसाठी अहवाल · Report for bank</div>
+    <div class="mrsub" style="margin-bottom:10px" id="reportLine">तयार करत आहे…</div>
+    <canvas class="pdfprev" id="reportCanvas"></canvas>
+    <div class="btnrow">
+      <button class="cta sub" style="flex:1" onclick="closeSheets()">बंद करा · Close</button>
+      <button class="cta" style="flex:1" onclick="downloadReport()">PDF उतरवा · Download</button>
+    </div>
   </div>
 
   <div class="sheet" id="sh-bidsheet">
-    <b style="font-size:17px">सह्याद्री एक्स्पोर्ट्स · ₹2,050/क्विं.</b>
-    <div class="math" style="margin:10px 0 4px;font-size:15px">₹2,050 × 20 क्विं. = ₹41,000<br>− वाहतूक ₹1,700 − सेस ₹600 = <b style="font-size:18px">तुम्हाला ₹38,700</b></div>
-    <div class="mrsub">डिलिव्हरी: गुरुवार, पिंपळगाव यार्ड · पैसे एस्क्रोमध्ये सुरक्षित</div>
+    <b style="font-size:17px" id="bidTitle">सह्याद्री एक्स्पोर्ट्स · ₹2,050/क्विं.</b>
+    <div class="math" style="margin:10px 0 4px;font-size:15px" id="bidMath">₹2,050 × 20 क्विं. = ₹41,000<br>− वाहतूक ₹1,700 − सेस ₹600 = <b style="font-size:18px">तुम्हाला ₹38,700</b></div>
+    <div class="mrsub" id="bidDeliv">डिलिव्हरी: गुरुवार, पिंपळगाव यार्ड · पैसे एस्क्रोमध्ये सुरक्षित</div>
     <button class="hold" id="holdbtn"
       onmousedown="holdStart()" onmouseup="holdEnd()" onmouseleave="holdEnd()"
       ontouchstart="holdStart()" ontouchend="holdEnd()">
@@ -443,7 +490,7 @@ svg text{font-family:var(--mukta)}
   <h2>Demo controls (presenter only)</h2>
   <button onclick="toggleOffline()">✈️ Offline toggle — chrome greys, cached data + timestamp shows</button>
   <button onclick="deliver()">📦 Simulate delivery — escrow releases, Paan fill, extra-earned card</button>
-  <button onclick="location.reload()">↺ Reset demo</button>
+  <button onclick="resetState()">↺ Reset demo — clears saved state</button>
   <div class="qr">
     <b>Scan to open on your phone</b>
     <div id="qrbox"></div>
@@ -456,6 +503,28 @@ svg text{font-family:var(--mukta)}
 // ---------- fixtures ----------
 const hist=[1640,1690,1720,1700,1730,1780,1850];
 const fc=[1880,1920,1960,2010,2050,2080,2100,2110,2090,2060];
+
+// ---------- store ----------
+const KEY='bhavsetu.demo.v1';
+const DEFAULTS={
+  onboarded:false,           // onboarding runs once (Phase C)
+  alerts:[],                 // {id, price, chan}
+  chan:'call',               // default delivery channel: phone call (spec 6.9)
+  alertPrice:2000,
+  lots:[],                   // lots added through the 3-step flow
+  lotStatus:{'LOT-0412':'बोली आली','LOT-0398':'खरेदीदार शोधत आहे'},
+  bids:[],                   // bids that arrived during the auction
+  accepted:null,             // {buyer, rate, q, net, lot}
+  delivered:false,
+};
+let S=loadState();
+function loadState(){
+  try{return Object.assign({},DEFAULTS,JSON.parse(localStorage.getItem(KEY)||'{}'))}
+  catch(e){return Object.assign({},DEFAULTS)}
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function resetState(){try{localStorage.removeItem(KEY)}catch(e){}location.reload()}
+
 
 // ---------- motion ----------
 // One doctrine: an animation either answers a tap or points at a price or a
@@ -665,13 +734,20 @@ function closeSheets(){
 }
 
 // ---------- alerts ----------
-let av=2000;
-function alertStep(d){av=Math.max(1500,av+d);document.getElementById('alertVal').textContent='₹'+av.toLocaleString('en-IN')}
-document.querySelectorAll('#chan button').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('#chan button').forEach(x=>x.className='cta sub');
-  b.className='cta';b.style.flex=1;
-  document.querySelectorAll('#chan button').forEach(x=>x.style.height='48px');
-});
+let av=S.alertPrice;
+function alertStep(d){
+  av=Math.max(1500,Math.min(3000,av+d));S.alertPrice=av;save();
+  document.getElementById('alertVal').textContent='₹'+av.toLocaleString('en-IN');
+}
+function setChan(c){
+  S.chan=c;save();
+  document.querySelectorAll('#chan button').forEach(x=>{
+    x.className=(x.dataset.c===c)?'cta':'cta sub';
+    x.style.flex=1;x.style.height='48px';
+  });
+}
+document.querySelectorAll('#chan button').forEach(b=>b.onclick=()=>setChan(b.dataset.c));
+setChan(S.chan);
 function saveAlert(){toast(`सूचना जतन झाली — कांदा ₹${av.toLocaleString('en-IN')} पार होताच फोन येईल`)}
 
 // ---------- calc ----------
@@ -847,6 +923,317 @@ if('serviceWorker' in navigator){
 // ---------- toast ----------
 let tt;
 function toast(m,ms){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),ms||2600)}
+
+/* =========================================================================
+   Everything below is the "server" the demo does not have. There is no
+   backend and no build step: state lives in one object, is written to
+   localStorage on every change, and is read back on load, so a reload on
+   stage lands exactly where the presenter left off.
+   Marathi copy that is not verbatim in docs/frontend-spec.md is marked
+   TODO-mr for native review before the judging round.
+   ========================================================================= */
+
+// ---------- fixtures the whole demo shares ----------
+// Same figures as docs/master-prompt.md and the deck. Nothing here is invented.
+const MANDIS=[
+  {n:'पिंपळगाव',en:'Pimpalgaon Baswant',km:18,price:1920,tr:85},
+  {n:'लासलगाव',en:'Lasalgaon',km:11,price:1850,tr:50},
+  {n:'येवला',en:'Yeola',km:34,price:1900,tr:140},
+];
+const CESS=30;
+const BUYERS=[
+  {n:'सह्याद्री एक्स्पोर्ट्स',en:'Sahyadri Exports',kind:'निर्यातदार',rate:2050,tr:85,trust:5,
+   why:'31 व्यवहार, नेहमी वेळेवर पैसे',deliv:'गुरुवार, पिंपळगाव यार्ड'},
+  {n:'देशमुख डिहायड्रेशन',en:'Deshmukh Dehydration',kind:'प्रक्रिया उद्योग',rate:1980,tr:85,trust:2,
+   why:'2 वेळा माल नाकारला',deliv:'शुक्रवार, लासलगाव यार्ड'},
+  {n:'किसान ॲग्रो ट्रेडर्स',en:'Kisan Agro Traders',kind:'व्यापारी',rate:1940,tr:50,trust:4,
+   why:'23 व्यवहार, वेळेवर पैसे',deliv:'गुरुवार, लासलगाव यार्ड'},
+];
+const LOTQ=20;                       // LOT-0412, 20 quintals
+const netOf=(rate,tr)=>rate-tr-CESS; // bid − transport − cess = in hand (rule 12)
+
+// ---------- voice out: Web Speech API, mr → hi → en ----------
+// Production speaks through Bhashini TTS. On stage we use whatever the device
+// has, and say so, so a speaker tap is never dead.
+let noteT,speaking=false;
+function voicePick(){
+  const vs=('speechSynthesis' in window)?(speechSynthesis.getVoices()||[]):[];
+  const by=p=>vs.find(v=>(v.lang||'').toLowerCase().replace('_','-').startsWith(p));
+  const mr=by('mr'),hi=by('hi'),en=by('en');
+  if(mr)return{v:mr,lang:'mr-IN',note:''};
+  if(hi)return{v:hi,lang:'hi-IN',note:'आवाज: हिंदी'};
+  if(en)return{v:en,lang:'en-IN',note:'आवाज: English'};
+  return{v:null,lang:'mr-IN',note:'आवाज: उपलब्ध नाही'};
+}
+if('speechSynthesis' in window)speechSynthesis.addEventListener('voiceschanged',()=>{});
+function setSpk(on){document.querySelectorAll('.spk').forEach(b=>b.classList.toggle('on',on))}
+function voiceNote(txt){
+  const el=document.getElementById('voicenote');
+  if(!el)return;
+  if(!txt){el.classList.remove('on');return}
+  el.textContent=txt;el.classList.add('on');
+  clearTimeout(noteT);noteT=setTimeout(()=>el.classList.remove('on'),3600);
+}
+function speak(text){
+  if(!('speechSynthesis' in window)){
+    toast('या फोनवर आवाज नाही · production uses Bhashini TTS');return;   /* TODO-mr */
+  }
+  if(speechSynthesis.speaking||speaking){speechSynthesis.cancel();speaking=false;setSpk(false);return}
+  const p=voicePick();
+  const u=new SpeechSynthesisUtterance(text);
+  if(p.v)u.voice=p.v;
+  u.lang=p.lang;u.rate=.92;
+  u.onstart=()=>{speaking=true;setSpk(true)};
+  u.onend=()=>{speaking=false;setSpk(false)};
+  u.onerror=()=>{speaking=false;setSpk(false)};
+  speechSynthesis.speak(u);
+  voiceNote(p.note);
+}
+// One spoken summary per screen — the same sentence the screen shows.  TODO-mr
+const SPOKEN={
+  home:()=>'लासलगाव, कांदा. आजचा भाव 1850 रुपये प्रति क्विंटल, कालपेक्षा 120 रुपये जास्त. थांबा. आठ दिवसांनी 2100 पर्यंत जाईल.',
+  chart:()=>'30 दिवसांचा भाव आणि 14 दिवसांचा अंदाज. अंदाज 2100, कमी जास्त 110. आजचा सल्ला: थांबा.',
+  alerts:()=>'भाव '+S.alertPrice+' रुपयांच्या वर गेला की तुम्हाला फोन येईल.',
+  calc:()=>{const t=calcNums();return Q+' क्विंटल. आज विकल्यास हातात '+t.sell+' रुपये. तीन आठवडे साठवल्यास '+t.store+' रुपये. साठवा, '+t.gain+' रुपये जास्त मिळतील.'},
+  lots:()=>'तुमचा माल: '+lotList().map(l=>l.id+', '+l.q+' क्विंटल, '+l.status).join('. ')+'.',
+  buyers:()=>{const b=bidList()[0];return 'सर्वात चांगली बोली: '+b.n+', '+b.rate+' रुपये. वाहतूक आणि सेस वजा जाता तुम्हाला '+netOf(b.rate,b.tr)+' रुपये मिळतील.'},
+  money:()=>(S.delivered
+      ?'या हंगामात मिळाले 5 लाख 70 हजार 700 रुपये. या व्यवहारात 4000 रुपये जास्त मिळाले.'
+      :'या हंगामात मिळाले 4 लाख 12 हजार 600 रुपये. 1 लाख 58 हजार 100 रुपये एस्क्रोमध्ये रोखले आहेत, माल पोहोचल्यावर मिळतील.'),
+};
+function speakScreen(){speak((SPOKEN[curView]||SPOKEN.home)())}
+function askAgain(){
+  const w=document.getElementById('wave');
+  if(w)w.style.opacity='1';
+  toast('पुन्हा ऐकत आहे…');                                              /* TODO-mr */
+  after(900,()=>speak(SPOKEN.home()));
+}
+
+// ---------- calc numbers, shared with the spoken summary ----------
+function calcNums(){
+  const today=1850,fut=2100,tr=85,store=18*3;
+  const sell=Q*(today-tr),st=Q*(fut-tr-store);
+  return{sell,store:st,gain:st-sell};
+}
+
+// ---------- nearby-mandi money math (rule 12) ----------
+function openMandi(i){
+  // Mandi net is price − transport, exactly as spec section 9 lists it. Cess is
+  // a sale-side deduction and appears on the bid sheet, not here, so the two
+  // screens can never disagree about the same rupee.
+  const m=MANDIS[i],net=m.price-m.tr;
+  document.getElementById('mandiName').textContent=m.n+' · '+m.km+' km';
+  document.getElementById('mandiMath').innerHTML=
+    '₹'+m.price.toLocaleString('en-IN')+' − वाहतूक ₹'+m.tr+
+    ' = <b style="font-size:18px">तुम्हाला ₹'+net.toLocaleString('en-IN')+'</b>'+
+    '<br>'+LOTQ+' क्विंटलवर = <b>'+inr(net*LOTQ)+'</b>'+
+    '<br><span class="en">विकताना सेस ₹'+CESS+'/क्विं. वेगळा कापला जातो</span>';
+  document.getElementById('mandiNote').textContent=
+    m.en+' · काहीही न सांगता कापले जात नाही';                             /* TODO-mr */
+  openSheet('mandi');
+}
+
+// ---------- cold storage ----------
+function callStorage(){
+  toast('प्रोडक्शनमध्ये: थेट कॉल जोडला जातो · विंचूर ॲग्रो कोल्ड चेन, 9 km',3200); /* TODO-mr */
+}
+
+// ---------- bid sheet ----------
+let curBid=0;
+function openBid(i){
+  curBid=i;
+  const b=bidList()[i]||bidList()[0];
+  const gross=b.rate*LOTQ,tr=b.tr*LOTQ,cess=CESS*LOTQ,net=gross-tr-cess;
+  document.getElementById('bidTitle').textContent=b.n+' · ₹'+b.rate.toLocaleString('en-IN')+'/क्विं.';
+  document.getElementById('bidMath').innerHTML=
+    '₹'+b.rate.toLocaleString('en-IN')+' × '+LOTQ+' क्विं. = '+inr(gross)+'<br>− वाहतूक '+inr(tr)+
+    ' − सेस '+inr(cess)+' = <b style="font-size:18px">तुम्हाला '+inr(net)+'</b>';
+  document.getElementById('bidDeliv').textContent='डिलिव्हरी: '+b.deliv+' · पैसे एस्क्रोमध्ये सुरक्षित';
+  openSheet('bidsheet');
+}
+function bidList(){
+  return BUYERS.concat(S.bids).slice().sort((a,b)=>netOf(b.rate,b.tr)-netOf(a.rate,a.tr));
+}
+function lotList(){
+  const base=[
+    {id:'LOT-0412',q:20,grade:'अ',pooled:false},
+    {id:'LOT-0398',q:85,grade:'अ/ब',pooled:true},
+  ].concat(S.lots);
+  return base.map(l=>Object.assign({},l,{status:S.lotStatus[l.id]||'खरेदीदार शोधत आहे'}));
+}
+
+/* =========================================================================
+   Bank report — a real, downloadable, single-page A4 PDF built in the page.
+
+   Devanagari in a PDF needs either an embedded font subset (another ~60 KB on
+   top of the 300 KB of faces the demo already precaches, plus a CID font
+   writer) or the page rasterised. We draw the report on a canvas with the
+   Mukta face the app has already loaded — so the Marathi renders with the same
+   shaping the screen uses — and embed that canvas as one JPEG image XObject
+   with /DCTDecode. JPEG bytes go into the stream untouched, so no compressor
+   is needed and nothing is fetched. That is the approach chosen.
+   ========================================================================= */
+
+// 18 completed deals summing to exactly ₹4,12,600, the season total on the
+// Money screen. The 22 Aug row is the ₹86,400 the spec records as last
+// received. date, buyer, quintals, grade, ₹/quintal, on time
+const DEALS=[
+  ['02 मे','किसान ॲग्रो ट्रेडर्स',12,'अ',1560,1],
+  ['09 मे','सह्याद्री एक्स्पोर्ट्स',11,'अ',1590,1],
+  ['16 मे','देशमुख डिहायड्रेशन',14,'ब',1540,1],
+  ['23 मे','किसान ॲग्रो ट्रेडर्स',9,'अ',1620,1],
+  ['30 मे','सह्याद्री एक्स्पोर्ट्स',13,'अ',1600,1],
+  ['06 जून','किसान ॲग्रो ट्रेडर्स',10,'अ',1650,1],
+  ['13 जून','देशमुख डिहायड्रेशन',12,'ब',1580,1],
+  ['20 जून','सह्याद्री एक्स्पोर्ट्स',8,'अ',1700,1],
+  ['27 जून','किसान ॲग्रो ट्रेडर्स',15,'अ',1610,1],
+  ['04 जुलै','सह्याद्री एक्स्पोर्ट्स',11,'अ',1660,1],
+  ['11 जुलै','किसान ॲग्रो ट्रेडर्स',13,'अ',1690,1],
+  ['18 जुलै','देशमुख डिहायड्रेशन',9,'ब',1720,1],
+  ['25 जुलै','सह्याद्री एक्स्पोर्ट्स',14,'अ',1640,1],
+  ['01 ऑगस्ट','किसान ॲग्रो ट्रेडर्स',10,'अ',1750,1],
+  ['08 ऑगस्ट','सह्याद्री एक्स्पोर्ट्स',12,'अ',1780,1],
+  ['15 ऑगस्ट','किसान ॲग्रो ट्रेडर्स',11,'अ',1670,1],
+  ['18 ऑगस्ट','देशमुख डिहायड्रेशन',14,'ब',1710,1],
+  ['22 ऑगस्ट','सह्याद्री एक्स्पोर्ट्स',48,'अ',1800,1],
+];
+function reportRows(){
+  const rows=DEALS.slice();
+  // The lot the judges just watched complete joins its own report.
+  if(S.delivered)rows.push(['05 सप्टेंबर','सह्याद्री एक्स्पोर्ट्स',77,'अ',2053,1]);
+  return rows;
+}
+function drawReport(cv){
+  const W=1240,H=1754,c=cv.getContext('2d');
+  cv.width=W;cv.height=H;
+  const F=(w,px)=>w+' '+px+'px Mukta, "Noto Sans Devanagari", sans-serif';
+  const rows=reportRows();
+  const total=rows.reduce((a,r)=>a+r[2]*r[4],0);
+  const onTime=rows.filter(r=>r[5]).length;
+
+  c.fillStyle='#F5F4EE';c.fillRect(0,0,W,H);
+  c.fillStyle='#FFFFFF';c.fillRect(48,48,W-96,H-96);
+  c.strokeStyle='#D9D2C5';c.lineWidth=2;c.strokeRect(48,48,W-96,H-96);
+
+  // header band, Kanda
+  c.fillStyle='#8C2F4A';c.fillRect(48,48,W-96,132);
+  c.fillStyle='#FFFFFF';c.font=F(800,42);c.textBaseline='alphabetic';
+  c.fillText('बँकेसाठी अहवाल',88,120);
+  c.font=F(400,21);c.fillStyle='#F3E3E8';
+  c.fillText('BhavSetu · Report for bank · भाव कळेल. बाजार मिळेल. पैसे मिळतील.',88,158);
+
+  // farmer block
+  let y=232;
+  c.fillStyle='#5C4A3C';c.font=F(600,19);
+  c.fillText('शेतकरी · Farmer',88,y);
+  c.fillText('हंगाम · Season',700,y);
+  c.fillStyle='#2B1F16';c.font=F(700,26);
+  c.fillText('राजू भास्कर शिंदे',88,y+38);
+  c.fillText('खरीप 2026 · मे — सप्टेंबर',700,y+38);
+  c.fillStyle='#5C4A3C';c.font=F(400,19);
+  c.fillText('निफाड, नाशिक · कांदा · 4 एकर',88,y+70);
+  c.fillText('स्रोत: BhavSetu एस्क्रो नोंदी',700,y+70);
+
+  // table
+  y=372;
+  const cols=[88,250,600,720,830,1000],hdr=['दिनांक','खरेदीदार','क्विंटल','दर्जा','₹/क्विं.','वेळेवर'];
+  c.fillStyle='#F3E3E8';c.fillRect(72,y-28,W-144,44);
+  c.fillStyle='#8C2F4A';c.font=F(700,19);
+  hdr.forEach((h,i)=>c.fillText(h,cols[i],y));
+  y+=52;
+  c.font=F(400,19);
+  rows.forEach((r,i)=>{
+    if(i%2){c.fillStyle='#F5F4EE';c.fillRect(72,y-26,W-144,40)}
+    c.fillStyle='#2B1F16';
+    c.fillText(r[0],cols[0],y);
+    c.fillText(r[1],cols[1],y);
+    c.fillText(String(r[2]),cols[2],y);
+    c.fillText(r[3]+' दर्जा',cols[3],y);
+    c.fillText('₹'+r[4].toLocaleString('en-IN'),cols[4],y);
+    c.fillStyle=r[5]?'#1F7A46':'#B3261E';
+    c.fillText(r[5]?'✓':'✕',cols[5],y);
+    y+=40;
+  });
+
+  // season total
+  y+=18;
+  c.strokeStyle='#D9D2C5';c.beginPath();c.moveTo(72,y-34);c.lineTo(W-72,y-34);c.stroke();
+  c.fillStyle='#5C4A3C';c.font=F(600,21);
+  c.fillText('हंगामातील एकूण रक्कम · Season total',88,y+4);
+  c.fillStyle='#2B1F16';c.font=F(800,40);
+  const tw=c.measureText('₹'+total.toLocaleString('en-IN')).width;
+  c.fillText('₹'+total.toLocaleString('en-IN'),W-88-tw,y+10);
+
+  // BhavScore-style summary
+  y+=64;
+  c.fillStyle='#E4F0E8';c.fillRect(72,y,W-144,104);
+  c.fillStyle='#1F7A46';c.fillRect(72,y,6,104);
+  c.font=F(700,26);c.fillStyle='#1F7A46';
+  c.fillText(rows.length+' व्यवहार · '+Math.round(onTime/rows.length*100)+'% वेळेवर पैसे',108,y+44);
+  c.fillStyle='#2B1F16';c.font=F(400,19);
+  c.fillText(rows.length+' deals · '+Math.round(onTime/rows.length*100)+
+    '% on-time delivery · सरासरी दर्जा: अ · कोणताही करार रद्द नाही',108,y+80);
+
+  // footer
+  c.fillStyle='#5C4A3C';c.font=F(400,17);
+  c.fillText('ही माहिती शेतकऱ्याच्या संमतीने दिली आहे. BhavSetu एस्क्रो व्यवहारांवरून तयार · '+
+    new Date().toLocaleDateString('en-IN'),88,H-104);
+  c.fillText('Generated from BhavSetu escrow records with the farmer’s consent. Not a credit decision.',88,H-76);
+  return{total,rows:rows.length,onTime};
+}
+/** Single-page A4 PDF, one JPEG XObject, offsets computed by hand. */
+function pdfFromCanvas(cv,title){
+  const b64=cv.toDataURL('image/jpeg',0.9).split(',')[1];
+  const bin=atob(b64),img=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)img[i]=bin.charCodeAt(i);
+  const chunks=[];let len=0;const xref=[];
+  const A=str=>{const u=new Uint8Array(str.length);for(let i=0;i<str.length;i++)u[i]=str.charCodeAt(i)&255;return u};
+  const put=x=>{const b=(typeof x==='string')?A(x):x;chunks.push(b);len+=b.length};
+  const obj=(n,dict,stream)=>{
+    xref[n]=len;put(n+' 0 obj\n'+dict+'\n');
+    if(stream!==undefined){put('stream\n');put(stream);put('\nendstream\n')}
+    put('endobj\n');
+  };
+  put('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n');
+  obj(1,'<< /Type /Catalog /Pages 2 0 R >>');
+  obj(2,'<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
+  obj(3,'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.276 841.890] '+
+        '/Resources << /XObject << /Im0 4 0 R >> /ProcSet [/PDF /ImageC] >> /Contents 5 0 R >>');
+  obj(4,'<< /Type /XObject /Subtype /Image /Width '+cv.width+' /Height '+cv.height+
+        ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+img.length+' >>',img);
+  const content='q 595.276 0 0 841.890 0 0 cm /Im0 Do Q';
+  obj(5,'<< /Length '+content.length+' >>',content);
+  const startxref=len;
+  put('xref\n0 6\n0000000000 65535 f \n');
+  for(let i=1;i<=5;i++)put(String(xref[i]).padStart(10,'0')+' 00000 n \n');
+  put('trailer\n<< /Size 6 /Root 1 0 R /Info << /Title ('+title+') /Producer (BhavSetu demo) >> >>\n'+
+      'startxref\n'+startxref+'\n%%EOF\n');
+  const out=new Uint8Array(len);let o=0;
+  for(const ch of chunks){out.set(ch,o);o+=ch.length}
+  return new Blob([out],{type:'application/pdf'});
+}
+function openReport(){
+  const cv=document.getElementById('reportCanvas');
+  openSheet('report');
+  // Let the sheet paint before the canvas work, so the tap feels instant.
+  requestAnimationFrame(()=>{
+    const r=drawReport(cv);
+    document.getElementById('reportLine').textContent=
+      r.rows+' व्यवहार · '+Math.round(r.onTime/r.rows*100)+'% वेळेवर · एकूण '+inr(r.total)+
+      ' · A4, एक पान';
+  });
+}
+function downloadReport(){
+  const cv=document.getElementById('reportCanvas');
+  if(!cv.width)drawReport(cv);
+  const blob=pdfFromCanvas(cv,'BhavSetu bank report');
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='bhavsetu-bank-report.pdf';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),8000);
+  toast('अहवाल उतरवला · PDF saved');                                     /* TODO-mr */
+}
 </script>
 </body>
 </html>

@@ -23,8 +23,7 @@ from urllib.request import urlretrieve
 ROOT = Path(__file__).resolve().parent.parent
 HTML = ROOT / "demo/index.html"
 OUT = ROOT / "demo/fonts"
-CACHE = Path("/private/tmp/claude-501/-Users-aaravsharma-Developer-bhavsetu"
-              "/85e0e117-7c17-40bc-8932-5d1220a5e03f/scratchpad/fullfonts")
+CACHE = Path.home() / ".cache/bhavsetu-fonts"
 
 BASE = "https://raw.githubusercontent.com/google/fonts/main/ofl"
 FACES = [
