@@ -165,8 +165,7 @@ svg text{font-family:var(--mukta)}
 .panel .qrurl{font-size:10.5px;color:#B7A897;word-break:break-all;margin-top:7px}
 @media (max-width:700px){
   :root{--sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px)}
-  .panel,.shelltabs,.gov{display:none}
-  body.gov-on .phone{display:block}
+  .panel{display:none}
   body{background:var(--bg);display:block}
   .phone{width:100vw;height:100vh;height:100dvh;border-radius:0;padding:0;box-shadow:none}
   .screen{border-radius:0}
@@ -375,6 +374,14 @@ body.gov-on .gov{display:flex}
 .offline-banner i{display:block;font-style:normal;transform:translateY(-140%);
   transition:transform var(--t-slow) var(--ease)}
 .offline-in .offline-banner i{transform:none}
+
+/* Last word in the sheet, so it beats the shell rules declared above it: the
+   government surface is desktop-only (spec 8) and must never cover the phone. */
+@media (max-width:700px){
+  .shelltabs,.gov{display:none}
+  body.gov-on{padding-top:0;align-items:center}
+  body.gov-on .phone{display:block}
+}
 </style>
 </head>
 <body>
@@ -790,19 +797,39 @@ body.gov-on .gov{display:flex}
 
 <div class="panel">
   <h2>Demo controls (presenter only)</h2>
-  <button onclick="toggleOffline()">✈️ Offline toggle — chrome greys, cached data + timestamp shows</button>
-  <button onclick="rerunOnboard()">▶ Re-run onboarding — language, crop, phone</button>
-  <button onclick="forceBid()">🔔 New bid now — Nashik Agro ₹1,960 lands, list re-sorts</button>
-  <button onclick="fireAlert()">📞 भाव ₹2,000 पार करा — alert rings as an incoming call</button>
-  <button onclick="deliver()">📦 Simulate delivery — escrow releases, Paan fill, extra-earned card</button>
+  <button onclick="rerunOnboard()">1 ▶ Re-run onboarding — language, crop, phone</button>
+  <button onclick="fireAlert()">7 📞 भाव ₹2,000 पार करा — the alert rings as a call</button>
+  <button onclick="forceBid()">10 🔔 New bid now — Nashik Agro ₹1,960, list re-sorts</button>
+  <button onclick="deliver()">11 📦 Simulate delivery — escrow releases, Paan fill, extra earned</button>
+  <button onclick="toggleOffline()">✈️ Offline toggle — chrome greys, cached data + timestamp</button>
   <button onclick="resetState()">↺ Reset demo — clears saved state</button>
   <div class="qr">
     <b>Scan to open on your phone</b>
     <div id="qrbox"></div>
     <div class="qrurl" id="qrurl"></div>
   </div>
-  <div class="note">Order for Wednesday: let Home finish its 2-second reveal before speaking → tap थांबा (reasons) → mic → chart → calc → lots → buyers → hold-to-accept → Money → deliver. Fixtures = Lasalgaon Sep 2026, same numbers as the deck.</div>
-</div>
+  <div class="note">
+    <b>Wednesday, 12 beats.</b> Every one of these is live — nothing is a
+    screenshot, and it all works with the network off.<br><br>
+    1 Onboarding — skip it, or run it.<br>
+    2 Home: let Home finish its 2-second reveal before speaking. ₹1,850, थांबा.<br>
+    3 Tap थांबा → three Marathi reasons.<br>
+    4 Mic → voice query, spoken answer (🔊 reads any screen).<br>
+    5 Chart: 30 days, ±110 forecast band.<br>
+    6 Set the alert at ₹2,000, channel = phone call.<br>
+    7 Panel → fire the alert. Full-screen incoming call, accept it, it speaks.<br>
+    8 हिशेब: साठवा — tap that verdict for its reasons too.<br>
+    9 माझा माल → माल नोंदवा: sample photo → अ दर्जा → 4 farmers / 85 q pool.<br>
+    10 खरेदीदार: the new bid lands on its own after 24s (or force it). List
+       re-sorts by net to the farmer. भाव मागा for one counter round.<br>
+    11 Accept by voice → करार झाला → पैसे रोखले → माल पाठवला → डिलिव्हरी →
+       Paan fill, +₹4,000 extra earned.<br>
+    12 पैसे → बँकेसाठी अहवाल (a real PDF downloads) → For Government tab →
+       Niphad → Send Marathi advisory.<br><br>
+    Airplane-mode beat fits anywhere: hit the offline toggle, the chrome greys
+    and the cached card still renders with its timestamp.<br>
+    Fixtures = Lasalgaon Sep 2026, the same numbers as the deck.
+  </div>
 
 <script>
 // ---------- fixtures ----------
@@ -1432,10 +1459,14 @@ const DEALS=[
   ['18 ऑगस्ट','देशमुख डिहायड्रेशन',14,'ब',1710,1],
   ['22 ऑगस्ट','सह्याद्री एक्स्पोर्ट्स',48,'अ',1800,1],
 ];
+// date, buyer, quintals, grade, ₹/quintal, on time, [amount if it is not q × rate]
 function reportRows(){
   const rows=DEALS.slice();
-  // The lot the judges just watched complete joins its own report.
-  if(S.delivered)rows.push(['05 सप्टेंबर','सह्याद्री एक्स्पोर्ट्स',77,'अ',2053,1]);
+  // The lot the judges just watched complete joins its own report. The escrow
+  // released ₹1,58,100 across 77 q, which is not a whole rupee per quintal, so
+  // the row carries the released amount and shows the rate rounded — the report
+  // total then matches the Money screen to the rupee.
+  if(S.delivered)rows.push(['05 सप्टेंबर','सह्याद्री एक्स्पोर्ट्स',77,'अ',2053,1,158100]);
   return rows;
 }
 function drawReport(cv){
@@ -1443,7 +1474,7 @@ function drawReport(cv){
   cv.width=W;cv.height=H;
   const F=(w,px)=>w+' '+px+'px Mukta, "Noto Sans Devanagari", sans-serif';
   const rows=reportRows();
-  const total=rows.reduce((a,r)=>a+r[2]*r[4],0);
+  const total=rows.reduce((a,r)=>a+(r[6]||r[2]*r[4]),0);
   const onTime=rows.filter(r=>r[5]).length;
 
   c.fillStyle='#F5F4EE';c.fillRect(0,0,W,H);

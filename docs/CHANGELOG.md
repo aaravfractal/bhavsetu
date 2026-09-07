@@ -171,3 +171,52 @@ from the locked inputs would need storage at about ₹40/q for three weeks rathe
 ₹54, so this is a reconciliation between the demo and the deck, not a typo. Either the
 storage rate in the demo changes or the deck figure does; both are outside this
 session's scope.
+
+## Session 3 — Every dead end closed, the loop closed with it (7 Sep 2026)
+
+Four commits against `demo/index.html`, architecture unchanged: static files in `/demo`,
+no backend, no build step, no new dependencies. Everything that would be a server is one
+state object written through to `localStorage`, so a reload on stage lands where the
+presenter left off.
+
+**Phase A — no tap answers with nothing.** The bank report is now a real single-page A4
+PDF built in the page and downloaded. Devanagari in PDF needs either an embedded CID font
+subset (another ~60 KB on top of the 310 KB of faces already precached, plus a font
+writer) or the page rasterised; we draw the report on a canvas with the Mukta face the app
+has already loaded and embed that canvas as one JPEG image XObject with `/DCTDecode`, so
+the JPEG bytes go into the stream untouched and nothing is fetched. It carries the farmer,
+season, 18 completed deals, the season total — a ledger that sums to the ₹4,12,600 the
+Money screen already showed — and a BhavScore-style line. Every screen gained a 56px
+speaker wired to `speechSynthesis`, falling back mr → hi → en and saying which it got.
+All three bid rows, the nearby-mandi rows, the cold-storage call, the voice sheet's two
+spec buttons and the alert channel picker are wired.
+
+**Phase B — the auction, end to end.** A countdown chip on the lot, a new bid landing on
+its own after 24s and re-sorting the list by net to the farmer, one round of counter-offer
+with live money math, and an accept that walks the lot through करार झाला → पैसे रोखले →
+वाहतूक → पैसे मिळाले from My Lots rather than only from the presenter panel. The 3-step
+add-lot flow from §6.5 with camera capture, a token-drawn sample photo for laptops,
+grading in 1.5s and the 4-farmers/85q pooling map from §6.8. Price alerts persist with
+delete, and the presenter can fire one as a full-screen incoming call.
+
+**Phase C — the missing surfaces.** Onboarding (§6.1) behind a once-only flag, skippable
+and re-runnable. A "For Government" tab on the desktop shell carrying the MSAMB view from
+§8 with the §9 risk table, a schematic inline-SVG map, three time series and a Marathi
+advisory preview. One reasons sheet now sits behind every verdict, including the
+store-or-sell one, whose footer carries the live deduction math.
+
+**Phase D — finish line.** Service worker bumped to `bhavsetu-demo-v2`; the precache list
+is unchanged and still complete because every new surface is inline (canvas, inline SVG,
+data URLs). Presenter panel rewritten to the 12-beat order.
+
+Verified in headless Chromium at 360×800 and 1280×860: every beat passes, no console
+errors, nothing scrolls sideways. Offline cold start with the origin server killed renders
+the whole app, loads both faces from cache, runs the auction and grading, and still
+downloads the PDF. `prefers-reduced-motion` leaves nothing hidden or mid-animation. Repo
+suite 44/44, build green. Demo shell is 37.6 KB gzipped plus the 310 KB font precache.
+
+One bug the run-through caught: `.shelltabs` declared `display:flex` further down the
+sheet than the mobile media query that hid it, so the government tab floated over the
+phone header at 360px. The override now sits last in the sheet.
+
+The ₹3,920 vs ₹4,200 store-or-sell gap recorded above is unchanged and still open.
