@@ -8,13 +8,18 @@
  * Bump CACHE on any change to the shell or the fonts; activate then drops
  * every older cache.
  *
+ * v3 adds consented QR access — the public trust card, the OTP consent flow
+ * and the access log. Still nothing new on disk: the requester screen, the
+ * farmer's second frame and the QR itself are markup, inline SVG and the QR
+ * encoder already in index.html.
+ *
  * v2 (Phase A–C): the auction, add-lot, onboarding, the incoming-call overlay,
  * the bank-report PDF and the government dashboard are all inline — canvas,
  * inline SVG and data URLs — so the precache list below is unchanged and still
  * complete. The version bump is what makes an already-installed home-screen
  * copy pick up the new index.html.
  */
-const CACHE = 'bhavsetu-demo-v2'
+const CACHE = 'bhavsetu-demo-v3'
 
 const SHELL = [
   './',

@@ -220,3 +220,54 @@ sheet than the mobile media query that hid it, so the government tab floated ove
 phone header at 360px. The override now sits last in the sheet.
 
 The ₹3,920 vs ₹4,200 store-or-sell gap recorded above is unchanged and still open.
+
+## Session 4 — Consented QR access (7 Sep 2026)
+
+The farmer identity gained a second tier, and a consent flow to reach it. Still no
+backend and no new dependencies: the requester, the farmer's device and the grant
+token all live in one page.
+
+**Tier 1, the public trust card.** `?id=BS-NSK-0412-7729` — or the presenter's scan
+buttons — opens a Kanda-barred card carrying ID, name, taluka, BhavScore with its bar,
+deals, on-time percentage and the grade history as a bar strip. It carries no rupee
+figure, no phone number and no buyer name, and a test asserts that rather than trusting
+the markup.
+
+**Tier 2, the full record, behind one OTP.** The requester picks who they are (Buyer /
+Bank / FPO / Government) and asks. The farmer's own device answers — a second phone frame
+beside the first on a desktop shell, the same node covering the screen as an incoming
+request on a phone — reads the request aloud, and offers परवानगी द्या / नाकारा. Allow
+shows a six-digit OTP, spoken through the existing TTS; the requester types it and the
+record opens: every deal with its money math, escrow history, alerts, recorded storage
+decisions, season and extra-earned totals, and the bank-report PDF. Three wrong entries
+lock the requester out for ten minutes in Marathi. Deny shows the farmer declined, and
+nothing else.
+
+**The grant is the feature.** Each request becomes a row in a consent ledger scoped to
+requester type plus farmer ID, valid 24 hours, and the farmer's Profile lists who saw
+what and when with a revoke button. Revoking flips the requester's open screen to
+"परवानगी संपली" within a second. A Bank grant does not let a Buyer in — the test proves
+the scope holds across a reload.
+
+**Copy.** 57 keys, complete in mr / hi / en, switched by the onboarding language picker.
+All of it is new copy, not verbatim in the spec, and is marked TODO-mr / TODO-hi for
+native review. The rest of the demo's copy is unchanged inline Marathi.
+
+BhavScore is roadmap item 14 in `docs/master-prompt.md`, whose tier is marked "never build
+scope this cycle". Built because the request asked for it explicitly, and flagged here
+rather than done quietly. It is computed from the deal ledger (on-time, count, grade mix,
+volume) and shows its inputs under the number instead of asserting a score.
+
+Service worker at `bhavsetu-demo-v3`; the precache list is unchanged because everything
+new is markup, inline SVG and the QR encoder already in the file.
+
+Two layout bugs the run-through caught, both fixed: on a phone the farmer's overlay
+covered the requester's OTP input, so the loop could not be completed — the farmer now
+hands the screen back after reading the OTP out, and revoke moves to the Profile there.
+And the fixed shell tab strip overlapped the phone frames once a second frame widened the
+row; the desktop shell now reserves a 66px strip and the frames take the height that is
+left, which holds at 1024×768 through 1440×900.
+
+Verified at 360×800 (35 checks) and 1280×860 (34 checks), plus offline: the public card
+renders from cache with the origin killed, and asking for consent refuses in Marathi with
+the reason. Suite 44/44. Demo shell 48.8 KB gzipped.
