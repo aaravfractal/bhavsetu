@@ -165,7 +165,8 @@ svg text{font-family:var(--mukta)}
 .panel .qrurl{font-size:10.5px;color:#B7A897;word-break:break-all;margin-top:7px}
 @media (max-width:700px){
   :root{--sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px)}
-  .panel{display:none}
+  .panel,.shelltabs,.gov{display:none}
+  body.gov-on .phone{display:block}
   body{background:var(--bg);display:block}
   .phone{width:100vw;height:100vh;height:100dvh;border-radius:0;padding:0;box-shadow:none}
   .screen{border-radius:0}
@@ -301,6 +302,65 @@ svg text{font-family:var(--mukta)}
 .callbtn:active{transform:scale(.97)}
 .calllbl{font:600 12px var(--mukta);color:#EFE9E0;margin-top:8px}
 
+/* onboarding: three screens, no chrome behind them (spec 6.1) */
+.screen.onboarding header,.screen.onboarding nav,.screen.onboarding .fab{display:none}
+.obwrap{padding:16px 4px}
+.obbig{width:100%;min-height:76px;border-radius:6px;border:1.5px solid var(--kanda);
+  background:var(--surface);color:var(--kanda);font:700 26px var(--mukta);cursor:pointer;margin-bottom:12px}
+.obbig.on{background:var(--kanda);color:#fff}
+.oblink{display:block;width:100%;min-height:56px;background:none;border:0;color:var(--ink2);
+  font:600 14px var(--mukta);cursor:pointer;text-decoration:underline}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
+.chips button{min-height:56px;padding:8px 16px;border-radius:6px;border:1px solid var(--line);
+  background:var(--surface);font:600 16px var(--mukta);color:var(--ink);cursor:pointer}
+.chips button.on{background:var(--kanda-soft);border-color:var(--kanda);color:var(--kanda)}
+.inp{width:100%;min-height:56px;border:1px solid var(--line);border-radius:6px;background:var(--surface);
+  padding:0 14px;font:600 20px var(--mukta);color:var(--ink);font-variant-numeric:tabular-nums}
+.inp.big{font-size:28px;letter-spacing:2px}
+.inp:focus{outline:2px solid var(--kanda);outline-offset:-2px}
+
+/* desktop landing shell: farmer app / government dashboard */
+.shelltabs{position:fixed;top:16px;left:16px;display:flex;gap:8px;z-index:30}
+.shelltabs button{padding:9px 14px;border-radius:8px;border:1px solid #6b5a4b;background:#4a3728;
+  color:#EFE9E0;font:600 13px var(--mukta);cursor:pointer}
+.shelltabs button.on{background:var(--kanda);border-color:var(--kanda);color:#fff}
+body.gov-on{align-items:flex-start;padding-top:64px}
+.gov{display:none;width:1060px;max-width:calc(100vw - 48px);max-height:calc(100vh - 88px);
+  background:var(--bg);border-radius:12px;overflow:auto;flex-direction:column;scrollbar-width:none}
+.gov::-webkit-scrollbar{display:none}
+body.gov-on .phone,body.gov-on .panel{display:none}
+body.gov-on .gov{display:flex}
+.govbar{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;
+  padding:16px 20px;border-bottom:1px solid var(--line);background:var(--surface)}
+.govbar b{font-size:18px}
+.govsub{font-size:12px;color:var(--ink2)}
+.govmain{display:flex;gap:16px;padding:12px 20px;align-items:flex-start}
+.govmap{width:60%;flex:none}
+.govlist{flex:1;min-width:0}
+.govlist h4{font-size:14px;margin-bottom:8px}
+.riskrow{display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center;
+  background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 12px;
+  margin-bottom:6px;cursor:pointer;font-size:13px}
+.riskrow.on{border-color:var(--kanda);background:var(--kanda-soft)}
+.riskrow .arr{font-weight:700;font-size:15px}
+.riskrow .act{font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:999px;
+  background:var(--haldi-soft);color:var(--haldi);white-space:nowrap}
+.riskrow .act.subsidy{background:var(--kanda-soft);color:var(--kanda)}
+.govdetail{background:var(--surface);border:1px solid var(--line);border-radius:8px;
+  padding:12px;margin-top:10px}
+.govdetail .riskrow{padding:6px 10px;margin-bottom:5px}
+.govstrip{display:flex;gap:10px;margin-top:14px}
+.govstrip>div{flex:1;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px}
+.govstrip b{font-size:12.5px}
+.govmodal{position:fixed;inset:0;background:var(--scrim);z-index:40;display:none;
+  align-items:center;justify-content:center;padding:24px}
+.govmodal.on{display:flex}
+.smscard{background:var(--surface);border-radius:12px;padding:20px;width:440px;max-width:100%}
+.smsbody{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:14px;
+  font-size:15px;line-height:1.55;margin:10px 0}
+.leg{display:flex;gap:14px;font-size:11.5px;color:var(--ink2);margin-top:8px;flex-wrap:wrap}
+.leg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+
 /* report preview: the A4 page the bank receives, drawn on a canvas */
 .sheet.tall{max-height:84%;overflow-y:auto;scrollbar-width:none}
 .sheet.tall::-webkit-scrollbar{display:none}
@@ -331,6 +391,54 @@ svg text{font-family:var(--mukta)}
   <div class="offline-banner"><i>नेटवर्क नाही. काल सकाळी ११ ची माहिती. <span class="en" style="color:#eee">No network · showing yesterday 11 am</span></i></div>
 
   <main>
+    <!-- ONBOARDING (spec 6.1): language, crop and place, phone. Skippable. -->
+    <section class="view" id="v-onboard">
+      <div class="obwrap">
+        <div class="dots" id="obDots"><i class="on"></i><i></i><i></i></div>
+
+        <div id="ob1">
+          <b style="font-size:20px">भाषा निवडा</b>
+          <div class="en" style="margin-bottom:16px">Choose your language</div>
+          <button class="obbig on" id="obMr" onclick="pickLang('mr')">मराठी</button>
+          <button class="obbig" id="obHi" onclick="pickLang('hi')">हिंदी</button>
+          <button class="oblink" onclick="pickLang('en')">Continue in English</button>
+        </div>
+
+        <div id="ob2" class="hidden">
+          <b style="font-size:20px">तुम्ही काय पिकवता?</b>
+          <div class="en">What do you grow?</div>
+          <div class="chips" id="cropChips">
+            <button class="on" onclick="pickCrop(this)">कांदा</button>
+            <button onclick="pickCrop(this)">कापूस</button>
+            <button onclick="pickCrop(this)">सोयाबीन</button>
+            <button onclick="pickCrop(this)">द्राक्षे</button>
+            <button onclick="pickCrop(this)">डाळिंब</button>
+            <button onclick="pickCrop(this)">इतर</button>
+          </div>
+          <b style="font-size:17px;display:block;margin-top:18px">तुमचा तालुका</b>
+          <div class="en" style="margin-bottom:8px">Your taluka</div>
+          <input class="inp" id="talukaInp" value="" placeholder="तालुका" autocomplete="off">
+          <button class="cta sub" onclick="gpsFill()">📍 माझं ठिकाण घ्या · Use my location</button>
+          <button class="cta" onclick="obStep(3)">पुढे · Next</button>
+        </div>
+
+        <div id="ob3" class="hidden">
+          <b style="font-size:20px">तुमचा फोन नंबर</b>
+          <div class="en" style="margin-bottom:10px">Your phone number · 10 digits</div>
+          <input class="inp big" id="phoneInp" inputmode="numeric" maxlength="10" value="9834512207">
+          <div id="otpBox" class="hidden" style="margin-top:14px">
+            <div class="mrsub">फोनवर आलेला 4 अंकी OTP टाका</div>
+            <input class="inp big" id="otpInp" inputmode="numeric" maxlength="4" value="">
+            <button class="cta sub" onclick="hearOtp()">🔊 फोनवर ऐका · Hear it on a call</button>
+            <div class="en">फीचर फोन वापरणाऱ्यांसाठी OTP कॉलवरही मिळतो</div>
+          </div>
+          <button class="cta" id="otpBtn" onclick="sendOtp()">OTP पाठवा · Send OTP</button>
+        </div>
+
+        <button class="oblink" onclick="finishOnboard(true)">वगळा · Skip</button>
+      </div>
+    </section>
+
     <!-- HOME -->
     <section class="view active" id="v-home">
       <div class="card bhav">
@@ -419,7 +527,7 @@ svg text{font-family:var(--mukta)}
             <div class="row total" style="color:var(--paan)"><span>हातात</span><span id="t4"></span></div>
           </div>
         </div>
-        <div class="verdict" style="margin-top:14px;color:var(--paan)" id="calcverdict">साठवा.<small id="calcgain"></small></div>
+        <div class="verdict" style="margin-top:14px;color:var(--paan)" id="calcverdict" onclick="tapVerdict('store')">साठवा.<small id="calcgain"></small></div>
         <div class="mrsub" style="margin-top:8px">विंचूर ॲग्रो कोल्ड चेन · 9 km · ₹18/क्विं./आठवडा <button style="border:0;background:none;color:var(--kanda);font-weight:700;cursor:pointer;min-height:56px" onclick="callStorage()">📞 कॉल</button></div>
       </div>
     </section>
@@ -538,12 +646,11 @@ svg text{font-family:var(--mukta)}
 
   <div class="scrim" id="scrim" onclick="closeSheets()"></div>
 
+  <!-- one sheet, every verdict: a verdict is never shown without its reasons -->
   <div class="sheet" id="sh-reasons">
-    <h4>थांबा — का?</h4>
-    <div class="reason"><div class="dot"></div><div>नाशिकमध्ये आवक कमी होत आहे<div class="en">Arrivals falling across Nashik mandis</div></div></div>
-    <div class="reason"><div class="dot"></div><div>पुढचे १० दिवस पाऊस नाही<div class="en">No rain expected 10 days, harvest slows</div></div></div>
-    <div class="reason"><div class="dot"></div><div>२ आठवड्यांत सणांची मागणी वाढेल<div class="en">Festival demand rising in 2 weeks</div></div></div>
-    <div class="mrsub" style="margin-top:10px">अंदाज ₹2,100 ± 110 · ८ दिवसांत</div>
+    <h4 id="reasonTitle">थांबा — का?</h4>
+    <div id="reasonList"></div>
+    <div class="mrsub" style="margin-top:10px" id="reasonFoot">अंदाज ₹2,100 ± 110 · ८ दिवसांत</div>
   </div>
 
   <div class="sheet" id="sh-voice">
@@ -553,7 +660,7 @@ svg text{font-family:var(--mukta)}
     <div class="card bhav" style="margin-top:14px">
       <div class="mrsub">लासलगाव · कांदा · आज</div>
       <div class="price" style="font-size:44px">₹1,850</div>
-      <div class="verdict" style="font-size:24px">थांबा<small>८ दिवसांनी ₹2,100 · उत्तर आवाजातही दिले जाते (Bhashini TTS)</small></div>
+      <div class="verdict" style="font-size:24px" onclick="tapVerdict()">थांबा<small>८ दिवसांनी ₹2,100 · उत्तर आवाजातही दिले जाते (Bhashini TTS) · का? टॅप करा</small></div>
     </div>
     <div class="btnrow">
       <button class="cta sub" style="flex:1" onclick="askAgain()">पुन्हा विचारा · Ask again</button>
@@ -636,9 +743,55 @@ svg text{font-family:var(--mukta)}
   <div class="toast" id="toast"></div>
 </div></div>
 
+<div class="shelltabs">
+  <button class="on" data-s="app" onclick="shell('app')">शेतकरी ॲप · Farmer app</button>
+  <button data-s="gov" onclick="shell('gov')">For Government · MSAMB</button>
+</div>
+
+<!-- Government early warning (spec 8). Desktop only, English primary. -->
+<div class="gov" id="gov">
+  <div class="govbar">
+    <div><b>Maharashtra · Onion · glut risk, next 7 days</b>
+      <div class="govsub">MSAMB / district officer view · महाराष्ट्र राज्य कृषी पणन मंडळ</div></div>
+    <div class="govsub" style="text-align:right">Last updated 7 Sep 2026, 06:00 IST<br>
+      Source: Agmarknet arrivals + MSAMB mandi feed</div>
+  </div>
+  <div class="govmain">
+    <div class="govmap">
+      <svg id="govMap" viewBox="0 0 520 316" style="width:100%;display:block"></svg>
+      <div class="leg">
+        <span><i style="background:#B3261E"></i>high glut risk</span>
+        <span><i style="background:#C98A0A"></i>watch</span>
+        <span><i style="background:#F5F4EE;border:1px solid #D9D2C5"></i>normal</span>
+        <span>Arrivals vs 30-day average, next 7 days</span>
+      </div>
+      <div class="govstrip" id="govStrip"></div>
+    </div>
+    <div class="govlist">
+      <h4>Talukas at risk</h4>
+      <div id="riskList"></div>
+      <div class="govdetail" id="govDetail"></div>
+    </div>
+  </div>
+</div>
+
+<div class="govmodal" id="advisory" onclick="closeAdvisory(event)">
+  <div class="smscard">
+    <b style="font-size:16px">Marathi advisory · SMS preview</b>
+    <div class="govsub" id="smsTo">To: 1,842 registered onion farmers in Niphad</div>
+    <div class="smsbody" id="smsBody"></div>
+    <div class="govsub" id="smsMeta">1 SMS · Marathi (Unicode) · also sent as a voice call to feature phones</div>
+    <div class="btnrow">
+      <button class="cta sub" style="flex:1;height:48px" onclick="closeAdvisory()">Cancel</button>
+      <button class="cta" style="flex:1;height:48px" onclick="sendAdvisory()">Send advisory</button>
+    </div>
+  </div>
+</div>
+
 <div class="panel">
   <h2>Demo controls (presenter only)</h2>
   <button onclick="toggleOffline()">✈️ Offline toggle — chrome greys, cached data + timestamp shows</button>
+  <button onclick="rerunOnboard()">▶ Re-run onboarding — language, crop, phone</button>
   <button onclick="forceBid()">🔔 New bid now — Nashik Agro ₹1,960 lands, list re-sorts</button>
   <button onclick="fireAlert()">📞 भाव ₹2,000 पार करा — alert rings as an incoming call</button>
   <button onclick="deliver()">📦 Simulate delivery — escrow releases, Paan fill, extra-earned card</button>
@@ -887,7 +1040,7 @@ function openSheet(id){
   if(id==='voice'){const w=document.getElementById('wave');w.innerHTML='';for(let i=0;i<26;i++){const b=document.createElement('i');b.style.animationDelay=(i*0.05)+'s';w.appendChild(b);}}
 }
 // The verdict compresses under the thumb before its reasons arrive.
-function tapVerdict(){after(120,()=>openSheet('reasons'))}
+function tapVerdict(kind){after(120,()=>openReasons(kind||'hold'))}
 function closeSheets(){
   document.getElementById('scrim').classList.remove('open');
   document.querySelectorAll('.sheet').forEach(s=>s.classList.remove('open'));
@@ -989,7 +1142,8 @@ function toggleOffline(){
 
 // Wait for the real face before locking the price width, but never let a slow
 // font hold the reveal hostage.
-Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,500))]).then(revealHome);
+Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,500))])
+  .then(()=>{if(S.onboarded)revealHome()});
 
 // ---------- QR for the presenter panel ----------
 // Byte mode, ECC level L, versions 1-5 (single data block), auto mask.
@@ -1839,8 +1993,260 @@ function callEnd(ok){
   }
 }
 
+
+/* =========================================================================
+   PHASE C — the surfaces that were referenced but missing.
+   ========================================================================= */
+
+// ---------- verdict reasons, behind every verdict (rule 11) ----------
+// Reasons are the forecast's own inputs, in plain Marathi. A verdict is never
+// shown bare, on any screen.
+const REASONS={
+  hold:{
+    title:'थांबा — का?',
+    foot:'अंदाज ₹2,100 ± 110 · ८ दिवसांत',
+    rows:[
+      ['नाशिकमध्ये आवक कमी होत आहे','Arrivals falling across Nashik mandis'],
+      ['पुढचे १० दिवस पाऊस नाही','No rain expected 10 days, harvest slows'],
+      ['२ आठवड्यांत सणांची मागणी वाढेल','Festival demand rising in 2 weeks'],
+    ],
+  },
+  store:{
+    title:'साठवा — का?',
+    foot:'',                       // filled from the live calculator below
+    rows:[
+      ['८ दिवसांत भाव ₹2,100 ± 110 पर्यंत जाण्याचा अंदाज','Forecast reaches ₹2,100 ± 110 in 8 days'],
+      ['साठवण ₹18/क्विं./आठवडा — ३ आठवड्यांचा खर्च वजा करूनही फायदा','Storage costs ₹18/q/week; the gain survives it'],
+      ['विंचूर ॲग्रो कोल्ड चेन फक्त 9 km · जागा उपलब्ध','Vinchur Agro Cold Chain is 9 km away, space available'],
+    ],
+  },
+};
+function openReasons(kind){
+  const r=REASONS[kind]||REASONS.hold;
+  document.getElementById('reasonTitle').textContent=r.title;
+  document.getElementById('reasonList').innerHTML=r.rows.map(x=>
+    '<div class="reason"><div class="dot"></div><div>'+x[0]+'<div class="en">'+x[1]+'</div></div></div>').join('');
+  let foot=r.foot;
+  if(kind==='store'){
+    const t=calcNums();
+    foot=Q+' क्विंटलवर: आज '+inr(t.sell)+' · साठवल्यास '+inr(t.store)+' = '+inr(t.gain)+' जास्त';
+  }
+  document.getElementById('reasonFoot').textContent=foot;
+  openSheet('reasons');
+}
+
+// ---------- onboarding (spec 6.1) ----------
+let obLang='mr',obCrop='कांदा';
+function obStep(n){
+  [1,2,3].forEach(k=>document.getElementById('ob'+k).classList.toggle('hidden',k!==n));
+  document.querySelectorAll('#obDots i').forEach((d,k)=>d.classList.toggle('on',k<n));
+  document.querySelector('main').scrollTop=0;
+}
+function pickLang(l){
+  obLang=l;
+  document.getElementById('obMr').classList.toggle('on',l==='mr');
+  document.getElementById('obHi').classList.toggle('on',l==='hi');
+  if(l!=='mr')toast('डेमो मराठीत चालतो · the demo runs in Marathi');   /* TODO-mr */
+  after(180,()=>obStep(2));
+}
+function pickCrop(btn){
+  document.querySelectorAll('#cropChips button').forEach(b=>b.classList.toggle('on',b===btn));
+  obCrop=btn.textContent;
+  if(obCrop!=='कांदा')toast('या डेमोत फक्त कांदा · onion only in this demo');
+}
+/** Fills the taluka the way GPS would. We deliberately do not call
+ *  navigator.geolocation: a permission prompt mid-demo would derail the run,
+ *  and with no network there is no reverse geocoder to turn a fix into a
+ *  taluka name anyway. Production wires this to the device fix. */
+function gpsFill(){
+  const el=document.getElementById('talukaInp');
+  el.value='ठिकाण शोधत आहे…';
+  after(700,()=>{
+    el.value='निफाड, नाशिक';
+    toast('प्रोडक्शनमध्ये: GPS वरून तालुका भरला जातो',3000);          /* TODO-mr */
+  });
+}
+function sendOtp(){
+  const ph=(document.getElementById('phoneInp').value||'').replace(/\D/g,'');
+  if(ph.length!==10)return toast('10 अंकी नंबर टाका · enter 10 digits');
+  document.getElementById('otpBox').classList.remove('hidden');
+  document.getElementById('otpBtn').textContent='सुरू करा · Start';
+  document.getElementById('otpBtn').setAttribute('onclick','finishOnboard(false)');
+  after(900,()=>{
+    document.getElementById('otpInp').value='4218';
+    toast('OTP आला · डेमोसाठी आपोआप भरला');                            /* TODO-mr */
+  });
+}
+function hearOtp(){
+  speak('तुमचा ओ टी पी आहे. चार. दोन. एक. आठ.');
+  toast('OTP फोन कॉलवर सांगितला जात आहे',3000);
+}
+function finishOnboard(skipped){
+  S.onboarded=true;save();
+  document.getElementById('screen').classList.remove('onboarding');
+  go('home');
+  revealHome();
+  toast(skipped?'नमस्कार राजू · तयार आहे':'खाते तयार · नमस्कार राजू',2600);
+}
+function rerunOnboard(){
+  S.onboarded=false;save();
+  startOnboard();
+}
+function startOnboard(){
+  document.getElementById('screen').classList.add('onboarding');
+  obStep(1);
+  go('onboard');
+}
+
+// ---------- desktop shell: farmer app / government dashboard ----------
+function shell(which){
+  document.body.classList.toggle('gov-on',which==='gov');
+  document.querySelectorAll('.shelltabs button').forEach(b=>b.classList.toggle('on',b.dataset.s===which));
+  if(which==='gov')renderGov();
+}
+
+// ---------- government early warning (spec 8, spec 9 data) ----------
+// Percentages, price moves, days-to-impact and actions are exactly the
+// at-risk table in spec section 9. Nothing here is modelled at runtime.
+const RISK=[
+  {en:'Niphad', mr:'निफाड',  arr:38,dp:-320,days:6,act:'Storage subsidy',mract:'साठवण अनुदान',x:190,y:120,w:120,h:74},
+  {en:'Yeola',  mr:'येवला',  arr:31,dp:-280,days:7,act:'Advisory',mract:'सूचना',x:318,y:150,w:106,h:80},
+  {en:'Sinnar', mr:'सिन्नर', arr:24,dp:-190,days:9,act:'Advisory',mract:'सूचना',x:214,y:202,w:96,h:70},
+  {en:'Rahuri', mr:'राहुरी', arr:22,dp:-170,days:9,act:'Advisory',mract:'सूचना',x:330,y:238,w:100,h:66},
+];
+const CALM=[
+  {en:'Dindori',arr:6,x:120,y:52,w:104,h:60},
+  {en:'Chandwad',arr:11,x:232,y:56,w:96,h:56},
+  {en:'Malegaon',arr:9,x:336,y:62,w:108,h:80},
+  {en:'Nashik',arr:14,x:96,y:120,w:86,h:96},
+  {en:'Igatpuri',arr:8,x:132,y:224,w:74,h:52},
+];
+// Chuna → Haldi → Mirchi, by arrivals against the 30-day average. Only the
+// three locked colours appear; the scale is carried by opacity.
+function riskFill(a){
+  if(a>=35)return{f:'#B3261E',o:1};
+  if(a>=28)return{f:'#B3261E',o:.6};
+  if(a>=20)return{f:'#C98A0A',o:.75};
+  if(a>=10)return{f:'#C98A0A',o:.3};
+  return{f:'#F5F4EE',o:1};
+}
+let govSel=0;
+function renderGov(){
+  const sv=document.getElementById('govMap');
+  let g='<rect width="520" height="316" fill="#F5F4EE"/>';
+  const blk=(d,i,hot)=>{
+    const c=riskFill(d.arr);
+    return '<g style="cursor:'+(hot?'pointer':'default')+'"'+(hot?' onclick="govPick('+i+')"':'')+'>'+
+      '<rect x="'+d.x+'" y="'+d.y+'" width="'+d.w+'" height="'+d.h+'" rx="6" fill="'+c.f+
+        '" fill-opacity="'+c.o+'" stroke="'+(hot&&i===govSel?'#8C2F4A':'#D9D2C5')+
+        '" stroke-width="'+(hot&&i===govSel?3:1)+'"/>'+
+      '<text x="'+(d.x+10)+'" y="'+(d.y+22)+'" font-size="12" font-weight="700" fill="'+
+        (c.o>.55&&c.f!=='#F5F4EE'?'#FFFFFF':'#2B1F16')+'">'+d.en+'</text>'+
+      '<text x="'+(d.x+10)+'" y="'+(d.y+38)+'" font-size="11" fill="'+
+        (c.o>.55&&c.f!=='#F5F4EE'?'#FFFFFF':'#5C4A3C')+'">+'+d.arr+'%</text></g>';
+  };
+  CALM.forEach((d,i)=>{g+=blk(d,i,false)});
+  RISK.forEach((d,i)=>{g+=blk(d,i,true)});
+  g+='<text x="16" y="26" font-size="13" font-weight="700" fill="#2B1F16">Nashik district and neighbours</text>'+
+     '<text x="16" y="42" font-size="11" fill="#5C4A3C">Schematic, not to scale — arrivals vs 30-day average</text>';
+  sv.innerHTML=g;
+
+  document.getElementById('riskList').innerHTML=RISK.map((d,i)=>
+    '<div class="riskrow'+(i===govSel?' on':'')+'" onclick="govPick('+i+')">'+
+      '<div><b>'+d.en+'</b> <span class="govsub">'+d.mr+'</span></div>'+
+      '<div class="arr" style="color:'+(d.arr>=35?'#B3261E':'#C98A0A')+'">+'+d.arr+'%</div>'+
+      '<div class="govsub">₹'+d.dp+' · '+d.days+'d</div>'+
+      '<div class="act'+(d.act==='Storage subsidy'?' subsidy':'')+'">'+d.act+'</div>'+
+    '</div>').join('');
+  govPick(govSel,true);
+  renderStrip();
+}
+function govPick(i,quiet){
+  govSel=i;
+  const d=RISK[i];
+  document.getElementById('govDetail').innerHTML=
+    '<b style="font-size:16px">'+d.en+' · '+d.mr+'</b>'+
+    '<div class="govsub" style="margin-bottom:8px">Nashik district · onion</div>'+
+    '<div class="riskrow" style="cursor:default;margin:0 0 6px">'+
+      '<div class="govsub">Arrivals vs 30-day avg</div><div></div><div></div>'+
+      '<b style="color:'+(d.arr>=35?'#B3261E':'#C98A0A')+'">+'+d.arr+'%</b></div>'+
+    '<div class="riskrow" style="cursor:default;margin:0 0 6px">'+
+      '<div class="govsub">Forecast modal price</div><div></div><div></div><b>₹'+d.dp+'</b></div>'+
+    '<div class="riskrow" style="cursor:default;margin:0 0 6px">'+
+      '<div class="govsub">Days until impact</div><div></div><div></div><b>'+d.days+' days</b></div>'+
+    '<div class="riskrow" style="cursor:default;margin:0 0 10px">'+
+      '<div class="govsub">Suggested action</div><div></div><div></div><b>'+d.act+'</b></div>'+
+    '<button class="cta" style="height:48px" onclick="openAdvisory()">Send Marathi advisory</button>';
+  if(!quiet)renderGov();
+}
+/** Three series along the bottom, ink with a single Haldi forecast band. */
+function miniSeries(title,sub,past,fore,fmt){
+  const W=300,H=58,n=past.length+fore.length;
+  const all=past.concat(fore),min=Math.min.apply(null,all)*.92,max=Math.max.apply(null,all)*1.06;
+  const x=i=>i*(W/(n-1)),y=v=>H-6-((v-min)/(max-min))*(H-14);
+  let p='';past.forEach((v,i)=>{p+=(i?'L':'M')+x(i)+','+y(v)});
+  let f='M'+x(past.length-1)+','+y(past[past.length-1]);
+  fore.forEach((v,i)=>{f+='L'+x(past.length+i)+','+y(v)});
+  let band='';
+  fore.forEach((v,i)=>{band+=x(past.length+i)+','+y(v*.93)+' '});
+  [].concat(fore).reverse().forEach((v,i)=>{band+=x(n-1-i)+','+y(v*1.07)+' '});
+  return '<div><b>'+title+'</b><div class="govsub">'+sub+'</div>'+
+    '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;display:block;margin-top:4px">'+
+      '<polygon points="'+band+'" fill="#C98A0A" opacity=".18"/>'+
+      '<path d="'+p+'" fill="none" stroke="#2B1F16" stroke-width="1.6"/>'+
+      '<path d="'+f+'" fill="none" stroke="#C98A0A" stroke-width="1.6" stroke-dasharray="4 3"/>'+
+      '<line x1="'+x(past.length-1)+'" y1="4" x2="'+x(past.length-1)+'" y2="'+(H-4)+
+        '" stroke="#5C4A3C" stroke-width=".7" stroke-dasharray="2 3"/>'+
+      '<text x="'+(x(past.length-1)+3)+'" y="11" font-size="8" fill="#5C4A3C">today</text>'+
+    '</svg><div class="govsub">'+fmt+'</div></div>';
+}
+function renderStrip(){
+  // Arrivals: a 30-day walk whose next week runs +38% over its own 30-day mean,
+  // which is the claim the Niphad row rests on.
+  const arrPast=[],base=1000;
+  for(let i=0;i<30;i++)arrPast.push(Math.round(base+((i*53)%220)-90+(i>22?i*9:0)));
+  const mean=arrPast.reduce((a,b)=>a+b)/30;
+  const arrFore=[1.14,1.22,1.29,1.34,1.38,1.38,1.35].map(k=>Math.round(mean*k));
+  const prPast=[1585,1600,1560,1540,1570,1610,1590,1620,1650,1630,1600,1580,1610,1640,1660,
+                1640,1620,1590,1570,1600,1620,1650,1630,1640,1690,1720,1700,1730,1780,1850];
+  const prFore=[1880,1920,1960,2010,2050,2080,2100];
+  const stPast=[];for(let i=0;i<30;i++)stPast.push(Math.round(52+i*0.55+((i*31)%7)));
+  const stFore=[70,72,74,76,78,79,80];
+  document.getElementById('govStrip').innerHTML=
+    miniSeries('Arrivals','Nashik district, quintals/day',arrPast,arrFore,
+      'Next 7 days +38% vs 30-day average')+
+    miniSeries('Modal price','Lasalgaon, ₹/quintal',prPast,prFore,
+      'Band ±110 · today ₹1,850')+
+    miniSeries('Storage utilisation','Nashik cold chain, % of capacity (estimate)',stPast,stFore,
+      'Headroom for roughly 6 more days of arrivals (estimate)');
+}
+function openAdvisory(){
+  const d=RISK[govSel];
+  document.getElementById('smsTo').textContent=
+    'To: registered onion farmers in '+d.en+' taluka ('+d.mr+')';
+  // Built from the alert copy in spec section 9; TODO-mr for native review.
+  document.getElementById('smsBody').textContent=
+    'भावसेतू / MSAMB सूचना — तालुका: '+d.mr+'. पुढच्या आठवड्यात कांद्याची आवक '+d.arr+
+    '% वाढणार. भाव सुमारे ₹'+Math.abs(d.dp)+' पडू शकतो. परिणाम '+d.days+
+    ' दिवसांत दिसेल. शक्य असल्यास थांबा किंवा जवळच्या कोल्ड स्टोरेजमध्ये साठवा. '+
+    'तुमचा भाव जाणून घ्या: मिस्ड कॉल 1800-XXX-XXXX';
+  document.getElementById('smsMeta').textContent=
+    '1 SMS · Marathi (Unicode) · '+d.act+' recommended · also placed as a voice call to feature phones';
+  document.getElementById('advisory').classList.add('on');
+}
+function closeAdvisory(e){
+  if(e&&e.target&&e.target.closest&&e.target.closest('.smscard'))return;
+  document.getElementById('advisory').classList.remove('on');
+}
+function sendAdvisory(){
+  const d=RISK[govSel];
+  document.getElementById('advisory').classList.remove('on');
+  toast('Advisory queued for '+d.en+' · SMS + voice call',3200);
+}
+
 // ---------- first paint ----------
 renderLots();renderAlerts();renderBids();
+if(!S.onboarded)startOnboard();
 </script>
 </body>
 </html>
