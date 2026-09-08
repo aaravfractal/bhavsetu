@@ -340,3 +340,53 @@ suite 44/44, build green, demo shell 59.7 KB gzipped. The one thing this session
 do is a pixel check in a real browser: there is no Chrome on this machine and screen
 capture is blocked, so layout at 360 and 1280 was reviewed in the stylesheet rather than
 seen. Worth a human glance at the buyer-type chip row, which wraps to three lines at 360.
+
+## English and Hindi modes, complete
+
+Every user-facing string in `demo/index.html` now goes through one table of 460 entries,
+each carrying mr, hi and en, plus an optional English gloss for the small second line the
+Marathi and Hindi screens have always printed. `t()` reads the primary line, `te()` the
+gloss, and the three `pair*` helpers assemble the block, inline and CTA shapes the markup
+uses. Static copy carries its key in the markup (`data-k`, `-ki`, `-kb`, `-kc`, `-kg`,
+`-kp`, `-ka`); everything drawn at runtime is repainted by the renderer that owns it, so
+`paintAll()` redraws every screen, sheet and overlay in place.
+
+**Data values are translated, not only labels.** A second map of 90 fixture strings is
+keyed by the Marathi form: buyer and company names, buyer types, quality requirements,
+pickup and delivery terms, trust reasons, farmer feedback, neighbour names, crops,
+talukas, mandis, the cold chain, grades, lot statuses and ledger months. Saved state stays
+keyed in Marathi, so switching language never rewrites what is in localStorage — a judge
+reading the English build never has to decode Devanagari to understand a value.
+
+**The switcher lives in three places** — a pill in the app header, one in the desktop
+shell top bar beside the wordmark, and one on Profile. The choice persists in
+localStorage and repaints in place: no reload, no navigation, no state lost. `?lang=en`
+(also `hi`, `mr`, and the long spellings) opens the demo already in that language, and
+Marathi remains the default for a new install.
+
+English mode prints Latin digits, greets `Hello Raju · Niphad, Nashik`, navigates
+Market · Calculator · My lots · Buyers · Money, and sets the verdict words SELL / HOLD /
+WARNING in Mukta 800 — Tiro is kept for Devanagari only. `speechSynthesis` picks a voice
+for the active locale before falling back, so English mode is never a Marathi voice
+reading English words.
+
+`src/i18n/*.json` went to 177 keys each. `hi.json` had been holding `TODO-hi: <English>`
+for 97 of 107 keys, which is English text on a Hindi screen; every value is now Hindi,
+with the TODO-hi marker kept where a line still wants a native pass (`t()` strips the
+marker before render). `en.json` has no TODO markers at all.
+
+Verified with a DOM harness — no new dependencies — that runs the real script in all three
+locales and walks the full presenter order: onboarding, home, reasons, chart, alerts, the
+calculator including the spoilage flip, lots, add-lot with pooling, the bid board, all six
+bid sheets, both trust breakdowns, the counter round, the mandi sheets, the incoming call,
+delivery, money, the bank PDF, profile, the whole consent/OTP/full-record/revoke flow, and
+the government tab. English mode writes no Devanagari anywhere except the two language-pill
+labels, which are deliberately in their own script, and the wordmark tagline. Hindi carries
+no English primary line. Repo suite 44/44, build green.
+
+Two things this session did not do. The font subsets were left untouched: only one new
+character (ऋ) fell outside them, and it was reworded away rather than regenerate five
+binary faces the night before the demo — `scripts/subset-demo-fonts.py` is still the right
+thing to run when there is time. And there is still no browser on this machine, so 360 and
+1280 were checked through the rendered DOM and the stylesheet rather than seen; the header
+now carries a language row above the Bhav card, which is the one place worth a human glance.
