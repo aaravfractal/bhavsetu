@@ -390,3 +390,55 @@ binary faces the night before the demo — `scripts/subset-demo-fonts.py` is sti
 thing to run when there is time. And there is still no browser on this machine, so 360 and
 1280 were checked through the rendered DOM and the stylesheet rather than seen; the header
 now carries a language row above the Bhav card, which is the one place worth a human glance.
+
+## 51 strings keyed: the identity screen, and every other English literal
+
+An audit of every literal that reaches the DOM, in four categories. Markup text
+nodes with no key: 78, of which 69 were fallbacks a renderer overwrites, 3 the
+deliberately native language names, 2 proper nouns, 1 a locale-neutral measurement
+and 1 the wordmark tagline — leaving **2 genuinely unkeyed**, the `BhavScore` and
+`my QR` gloss spans on the identity and QR cards. User-facing attributes: 0. JS
+literals written to the DOM: 7 candidates, all false positives (a CSS class, three
+literals already inside `xl()`/`pairCta()`, an onclick, and QR path fragments).
+`src/` components: 0, as `tests/i18n.parity.test.js` already enforces.
+
+The fourth category was the real one: **10 table entries whose mr and hi values
+held English**, so information existed only in English no matter the locale —
+`profile.scoreNote`, `money.released`, `full.grantedAt`, `add.checkingSub`,
+`pool.bNote`, `cmp.winSub`, `money.extraEn` and the three escrow flags. All ten now
+carry real Marathi and Hindi. A further 7 primaries were mixed — `वाढ candle`,
+`आकार · size`, `सूचक · roadmap` and their siblings — and are now fully native, as
+are the bank report's strapline and summary line.
+
+Timestamps were UI copy nobody had keyed: `stamp()` ran on `en-IN`, so the access
+log and the grant lines read `08 Sept` on a Marathi screen. Month names now come
+from the table and the digits from `dev()`, formatted by hand rather than through
+Intl, because a device without the mr-IN calendar data would silently fall back to
+English. `०८ सप्टें १९:०२` in Marathi, `08 Sep 19:02` in English.
+
+`src/i18n/*.json` went to 189 keys. The 17 gallery strings that still held English
+in `mr.json` now have Marathi, and 12 keys were added for the copy above. There is
+**no English left in the Marathi or Hindi tables**. The TODO-mr / TODO-hi markers
+remain, because `tests/i18n.parity.test.js` requires one on any Devanagari not
+verbatim in `docs/` — they are review flags, not content, and `t()` strips them
+before render. Dropping them means relaxing that test, which is a call for the
+owner of CLAUDE.md rule 2, not for this session.
+
+The onboarding language picker was already three matching `.obbig` cards as of the
+previous commit — मराठी first and filled, हिंदी and English below it, 76px each
+against a 56px floor, with वगळा · Skip unchanged underneath.
+
+Verified by extending the DOM harness with two assertions over the full presenter
+order in all three locales, including the QR, OTP, revoke and government screens.
+English mode: no Devanagari in 787 DOM writes outside the wordmark tagline and the
+language-pill labels. Marathi: no Latin UI copy in 766 writes; Hindi: none in 787 —
+after subtracting every string `te()` can produce, then proper nouns, acronyms, lot
+and BhavScore ids, units and the missed-call number format. Two harness bugs were
+fixed to get there: descendant selectors matched on the last part alone, so
+`#chan button` was hitting every button in the page, and the allowlist ran before
+gloss subtraction, which broke any gloss containing a proper noun.
+
+Font subsets untouched, as required; all new copy was checked against
+`demo/fonts/coverage.json` before it was written and every character already had a
+glyph. Tests 44/44, build green. Still no browser on this machine, so the identity
+and QR screens were read through the rendered DOM rather than seen.

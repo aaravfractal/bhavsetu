@@ -827,7 +827,7 @@ html[lang="en"] .verdict small,html[lang="en"] .cmpwin small{font-weight:400}
           </div>
           <div class="idchip" id="fId" style="margin-top:8px">BS-NSK-0412-7729</div>
 
-          <div class="mrsub" style="margin-top:14px" id="lblScore">भावस्कोअर <span class="en">BhavScore</span></div>
+          <div class="mrsub" style="margin-top:14px" id="lblScore" data-ki="score">भावस्कोअर</div>
           <div class="scorewrap"><div class="scorenum" id="scoreNum">0</div><div class="scoreof">/ 100</div></div>
           <div class="scorebar"><i id="scoreBar"></i></div>
           <div class="en" id="scoreWhy"></div>
@@ -891,7 +891,7 @@ html[lang="en"] .verdict small,html[lang="en"] .cmpwin small{font-weight:400}
         <div class="langpill wide" id="langPillProfile" style="margin-top:10px"></div>
       </div>
       <div class="qrcard">
-        <b style="font-size:16px" id="lblMyQr">माझा QR <span class="en">my QR</span></b>
+        <b style="font-size:16px" id="lblMyQr" data-ki="myQr">माझा QR</b>
         <div id="myQr"></div>
         <div class="idchip" id="myId">BS-NSK-0412-7729</div>
         <div class="en" id="myQrNote">कोणीही स्कॅन करू शकतो · फक्त सार्वजनिक माहिती दिसते</div>
@@ -2180,7 +2180,7 @@ function drawReport(cv){
 
   // footer
   c.fillStyle='#5C4A3C';c.font=F(400,17);
-  c.fillText(t('report.consent',{d:new Date().toLocaleDateString('en-IN')}),88,H-104);
+  c.fillText(t('report.consent',{d:stamp(Date.now()).split(' ').slice(0,2).join(' ')}),88,H-104);
   c.fillText(t('report.footer'),88,H-76);
   return{total,rows:rows.length,onTime};
 }
@@ -3279,11 +3279,11 @@ const T={
 'chart.title':{mr:'भाव चार्ट · कांदा, लासलगाव',hi:'भाव चार्ट · प्याज़, लासलगाव',
   en:'Bhav chart · Onion, Lasalgaon',g:'30 days + 14-day forecast',
   ge:'30 days + 14-day forecast'},
-'chart.legUp':{mr:'वाढ candle',hi:'बढ़त candle',en:'Up candle'},
-'chart.legDown':{mr:'घट candle',hi:'गिरावट candle',en:'Down candle'},
+'chart.legUp':{mr:'वाढ',hi:'बढ़त',en:'Up candle'},
+'chart.legDown':{mr:'घट',hi:'गिरावट',en:'Down candle'},
 'chart.legAvg':{mr:'30-दिवस सरासरी',hi:'30-दिन औसत',en:'30-day average'},
 'chart.legBand':{mr:'अंदाज ±110',hi:'अनुमान ±110',en:'Forecast ±110'},
-'chart.legVol':{mr:'आवक (volume)',hi:'आवक (volume)',en:'Arrivals (volume)'},
+'chart.legVol':{mr:'आवक',hi:'आवक',en:'Arrivals (volume)'},
 'chart.today':{mr:'आज',hi:'आज',en:'today'},
 'chart.alertCta':{mr:'भाव सूचना लावा',hi:'भाव सूचना लगाएँ',en:'Set a price alert',
   g:'Set price alert'},
@@ -3394,15 +3394,16 @@ const T={
 'add.sampleLabel':{mr:'नमुना फोटो · sample photo',hi:'नमूना फ़ोटो · sample photo',
   en:'sample photo'},
 'add.checking':{mr:'दर्जा तपासत आहे…',hi:'ग्रेड जाँचा जा रहा है…',en:'Checking the grade…'},
-'add.checkingSub':{mr:'Checking size, sprouting and damage',
-  hi:'Checking size, sprouting and damage',en:'Checking size, sprouting and damage'},
+'add.checkingSub':{mr:'आकार, कोंब आणि खराबी तपासत आहे',
+  hi:'आकार, अंकुर और ख़राबी जाँची जा रही है',
+  en:'Checking size, sprouting and damage'},
 'add.gradedSub':{mr:'आकार 55–65 mm · कोंब 2% · खराब 1%',
   hi:'आकार 55–65 mm · अंकुर 2% · ख़राब 1%',en:'Size 55–65 mm · sprouting 2% · damage 1%'},
 'add.gradedToast':{mr:'दर्जा तपासला · अ दर्जा',hi:'ग्रेड जाँचा · अ ग्रेड',
   en:'Graded · Grade A'},
-'add.size':{mr:'आकार · size',hi:'आकार · size',en:'Size'},
-'add.sprout':{mr:'कोंब · sprouting',hi:'अंकुर · sprouting',en:'Sprouting'},
-'add.damage':{mr:'खराब · damage',hi:'ख़राब · damage',en:'Damage'},
+'add.size':{mr:'आकार',hi:'आकार',en:'Size'},
+'add.sprout':{mr:'कोंब',hi:'अंकुर',en:'Sprouting'},
+'add.damage':{mr:'खराब',hi:'ख़राब',en:'Damage'},
 'add.photoSeen':{mr:'हा फोटो खरेदीदारांना दिसेल',hi:'यह फ़ोटो ख़रीदारों को दिखेगा',
   en:'Buyers will see this photo',g:'buyers will see this photo'},
 'add.howMany':{mr:'किती क्विंटल?',hi:'कितने क्विंटल?',en:'How many quintals?'},
@@ -3448,8 +3449,8 @@ const T={
 'pool.bSeparate':{mr:'ब दर्जाचे लॉट वेगळे एकत्र होतात — {list}',
   hi:'ब ग्रेड के लॉट अलग एकत्र होते हैं — {list}',
   en:'Grade B lots pool separately — {list}'},
-'pool.bNote':{mr:'Grade B pools separately; grades are never mixed in one truck',
-  hi:'Grade B pools separately; grades are never mixed in one truck',
+'pool.bNote':{mr:'एका ट्रकमध्ये दोन दर्जे कधीच मिसळले जात नाहीत',
+  hi:'एक ट्रक में दो ग्रेड कभी नहीं मिलाए जाते',
   en:'Grades are never mixed in one truck'},
 'pool.same':{mr:'तोच दर्जा — हा लॉट तुमच्या {q} क्विंटलच्या पूलमध्ये येतो',
   hi:'वही ग्रेड — यह लॉट आपके {q} क्विंटल के पूल में आता है',
@@ -3505,8 +3506,8 @@ const T={
   en:'What {q} quintals put in your hand, after transport and cess'},
 'cmp.win':{mr:'म्हणून A चांगला — {x} जास्त',hi:'इसलिए A बेहतर — {x} ज़्यादा',
   en:'So A wins — {x} more'},
-'cmp.winSub':{mr:'The bigger headline loses once the lorry is paid for',
-  hi:'The bigger headline loses once the lorry is paid for',
+'cmp.winSub':{mr:'ट्रक भाडे दिल्यावर मोठा आकडा मागे पडतो',
+  hi:'ट्रक भाड़ा देने के बाद बड़ा आँकड़ा पीछे रह जाता है',
   en:'The bigger headline loses once the lorry is paid for'},
 
 // ---- one bid -------------------------------------------------------------
@@ -3570,18 +3571,18 @@ const T={
   hi:'नया ख़रीदार · एस्क्रो अनिवार्य',en:'New buyer · escrow compulsory'},
 'trust.newWhy':{mr:'एकही पूर्ण व्यवहार नाही',hi:'एक भी पूरा सौदा नहीं',
   en:'No completed deals'},
-'trust.newEn':{mr:'New buyer, no history — escrow is compulsory',
-  hi:'New buyer, no history — escrow is compulsory',
+'trust.newEn':{mr:'नवीन खरेदीदार, इतिहास नाही — एस्क्रो अनिवार्य',
+  hi:'नया ख़रीदार, इतिहास नहीं — एस्क्रो अनिवार्य',
   en:'No history at all — escrow cannot be switched off'},
 'trust.warn':{mr:'सावध',hi:'सावधान',en:'Caution'},
 'trust.rejWhy':{mr:'{n} वेळा माल नाकारला',hi:'{n} बार माल अस्वीकार',
   en:'Rejected lots {n} times'},
-'trust.rejEn':{mr:'Rejected lots {n} times — escrow is compulsory',
-  hi:'Rejected lots {n} times — escrow is compulsory',
+'trust.rejEn':{mr:'{n} वेळा माल नाकारला — एस्क्रो अनिवार्य',
+  hi:'{n} बार माल अस्वीकार — एस्क्रो अनिवार्य',
   en:'Escrow is compulsory on this buyer'},
 'trust.dispWhy':{mr:'{n} वाद प्रलंबित',hi:'{n} विवाद लंबित',en:'{n} open dispute'},
-'trust.dispEn':{mr:'An open payment dispute — escrow is compulsory',
-  hi:'An open payment dispute — escrow is compulsory',
+'trust.dispEn':{mr:'पैशांचा वाद प्रलंबित — एस्क्रो अनिवार्य',
+  hi:'पैसों का विवाद लंबित — एस्क्रो अनिवार्य',
   en:'An open payment dispute — escrow is compulsory'},
 'trust.chipNew':{mr:'नवीन',hi:'नया',en:'New'},
 'trust.chipWarn':{mr:'सावध',hi:'सावधान',en:'Caution'},
@@ -3630,16 +3631,16 @@ const T={
 'money.escrowSub':{mr:'{n} · {q} क्विं. · माल पोहोचल्यावर पैसे तुम्हाला',
   hi:'{n} · {q} क्विं. · माल पहुँचने पर पैसे आपको',
   en:'{n} · {q} q · the money reaches you when the lot is delivered'},
-'money.released':{mr:'Released to you when delivery is confirmed',
-  hi:'Released to you when delivery is confirmed',
+'money.released':{mr:'डिलिव्हरी नोंदल्यावर पैसे मोकळे होतात',
+  hi:'डिलीवरी दर्ज होने पर पैसे मुक्त होते हैं',
   en:'Released to you when delivery is confirmed'},
 'money.extra':{mr:'या व्यवहारात जास्त मिळाले',hi:'इस सौदे में ज़्यादा मिले',
   en:'Extra earned on this deal',g:'extra earned'},
 'money.extraSub':{mr:'विकले {r} ला · कापणीच्या दिवशी भाव {h} होता ({q} क्विं.)',
   hi:'बेचा {r} में · कटाई के दिन भाव {h} था ({q} क्विं.)',
   en:'Sold at {r} · the harvest-day price was {h} ({q} q)'},
-'money.extraEn':{mr:'Sold at {r} vs harvest-day {h}, via BhavSetu',
-  hi:'Sold at {r} vs harvest-day {h}, via BhavSetu',
+'money.extraEn':{mr:'भावसेतूमार्फत {r} ला विकले · कापणीच्या दिवशी {h}',
+  hi:'भावसेतू के ज़रिए {r} में बेचा · कटाई के दिन {h}',
   en:'Measured against the harvest-day price, every lot this season'},
 'money.paidToast':{mr:'{x} मिळाले ✓',hi:'{x} मिले ✓',en:'{x} received ✓'},
 'money.alreadyPaid':{mr:'या व्यवहाराचे पैसे मिळाले आहेत',hi:'इस सौदे के पैसे मिल चुके हैं',
@@ -3655,8 +3656,8 @@ const T={
 'report.download':{mr:'PDF उतरवा',hi:'PDF डाउनलोड करें',en:'Download the PDF',g:'Download'},
 'report.saved':{mr:'अहवाल उतरवला',hi:'रिपोर्ट डाउनलोड हुई',en:'Report saved',g:'PDF saved'},
 'report.title':{mr:'बँकेसाठी अहवाल',hi:'बैंक के लिए रिपोर्ट',en:'Report for the bank'},
-'report.strap':{mr:'BhavSetu · Report for bank · भाव कळेल. बाजार मिळेल. पैसे मिळतील.',
-  hi:'BhavSetu · Report for bank · भाव पता चलेगा. बाज़ार मिलेगा. पैसे मिलेंगे.',
+'report.strap':{mr:'BhavSetu · बँकेसाठी अहवाल · भाव कळेल. बाजार मिळेल. पैसे मिळतील.',
+  hi:'BhavSetu · बैंक के लिए रिपोर्ट · भाव पता चलेगा. बाज़ार मिलेगा. पैसे मिलेंगे.',
   en:'BhavSetu · Report for the bank · Know the price. Reach the buyer. Get paid.'},
 'report.farmer':{mr:'शेतकरी · Farmer',hi:'किसान · Farmer',en:'Farmer'},
 'report.season':{mr:'हंगाम · Season',hi:'सीज़न · Season',en:'Season'},
@@ -3676,8 +3677,8 @@ const T={
   en:'Season total'},
 'report.summary':{mr:'{n} व्यवहार · {p}% वेळेवर पैसे',hi:'{n} सौदे · {p}% समय पर पैसे',
   en:'{n} deals · {p}% paid on time'},
-'report.summarySub':{mr:'{n} deals · {p}% on-time delivery · सरासरी दर्जा: अ · कोणताही करार रद्द नाही',
-  hi:'{n} deals · {p}% on-time delivery · औसत ग्रेड: अ · कोई सौदा रद्द नहीं',
+'report.summarySub':{mr:'{n} व्यवहार · {p}% वेळेवर पोहोच · सरासरी दर्जा: अ · कोणताही करार रद्द नाही',
+  hi:'{n} सौदे · {p}% समय पर पहुँच · औसत ग्रेड: अ · कोई सौदा रद्द नहीं',
   en:'{n} deals · {p}% on-time delivery · average grade A · no cancelled contracts'},
 'report.consent':{mr:'ही माहिती शेतकऱ्याच्या संमतीने दिली आहे. BhavSetu एस्क्रो व्यवहारांवरून तयार · {d}',
   hi:'यह जानकारी किसान की सहमति से दी गई है। BhavSetu एस्क्रो सौदों से तैयार · {d}',
@@ -3743,12 +3744,12 @@ const T={
 
 // ---- profile / next season ----------------------------------------------
 'profile.language':{mr:'भाषा',hi:'भाषा',en:'Language',g:'language'},
-'profile.scoreNote':{mr:'BhavScore · built from completed deals',
-  hi:'BhavScore · built from completed deals',
+'profile.scoreNote':{mr:'पूर्ण झालेल्या व्यवहारांवरून तयार',
+  hi:'पूरे हुए सौदों से तैयार',
   en:'BhavScore · built from completed deals'},
 'season.title':{mr:'पुढील हंगाम',hi:'अगला सीज़न',en:'Next season',
   g:'Next season · what to plant, and why',ge:'What to plant, and why'},
-'season.chip':{mr:'सूचक · roadmap',hi:'सूचक · roadmap',en:'Indicative · roadmap'},
+'season.chip':{mr:'सूचक',hi:'सूचक',en:'Indicative'},
 'season.recommended':{mr:'शिफारस',hi:'सिफ़ारिश',en:'Recommended',g:'recommended'},
 'season.crop':{mr:'उन्हाळ कांदा',hi:'गर्मी का प्याज़',en:'Summer onion'},
 'season.demand':{mr:'मागणी: जास्त',hi:'माँग: ज़्यादा',en:'Demand: high'},
@@ -3864,8 +3865,8 @@ storeSaved:{mr:'निर्णय नोंदवला',hi:'निर्णय
 'full.storeShort':{mr:'साठवण मुदत संपत आली',hi:'भंडारण अवधि ख़त्म हो रही है',
   en:'Shelf life was running out'},
 'full.extra':{mr:'+ {x} जास्त मिळाले',hi:'+ {x} ज़्यादा मिले',en:'+ {x} extra earned'},
-'full.grantedAt':{mr:'Granted {a} · expires {b}',hi:'Granted {a} · expires {b}',
-  en:'Granted {a} · expires {b}'},
+'full.grantedAt':{mr:'परवानगी {a} · मुदत {b} पर्यंत',
+  hi:'अनुमति {a} · अवधि {b} तक',en:'Granted {a} · expires {b}'},
 
 // ---- government early warning (spec 8) -----------------------------------
 'gov.title':{mr:'महाराष्ट्र · कांदा · पुढच्या 7 दिवसांत आवक वाढीचा धोका',
@@ -4047,6 +4048,9 @@ storeSaved:{mr:'निर्णय नोंदवला',hi:'निर्णय
      'Fixtures = Lasalgaon Sep 2026, the same numbers as the deck.'},
 
 // ---- spoken summaries (Web Speech; production speaks through Bhashini) ----
+'stamp.months':{mr:'जाने,फेब्रु,मार्च,एप्रि,मे,जून,जुलै,ऑग,सप्टें,ऑक्टो,नोव्हें,डिसें',
+  hi:'जन,फ़र,मार्च,अप्रै,मई,जून,जुल,अग,सित,अक्तू,नव,दिस',
+  en:'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec'},
 'spk.home':{mr:'लासलगाव, कांदा. आजचा भाव 1850 रुपये प्रति क्विंटल, कालपेक्षा 120 रुपये जास्त. थांबा. आठ दिवसांनी 2100 पर्यंत जाईल.',
   hi:'लासलगाव, प्याज़. आज का भाव 1850 रुपये प्रति क्विंटल, कल से 120 रुपये ज़्यादा. रुकें. आठ दिन में 2100 तक जाएगा.',
   en:'Lasalgaon, onion. Today the price is 1850 rupees a quintal, 120 rupees more than yesterday. Hold. It should reach 2100 in eight days.'},
@@ -4384,10 +4388,18 @@ function grantState(g){
 function isOffline(){
   return document.body.classList.contains('offline-mode')||navigator.onLine===false;
 }
+/* Access-log and grant timestamps are UI copy too: an English month name on a
+   Marathi screen is the same leak as an English label. Month names come from
+   the table rather than Intl, because a device without the mr-IN or hi-IN
+   calendar data would quietly fall back to English. */
+const two=n=>String(n).padStart(2,'0');
 const stamp=ms=>{
   const d=new Date(ms);
-  return d.toLocaleDateString('en-IN',{day:'2-digit',month:'short'})+' '+
-         d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:false});
+  const mon=t('stamp.months').split(',')[d.getMonth()];
+  // Formatted by hand rather than through Intl: a device without the mr-IN or
+  // hi-IN calendar data falls back to English month names and Latin digits,
+  // and dev() has to decide the numerals anyway (rule 2).
+  return dev(two(d.getDate()))+' '+mon+' '+dev(two(d.getHours()))+':'+dev(two(d.getMinutes()));
 };
 
 // ---------- requester side ----------
